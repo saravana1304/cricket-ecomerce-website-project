@@ -1,7 +1,20 @@
-{% extends 'userapp1/home.html' %}
+{% extends 'userapp1/main.html' %}
 
 {%block content%}
 
-<center><h1>this is my register page</h1></center>
+<center>
+    <h1>this is my register page</h1>
+
+<form method="POST" autocomplete="off">
+    {% csrf_token %}
+
+    {{registerform.as_p}}
+
+    <input type="submit" value="Register">
+
+    <a href="{% url 'userlogin' %}">Already Have an Account</a>
+
+</form>
+</center>
 
 {%endblock content%}

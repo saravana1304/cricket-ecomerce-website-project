@@ -1,0 +1,21 @@
+{% extends 'userapp1/main.html' %}
+
+
+{% block content %}
+<center>
+    <h1>Login here</h1>
+
+    <form method="POST" autocomplete="off">
+        {% csrf_token %}
+    
+        {{loginform.as_p}}
+    
+        <input type="submit" value="Login"> <br>
+
+        <a href="{% url 'register' %}"> Click here Register</a>
+    </form>
+</center>
+
+{% endblock %}
+
+

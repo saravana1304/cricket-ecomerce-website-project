@@ -1,36 +1,14 @@
+{% extends 'userapp1/main.html' %}
 
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome Cricket lovers</title>
-    <link rel="stylesheet" href="{% static 'userapp1/style.css'%}">
-</head>
-<body>
 
-    <header>
-        <nav>
-            <div class="logo">Crickart</div>
-            <ul class="nav-links">
-                <li><a href="#"></i>🏠Home</a></li>
-                <li><a href="#">👨‍⚖️profile</a></li>
-                <li><a href="#">👨🏿‍❤️‍💋‍👨🏽wishlist</a></li>
-                <li><a href="#">🛒Cart</a></li>
-                <li><a href="#">📞Contact Us</a></li>
-            </ul>
-        </nav>
-    </header>
+{% block content %}
 
-    {%block content%}
+<link rel="stylesheet" href="{% static 'userapp1/home.css' %}">
 
-    {%endblock content%}
+<div class="container">
+    <img src="{% static 'images/banner/h1.jpg' %}" alt="Homepage Image">
+</div>
 
-    <footer>
-        <p>&copy; 2024 Cricket Website. All rights reserved.</p>
-    </footer>
 
-</body>
-</html>
-
+{% endblock content %}
