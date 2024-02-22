@@ -12,16 +12,23 @@
     <link rel="stylesheet" href="{% static 'userapp1/style.css'%}">
 </head>
 <body>
-
+    
     <header>
         <nav>
-            <div class="logo">🥎Cric❕kart🏏</div>
+            <div class="logo">⚾Cric-kart⛹️</div>
             <ul class="nav-links">
-                <li><a href="{% url 'home' %}">🏠Home</i></a></li>
-                <li><a href="{% url 'userlogin' %}">👨‍⚖️profile</i></a></li>
-                <li><a href="{% url 'userlogin' %}"> 👨🏿‍❤️‍💋‍👨🏽wishlist</a></li>
+                {% if user.is_authenticated %}
+                    <p>🙏🏻Welcome, {{ user.username }}✔️</p>
+                    <li><a href="{% url 'logout' %}">🔓Logout</a></li>
+                {% else %}
+                    <p>👉Please log in🔓</p>
+                    <li><a href="{% url 'userlogin' %}">🔑Login</a></li>
+                {% endif %}
+                <li><a href="{% url 'home' %}">🏠Home</a></li>
+                <li><a href="{% url 'userlogin' %}">👨‍⚖️Profile</a></li>
+                <li><a href="{% url 'userlogin' %}">👨🏿‍❤️‍💋‍👨🏽Wishlist</a></li>
                 <li><a href="{% url 'userlogin' %}">🛒Cart</a></li>
-                <li><a href="{% url 'contactus' %}">📞Contact Us</a></li>
+                <li><a href="{% url 'contactus' %}">💬Contact Us</a></li>
             </ul>
         </nav>
     </header>

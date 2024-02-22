@@ -6,6 +6,11 @@ from .forms import CreateUserForm,UserLoginForm
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate,login,logout
 
+#
+
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_control
+
 
 # Create your views here.
 
@@ -27,7 +32,7 @@ def userregister(request):
     return render(request,"userapp1/register.html",context=context)
 
 
-
+@cache_control(no_cache=True,must_revalidate=True,no_store=True) 
 def userlogin(request):
     form=UserLoginForm()
     if request.method=='POST':
@@ -43,6 +48,12 @@ def userlogin(request):
     return render(request,'userapp1/login.html',context=context)
 
 
+def userlogout(request):
+    auth.logout(request)
+    return redirect('home')
+
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)  #performimg the sessions control,not ot redirect to older pages
+@login_required(login_url='userlogin')
 def contactus(request):
     return render(request,'userapp1/contact.html')
 
