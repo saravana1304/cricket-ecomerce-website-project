@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'userapp1',     # registering app name 
+    'userapp1',
+    'adminn',     # registering app name 
 
 # thiss apps for checking social authendications 
     'django.contrib.sites',

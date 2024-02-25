@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+    <title>Welcome Cricket lovers</title>
+    <link rel="icon" type="image/x-icon" href="static/images/title1.jpg">
+   
+   
+    <link rel="stylesheet" href="{% static 'userapp1/style.css'%}">
+</head>
+<body>
+    
+    <header>
+        <nav>
+            <div class="logo">⚾Cric-kart⛹️</div>
+            <ul class="nav-links">
+                {% if user.is_authenticated %}
+                    <p>🙏🏻Welcome, {{ user.username }}✔️</p>
+                    <li><a href="{% url 'logout' %}">🔓Logout</a></li>
+                {% else %}
+                    <p>👉Please log in🔓</p>
+                    <li><a href="{% url 'userlogin' %}">🔑Login</a></li>
+                {% endif %}
+                <li><a href="{% url 'home' %}">🏠Home</a></li>
+                <li><a href="{% url 'userlogin' %}">👨‍⚖️Profile</a></li>
+                <li><a href="{% url 'userlogin' %}">👨🏿‍❤️‍💋‍👨🏽Wishlist</a></li>
+                <li><a href="{% url 'userlogin' %}">🛒Cart</a></li>
+                <li><a href="{% url 'contactus' %}">💬Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+   
+    {%block content%}
+
+    {%endblock content%}
+
+    <footer>
+        <p>&copy; 2024 Cricket Website. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
