@@ -15,20 +15,24 @@
     
     <header>
         <nav>
-            <div class="logo">⚾Cric-kart⛹️</div>
+            <div class="logo">⚾Cric-kart⛹️-admin page👨🏻‍💻</div>
             <ul class="nav-links">
                 {% if user.is_authenticated %}
                     <p>🙏🏻Welcome, {{ user.username }}✔️</p>
-                    <li><a href="{% url 'logout' %}">🔓Logout</a></li>
+                    <li><a href="{% url 'alogin' %}">🔓Logout</a></li>
                 {% else %}
                     <p>👉Please log in🔓</p>
                     <li><a href="{% url 'userlogin' %}">🔑Login</a></li>
                 {% endif %}
-                <li><a href="{% url 'home' %}">🏠Home</a></li>
-                <li><a href="{% url 'userlogin' %}">👨‍⚖️Profile</a></li>
-                <li><a href="{% url 'userlogin' %}">👨🏿‍❤️‍💋‍👨🏽Wishlist</a></li>
-                <li><a href="{% url 'userlogin' %}">🛒Cart</a></li>
-                <li><a href="{% url 'contactus' %}">💬Contact Us</a></li>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">SalesReport</a></li>
+                <li><a href="#">Category</a></li>
+                <li><a href="#">UserList</a></li>
+                <li><a href="#">OrderDetails</a></li>
+                <li><a href="#">Coupon</a></li>
+                <li><a href="#">Trending</a></li>
+                <li><a href="#">Offers</a></li>
+                <li><a href="#">Banner</a></li>
             </ul>
         </nav>
     </header>
