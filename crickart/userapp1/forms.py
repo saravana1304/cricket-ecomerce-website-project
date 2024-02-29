@@ -11,12 +11,9 @@ class CreateUserForm(UserCreationForm):
         model=User
         fields=['username','email','password1','password2']
 
+
 # user athendication for we using this form 
 class UserLoginForm(AuthenticationForm):
     username=forms.CharField(widget=TextInput())
     password=forms.CharField(widget=PasswordInput())
-
-
-
-        
 
