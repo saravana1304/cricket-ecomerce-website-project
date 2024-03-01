@@ -22,7 +22,6 @@ def userindex(request):
 
 def userregister(request):
     form=CreateUserForm()
-    print(request)
     if request.method=='POST':
         form=CreateUserForm(request.POST)
         if form.is_valid():

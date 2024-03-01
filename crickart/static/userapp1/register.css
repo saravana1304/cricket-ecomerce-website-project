@@ -1,0 +1,47 @@
+/* userapp1/register.css */
+
+/* Center the form */
+form {
+    max-width: 400px;
+    margin: 50px auto; /* Adjust the margin to move the form down */
+    padding: 20px; /* Add some padding for a cleaner look */
+    box-sizing: border-box; /* Include padding in the total width */
+}
+
+/* Add more styles for labels */
+form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+/* Add styles for form fields */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Style the input fields */
+form input[type="text"],
+form input[type="email"],
+form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+}
+
+/* Style the submit button */
+form button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+/* Hover effect for the submit button */
+form button:hover {
+    background-color: #45a049;
+}

@@ -1,20 +1,23 @@
 {% extends 'userapp1/main.html' %}
 
-{%block content%}
+{% load static %}
 
-<center>
-    <h1>this is my register page</h1>
+{% block content %}
 
-<form method="POST" autocomplete="off">
+<link rel="stylesheet" href="{% static 'userapp1/register.css' %}">
+
+<form method="post" >
     {% csrf_token %}
 
-    {{registerform.as_p}}
+    {% for field in registerform %}
+        <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+        </div>
+    {% endfor %}
 
-    <input type="submit" value="Register">
-
-    <a href="{% url 'userlogin' %}">Already Have an Account</a>
-
+    <button type="submit">Register</button>
+   <p style="color: red;">Already have an account? <a href="{% url 'userlogin' %}">Click for Login</a></p></center>
 </form>
-</center>
 
-{%endblock content%}
+{% endblock content %}

@@ -1,42 +1,135 @@
-/* styles.css */
-center {
-    margin-top: 50px;
+/* userapp1/login.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
 }
 
-h1 {
-    color: #333;
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
 }
 
-form {
-    max-width: 400px;
-    margin: auto;
+.login-form {
+    background-color: #fff;
+    border: 1px solid #ddd;
     padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 10px;
+    border-radius: 3px;
+    box-sizing: border-box;
 }
 
 input[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 15px;
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: 3px;
     cursor: pointer;
+    width: 100%;
 }
 
-h3 {
-    color: red;
+input[type="submit"]:hover {
+    background-color: #45a049;
 }
 
-h2 {
-    color: #333;
+.social-login {
+    margin-top: 10px;
 }
 
-a {
+.register-link {
+    margin-top: 10px;
+    color: #428bca;
+    text-align: center;
+}
+
+.register-link a {
+    color: #428bca;
     text-decoration: none;
-    color: #0066cc;
 }
 
-a:hover {
+.register-link a:hover {
     text-decoration: underline;
 }
+
+
+/* this code for forget password */
+.forget {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.forget a {
+    color: red;
+    text-decoration: none;
+}
+
+.forget a:hover {
+    text-decoration: underline;
+}
+
+/* this code for googleloin */
+
+.social-login {
+    text-align: center;
+    margin-top: 10px;
+}
+
+
+.social-login svg {
+    width: 24px; /* Adjust the width of the SVG icon */
+    height: 24px; /* Adjust the height of the SVG icon */
+    fill: linear-gradient(to right, #4285f4, #0F9D58); /* Green to Blue gradient */
+    margin-right: 5px; /* Add spacing between the icon and the text */
+}
+
+.social-login a {
+    color: #428bca;
+    text-align: center;
+    text-decoration: none;
+}
+
+.social-login a:hover {
+    text-decoration: underline;
+}
+
+/* Account details display*/
+.register-link {
+    margin-top: 20px; /* Adjust the margin-top value as needed */
+    color: #428bca;
+    text-align: center;
+}
+
+.register-link a {
+    color: #428bca;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+
