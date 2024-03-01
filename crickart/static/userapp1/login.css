@@ -107,7 +107,7 @@ input[type="submit"]:hover {
 }
 
 .social-login a {
-    color: #428bca;
+    color: orange;
     text-align: center;
     text-decoration: none;
 }
@@ -117,19 +117,21 @@ input[type="submit"]:hover {
 }
 
 /* Account details display*/
-.register-link {
-    margin-top: 20px; /* Adjust the margin-top value as needed */
-    color: #428bca;
-    text-align: center;
+.register {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px; /* Adjust the margin-top value as needed for space below */
 }
 
-.register-link a {
-    color: #428bca;
+.register a {
     text-decoration: none;
+    color: blue; /* Set the color as needed */
 }
 
-.register-link a:hover {
+.register a:hover {
     text-decoration: underline;
 }
+
 
 
