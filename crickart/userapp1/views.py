@@ -11,6 +11,8 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
+from django.contrib import messages
+
 
 # Create your views here.
 
@@ -18,34 +20,38 @@ from django.views.decorators.cache import cache_control
 def userindex(request):
     return render(request,"userapp1/home.html")
 
-
-
 def userregister(request):
-    form=CreateUserForm()
-    if request.method=='POST':
-        form=CreateUserForm(request.POST)
+    form = CreateUserForm()
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('userlogin')
-    context={'registerform':form}
-    return render(request,"userapp1/register.html",context=context)
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+
+    context = {'registerform': form}
+    return render(request, "userapp1/register.html", context=context)
 
 
 def userlogin(request):
     if request.user.is_authenticated:
         return redirect('home')
-    form=UserLoginForm()
-    if request.method=='POST':
-        form=UserLoginForm(request,data=request.POST)
+    form = UserLoginForm()
+    if request.method == 'POST':
+        form = UserLoginForm(request, data=request.POST)
         if form.is_valid():
-            username=request.POST.get('username')
+            username = request.POST.get('username')
             password = request.POST.get('password')
-            user=authenticate(username=username,password=password)
+            user = authenticate(username=username, password=password)
             if user is not None:
-                auth.login(request,user)
+                auth.login(request, user)
                 return redirect('home')
-    context={'loginform':form}
-    return render(request,'userapp1/login.html',context=context)
+            else:
+                messages.error(request, 'Invalid username or password')
+    return render(request, 'userapp1/login.html', {'loginform': form})
 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  #performimg the sessions control,not ot redirect to older pages
@@ -57,4 +63,7 @@ def userlogout(request):
 
 def contactus(request):
     return render(request,'userapp1/contact.html')
+
+def otp(request):
+    return render(request,'userapp1/otp.html')
 

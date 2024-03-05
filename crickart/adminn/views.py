@@ -30,8 +30,12 @@ def adminlogin(request):
 
 
 # admin logout request
-cache_control(no_cache=True,must_revalidate=True,no_store=True)  #performimg the sessions control,not ot redirect to older pages
 @login_required(login_url='alogin')
 def adminlogout(request):
-    auth.logout(request)
-    return redirect('alogin')
+    # Check if the user is an admin before logging out
+    if request.user.is_superuser:
+        auth.logout(request)
+        return redirect('alogin')  # Redirect admin to admin login page
+    else:
+        # If the user is not an admin, redirect them to the user home page
+        return redirect('ahome')

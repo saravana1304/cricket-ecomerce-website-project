@@ -17,7 +17,7 @@
             {% if user.is_authenticated and user.is_superuser %}
                 <div class="user-welcome">🙏🏻Welcome, {{ user.username }}✔️</div>
                 <ul class="nav-links">
-                    <li><a href="{% url 'alogin' %}">🔓Logout</a></li>
+                    <li><a href="{% url 'alogout' %}">🔓Logout</a></li>
                 </ul>
             {% else %}
                 <ul class="nav-links">
@@ -30,17 +30,19 @@
     <div class="content-wrapper">
         {% block content %}
 
-        <ul class="dashboard-links">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">SalesReport</a></li>
-            <li><a href="#">Category</a></li>
-            <li><a href="#">UserList</a></li>
-            <li><a href="#">OrderDetails</a></li>
-            <li><a href="#">Coupon</a></li>
-            <li><a href="#">Trending</a></li>
-            <li><a href="#">Offers</a></li>
-            <li><a href="#">Banner</a></li>
-        </ul>
+        {% if user.is_authenticated and user.is_superuser %}
+            <ul class="dashboard-links">
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">SalesReport</a></li>
+                <li><a href="#">Category</a></li>
+                <li><a href="#">UserList</a></li>
+                <li><a href="#">OrderDetails</a></li>
+                <li><a href="#">Coupon</a></li>
+                <li><a href="#">Trending</a></li>
+                <li><a href="#">Offers</a></li>
+                <li><a href="#">Banner</a></li>
+            </ul>
+        {% endif %}
 
         {% endblock content %}
     </div>

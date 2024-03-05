@@ -3,21 +3,27 @@
 {% load static %}
 
 {% block content %}
+    <link rel="stylesheet" href="{% static 'userapp1/register.css' %}">
+    <form method="post">
+        {% csrf_token %}
 
-<link rel="stylesheet" href="{% static 'userapp1/register.css' %}">
+        {% for field in registerform %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.name == 'email' %}
+                    {% for error in field.errors %}
+                        {% if "Invalid email format. \"@\" is required." not in error %}
+                            <span class="text-danger">{{ error }}</span>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <span class="text-danger">{{ field.errors }}</span>
+                {% endif %}
+            </div>
+        {% endfor %}
 
-<form method="post" >
-    {% csrf_token %}
-
-    {% for field in registerform %}
-        <div class="form-group">
-            {{ field.label_tag }}
-            {{ field }}
-        </div>
-    {% endfor %}
-
-    <button type="submit">Register</button>
-   <p style="color: red;">Already have an account? <a href="{% url 'userlogin' %}">Click for Login</a></p></center>
-</form>
-
+        <button type="submit">Register</button>
+        <p style="color: red;">Already have an account? <a href="{% url 'userlogin' %}">Click for Login</a></p>
+    </form>
 {% endblock content %}
