@@ -5,14 +5,14 @@
     <link rel="stylesheet" href="{% static 'userapp1/otp.css' %}">
     <form action="" method='POST' class="custom-form">
         {% csrf_token %}
-        <h3><strong>Verify Email</strong></h3>
+        <h3><strong>Resend OTP</strong></h3>
         <div class="mb-3">
-            <label class="form-label">OTP</label>
+            <label class="form-label">Email Address</label>
             <input class="form-control" name="otp_code" placeholder="Enter OTP">
         </div>
 
-        <button class="btn btn-primary" style="width:100%">Activate Account</button>
-        <p>Need a new OTP? <a href="{% url 'resendotp' %}">Resend OTP</a></p>
+        <button class="btn btn-primary" style="width:100%">SEND</button>
+        <p>I have a OTP? <a href="{% url 'otp' %}">Validate OTP</a></p>
     </form>
 {% endblock content %}
 

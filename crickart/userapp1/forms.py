@@ -26,7 +26,7 @@ class CreateUserForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2']
 
     # Form validation for username
-    def clean_username(self):
+    def clean_username(self):   
         cleaned_data = super().clean()
         username = cleaned_data.get('username')
 
@@ -44,11 +44,12 @@ class CreateUserForm(UserCreationForm):
         # Check for numbers in the username
         if any(char.isdigit() for char in username):
             raise forms.ValidationError('Numbers are not allowed in the username')
-
         return username
     
+    
+    
         
-        # Form validation for email
+    # Form validation for email
     def clean_email(self):
         email = self.cleaned_data.get('email')
 
@@ -59,7 +60,16 @@ class CreateUserForm(UserCreationForm):
         # Check if '@' is present in the email
         if '@' not in email:
             raise forms.ValidationError('Invalid email format. "@" is required.')
+        
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
 
+        if not email:
+            raise forms.ValidationError('Email is required')
+
+        # Check if the email already exists in the database
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError('This email is already registered')
         return email
     
     # Custom password validator

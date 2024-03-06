@@ -77,6 +77,8 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
+
+
 ROOT_URLCONF = 'crickart.urls'
 
 TEMPLATES = [
@@ -171,3 +173,5 @@ AUTHENTICATION_BACKENDS = (
 
 LOGIN_REDIRECT_URL ='/'
 LOGOUT_REDIRECT_URL ='/'
+
+

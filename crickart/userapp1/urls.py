@@ -10,5 +10,7 @@ urlpatterns = [
     path('contactus/',views.contactus,name='contactus'),
     path('logout/',views.userlogout,name='logout'),
     path('otp/',views.otp,name='otp'),
+    path('resendotp/',views.resendotp,name='resendotp'),
 
+   
 ]

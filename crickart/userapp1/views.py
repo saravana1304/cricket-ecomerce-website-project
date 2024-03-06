@@ -26,7 +26,7 @@ def userregister(request):
         form = CreateUserForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('userlogin')
+            return redirect('otp')
         else:
             for field, errors in form.errors.items():
                 for error in errors:
@@ -61,9 +61,16 @@ def userlogout(request):
     return redirect('home')
 
 
+def otp(request):
+    return render(request,'userapp1/otp.html')
+
+
+def resendotp(request):
+    return render(request,'userapp1/resendotp.html')
+
+
+
 def contactus(request):
     return render(request,'userapp1/contact.html')
 
-def otp(request):
-    return render(request,'userapp1/otp.html')
 
