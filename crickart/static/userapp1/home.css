@@ -1,0 +1,33 @@
+/* Center and set a fixed size and aspect ratio for the images */
+.carousel-inner img {
+    display: block;
+    margin: 0 auto; /* Center the image */
+    max-width: 100%; /* Ensure images don't exceed their container */
+    height: 100%; /* Set height to 100% to maintain aspect ratio */
+    object-fit: cover; /* Cover the container while maintaining aspect ratio */
+  }
+  
+  /* Ensure the carousel container has a fixed aspect ratio and is centered */
+  #carouselExampleDark {
+    max-width: 800px; /* Set a maximum width for the carousel */
+    margin: 50px auto; /* Center the carousel on the page and adjust the top margin as needed */
+    overflow: hidden; /* Hide any overflow beyond the specified aspect ratio */
+    aspect-ratio: 16 / 9; /* Set the desired aspect ratio (adjust as needed) */
+  }
+
+  .one {
+    max-height: 50px; /* Set a maximum height for the image */
+    width: auto; /* Maintain the aspect ratio */
+    display: block; /* Ensure proper spacing around the image */
+    margin-top: 20px; /* Adjust the margin-top to your desired spacing */
+    margin-bottom: 250px; /* Add margin at the bottom to create space */
+  }
+  
+  .navbar {
+    position: fixed; /* Fixed position to keep it in place */
+    top: 0; /* Stick it to the top of the viewport */
+    width: 100%; /* Full width */
+    background-color: #333; /* Adjust the background color as needed */
+    padding: 10px; /* Adjust padding as needed */
+    z-index: 1000; /* Set a high z-index to ensure it's on top of other elements */
+  }

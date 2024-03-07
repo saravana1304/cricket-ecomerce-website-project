@@ -8,6 +8,10 @@ header {
     background-color: #333;
     color: #fff;
     padding: 10px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* Set a high z-index to ensure it's on top of other elements */
 }
 
 nav {
@@ -24,6 +28,9 @@ nav {
 .nav-links {
     list-style: none;
     display: flex;
+    align-items: center; /* Center-align vertically within flex container */
+    justify-content: flex-start; /* Align items to the start (left) of the container */
+    gap: 20px; /* Adjust the space between items */
 }
 
 .nav-links li {
@@ -35,9 +42,9 @@ nav {
     color: #fff;
 }
 
-
 .main-content {
-    padding: 20px;
+    padding-top: 80px; /* Adjust the padding based on the height of your fixed header */
+    /* Other styles for the main content */
 }
 
 footer {
@@ -45,25 +52,4 @@ footer {
     color: #fff;
     text-align: center;
     padding: 10px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
 }
-
-
-/* user authendicated*/
-
-.nav-links {
-    display: flex;
-    align-items: center; /* Center-align vertically within flex container */
-    justify-content: flex-start; /* Align items to the start (left) of the container */
-    gap: 20px; /* Adjust the space between items */
-}
-
-.nav-links p {
-    font-weight: bold; /* Make the text bold */
-    color: red; /* Set the text color to red */
-    font-size: 18px; /* Increase the font size */
-}
-
-
