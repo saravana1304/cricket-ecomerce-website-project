@@ -3,7 +3,7 @@
 /* Center the form */
 form {
     max-width: 400px;
-    margin: 50px auto; /* Adjust the margin to move the form down */
+    margin: 100px auto; /* Adjust the margin to move the form down */
     padding: 20px; /* Add some padding for a cleaner look */
     box-sizing: border-box; /* Include padding in the total width */
 }

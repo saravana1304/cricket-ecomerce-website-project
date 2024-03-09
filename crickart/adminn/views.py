@@ -39,3 +39,6 @@ def adminlogout(request):
     else:
         # If the user is not an admin, redirect them to the user home page
         return redirect('ahome')
+    
+def userlist(request):
+    return render(request,'adminn/userlist.html')

@@ -1,3 +1,4 @@
+/* Add your general styling here */
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
@@ -11,7 +12,7 @@ header {
     position: fixed;
     top: 0;
     width: 100%;
-    z-index: 1000; /* Set a high z-index to ensure it's on top of other elements */
+    z-index: 1000;
 }
 
 nav {
@@ -28,9 +29,9 @@ nav {
 .nav-links {
     list-style: none;
     display: flex;
-    align-items: center; /* Center-align vertically within flex container */
-    justify-content: flex-start; /* Align items to the start (left) of the container */
-    gap: 20px; /* Adjust the space between items */
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
 }
 
 .nav-links li {
@@ -42,9 +43,15 @@ nav {
     color: #fff;
 }
 
+/* Adjusted padding-top for space between navbar and content */
 .main-content {
-    padding-top: 80px; /* Adjust the padding based on the height of your fixed header */
-    /* Other styles for the main content */
+    padding-top: 50px; /* Adjust this value as needed */
+}
+
+/* Adjusted margin-top for space between navbar and content on other pages */
+.content {
+    flex: 1;
+    margin-top: 20px;
 }
 
 footer {
@@ -52,4 +59,8 @@ footer {
     color: #fff;
     text-align: center;
     padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
+
