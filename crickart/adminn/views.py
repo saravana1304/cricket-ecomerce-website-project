@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
-from django.contrib.auth.models import auth
+from django.contrib.auth.models import auth,User
 
 # for performing sessions
 from django.views.decorators.cache import cache_control
@@ -41,4 +41,6 @@ def adminlogout(request):
         return redirect('ahome')
     
 def userlist(request):
-    return render(request,'adminn/userlist.html')
+    users = User.objects.all().order_by('-id')
+    context = {'users': users}
+    return render(request, 'adminn/userlist.html', context) 
