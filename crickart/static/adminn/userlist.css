@@ -1,13 +1,13 @@
 /* userlist.css */
 body {
-    background-color: #f5f5f5;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4;
 }
 
 .container {
-    max-width: 900px;
+    max-width: 800px;
     margin: 50px auto;
     padding: 20px;
     background-color: #ffffff;
@@ -26,50 +26,22 @@ h1 {
 }
 
 .user-table th, .user-table td {
-    padding: 15px;
+    padding: 10px;
     border: 1px solid #ddd;
     text-align: left;
 }
 
-.user-table th {
-    background-color: #4CAF50;
-    color: white;
+/* Style for active user */
+.user-table .active {
+    background-color: #C8E6C9; /* Green */
 }
 
-.user-table select {
-    width: 80px;
-    padding: 8px;
+/* Style for blocked user */
+.user-table .block {
+    background-color: #FFCDD2; /* Red */
 }
 
-/* Add some margin between rows */
-.user-table tr {
-    margin-bottom: 10px;
+/* Style for unblocked user */
+.user-table .unblock {
+    background-color: #FFEBEE; /* Light Red */
 }
-
-/* Highlight alternate rows for better readability */
-.user-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-/* Responsive design for small screens */
-@media (max-width: 768px) {
-    .user-table th, .user-table td {
-        padding: 10px;
-    }
-
-    .user-table select {
-        width: 60px;
-        padding: 5px;
-    }
-}
-.new {
-    background-color: red;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    float: right; /* Align the button to the right */
-    margin-bottom: 30px; /* Adjust the top margin for spacing */
-}
-

@@ -6,5 +6,6 @@ urlpatterns = [
     path('ahome/',views.ahome,name='ahome'),
     path('alogout/',views.adminlogout,name='alogout'),
 
-     path('userlist/',views.userlist,name='userlist'),
+    path('userlist/',views.userlist,name='userlist'),
+    path('toggle_user_status/<int:user_id>/', views.toggle_user_status, name='toggle_user_status'),
 ]

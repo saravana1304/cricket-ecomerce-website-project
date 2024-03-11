@@ -1,6 +1,4 @@
-{% load static %}
-
-
+{% load static%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,43 +11,28 @@
 
 <div class="container">
     <h1>User List</h1>
-    <a href="{% url 'ahome' %}"><button class="new">Admin Dashboard</button></a>
 
     <table class="user-table">
         <thead>
             <tr>
-                <th>ID</th>
                 <th>Username</th>
                 <th>Email</th>
-                <th>Date Joined</th>
-                <th>Last Login</th>
                 <th>Status</th>
-                <!-- Add more columns for additional information -->
             </tr>
         </thead>
         <tbody>
             {% for user in users %}
-                <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.username }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.date_joined|date:"Y-m-d H:i:s" }}</td>
-                    <td>{{ user.last_login|default:"N/A" }}</td>
-                    <td>
-                        <!-- Dropdown for status -->
-                        <select>
-                            <option value="active">Active</option>
-                            <option value="block">Block</option>
-                            <option value="unblock">Unblock</option>
-                        </select>
-                    </td>
-                    <!-- Add more cells for additional information -->
-                </tr>
+            <tr class="{{ user.status }}">
+                <td>{{ user.user.username }}</td>
+                <td>{{ user.user.email }}</td>
+                <td>{{ user.status }}</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
+
 </div>
 
+<script src="{% static 'adminn/userlist.js' %}"></script>
 </body>
 </html>
-

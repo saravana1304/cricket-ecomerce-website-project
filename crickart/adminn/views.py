@@ -3,9 +3,13 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.contrib.auth.models import auth,User
 
+
 # for performing sessions
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
+
+from django.http import JsonResponse
+from .models import UserProfile
 
 # Create your views here.
 
@@ -41,6 +45,15 @@ def adminlogout(request):
         return redirect('ahome')
     
 def userlist(request):
-    users = User.objects.all().order_by('-id')
+    users = UserProfile.objects.all().order_by('-id')
     context = {'users': users}
-    return render(request, 'adminn/userlist.html', context) 
+    return render(request, 'adminn/userlist.html', context)
+
+def toggle_user_status(request, user_id, new_status):
+    try:
+        user_profile = UserProfile.objects.get(user_id=user_id)
+        user_profile.status = new_status
+        user_profile.save()
+        return JsonResponse({'success': True})
+    except UserProfile.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'User profile not found.'})
