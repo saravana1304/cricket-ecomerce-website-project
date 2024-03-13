@@ -11,20 +11,25 @@
 
 <div class="container">
     <h1>User List</h1>
-
     <table class="user-table">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Username</th>
                 <th>Email</th>
+                <th>Account Created</th>
+                <th>Last Login</th>
                 <th>Status</th>
             </tr>
         </thead>
         <tbody>
             {% for user in users %}
             <tr class="{{ user.status }}">
+                <td>{{ user.id }}</td>
                 <td>{{ user.user.username }}</td>
                 <td>{{ user.user.email }}</td>
+                <td>{{ user.user.date_joined }}</td>
+                <td>{{ user.user.last_login }}</td>
                 <td>{{ user.status }}</td>
             </tr>
             {% endfor %}

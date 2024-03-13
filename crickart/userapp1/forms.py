@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 
 import re
 from django.contrib import messages
+from .models import UserProfile
+from django.core.validators import RegexValidator
 
 from django import forms
 from django.forms.widgets import PasswordInput,TextInput
@@ -16,6 +18,8 @@ class CreateUserForm(UserCreationForm):
         self.fields['email'].widget.attrs['placeholder'] = 'Enter your email'
         self.fields['password1'].widget.attrs['placeholder'] = 'Enter your password'
         self.fields['password2'].widget.attrs['placeholder'] = 'Confirm your password'
+        self.fields['phone_number'].widget.attrs['placeholder'] = 'Enter your phone number'
+        self.fields['place'].widget.attrs['placeholder'] = 'Enter your place'
 
         # Hide last_login field
         if 'last_login' in self.fields:
@@ -23,7 +27,10 @@ class CreateUserForm(UserCreationForm):
     
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username', 'email', 'password1', 'password2','phone_number', 'place']
+
+    phone_number = forms.CharField(max_length=10, validators=[RegexValidator(r'^\d{10}$', 'Phone number must be 10 digits')])
+    place = forms.CharField(max_length=255)
 
     # Form validation for username
     def clean_username(self):   
@@ -95,6 +102,31 @@ class CreateUserForm(UserCreationForm):
 
         self.validate_password(password2)
         return password2
+    
+    def clean(self):
+        cleaned_data = super(CreateUserForm, self).clean()
+        phone_number = cleaned_data.get('phone_number')
+
+        # Check if the phone number is unique
+        if UserProfile.objects.filter(phone_number=phone_number).exists():
+            self.add_error('phone_number', 'This phone number is already associated with another user')
+
+        return cleaned_data
+    
+    def save(self, commit=True):
+        user = super(CreateUserForm, self).save(commit=False)
+        user.save()
+
+        # Create UserProfile with additional fields
+        UserProfile.objects.create(
+            user=user,
+            phone_number=self.cleaned_data['phone_number'],
+            place=self.cleaned_data['place'],
+        )
+
+        return user
+
+
 
 
 

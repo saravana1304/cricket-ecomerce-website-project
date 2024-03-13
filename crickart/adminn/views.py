@@ -9,7 +9,6 @@ from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 
 from django.http import JsonResponse
-from .models import UserProfile
 
 # Create your views here.
 
@@ -43,11 +42,12 @@ def adminlogout(request):
     else:
         # If the user is not an admin, redirect them to the user home page
         return redirect('ahome')
-    
+
 def userlist(request):
     users = UserProfile.objects.all().order_by('-id')
     context = {'users': users}
     return render(request, 'adminn/userlist.html', context)
+
 
 def toggle_user_status(request, user_id, new_status):
     try:

@@ -3,7 +3,7 @@ from .forms import CreateUserForm,UserLoginForm
 
 # authendication models and functions 
 
-from django.contrib.auth.models import auth
+from django.contrib.auth.models import auth,User
 from django.contrib.auth import authenticate,login,logout
 
 # for managing sessons and user management
@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
 from django.contrib import messages
+from .models import UserProfile
 
 
 # Create your views here.
@@ -22,18 +23,32 @@ def userindex(request):
 
 def userregister(request):
     form = CreateUserForm()
+
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
+
         if form.is_valid():
-            form.save()
+            user = form.save()
+
+            # Check if a UserProfile already exists for the user
+            user_profile, created = UserProfile.objects.get_or_create(user=user)
+
+            # Update additional fields in the existing UserProfile
+            user_profile.phone_number = form.cleaned_data['phone_number']
+            user_profile.place = form.cleaned_data['place']
+            user_profile.save()
+
             return redirect('otp')
         else:
+            # Add form errors to the messages framework
             for field, errors in form.errors.items():
                 for error in errors:
                     messages.error(request, f"{field}: {error}")
 
     context = {'registerform': form}
     return render(request, "userapp1/register.html", context=context)
+
+
 
 
 def userlogin(request):

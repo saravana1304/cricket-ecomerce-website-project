@@ -2,11 +2,13 @@
 
 .custom-form {
     width: 400px;
-    margin: 50px auto;
+    margin: 200px auto;
     padding: 20px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: 10px;
     text-align: center;
+   
+  
 }
 
 .custom-form p {
