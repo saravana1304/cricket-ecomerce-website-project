@@ -9,8 +9,12 @@ urlpatterns = [
     path('userlogin/',views.userlogin,name='userlogin'),
     path('contactus/',views.contactus,name='contactus'),
     path('logout/',views.userlogout,name='logout'),
+   
+   
+    path("verify-email/<slug:username>", views.verify_email, name="verify-email"),
+    path("resend-otp", views.resend_otp, name="resend-otp"),
     path('otp/',views.otp,name='otp'),
-    path('resendotp/',views.resendotp,name='resendotp'),
+    
 
    
 ]

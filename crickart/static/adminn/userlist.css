@@ -1,47 +1,75 @@
 /* userlist.css */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
 
 .container {
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #ffffff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
 }
 
-h1 {
+.container h1 {
+    color: blue;
     text-align: center;
-    color: #333;
 }
+
 
 .user-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
 }
 
-.user-table th, .user-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
+.user-table th,
+.user-table td {
+    border: 1px solid #dddddd;
+    padding: 8px;
     text-align: left;
 }
 
-/* Style for active user */
+.user-table th {
+    text-align: center; /* Center align heading */
+    background-color: #f2f2f2;
+    color: red; /* Change heading color to red */
+}
+
+.user-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.user-table tr:hover {
+    background-color: #e9e9e9;
+}
+
+.user-table select {
+    padding: 5px;
+}
+
+.user-table button {
+    padding: 5px 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.user-table button:hover {
+    background-color: #45a049;
+}
+
 .user-table .active {
-    background-color: #C8E6C9; /* Green */
+    background-color: #c8e6c9;
 }
 
-/* Style for blocked user */
-.user-table .block {
-    background-color: #FFCDD2; /* Red */
+.user-table .blocked {
+    background-color: #ffcdd2;
 }
 
-/* Style for unblocked user */
-.user-table .unblock {
-    background-color: #FFEBEE; /* Light Red */
+.container a {
+    display: block; /* Make the link a block element to center it */
+    text-align: center; /* Center the link text */
 }
+
+.container a h4 {
+    font-size: 20px; /* Increase the font size */
+    margin: 10px auto; /* Add some margin to center the link vertically */
+}
+
+
+
+

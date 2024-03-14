@@ -8,9 +8,8 @@
     <link rel="stylesheet" href="{% static 'adminn/userlist.css' %}">
 </head>
 <body>
-
 <div class="container">
-    <h1>User List</h1>
+    <h1>User List</h1>  
     <table class="user-table">
         <thead>
             <tr>
@@ -20,24 +19,41 @@
                 <th>Account Created</th>
                 <th>Last Login</th>
                 <th>Status</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             {% for user in users %}
-            <tr class="{{ user.status }}">
+            <tr>
                 <td>{{ user.id }}</td>
-                <td>{{ user.user.username }}</td>
-                <td>{{ user.user.email }}</td>
-                <td>{{ user.user.date_joined }}</td>
-                <td>{{ user.user.last_login }}</td>
-                <td>{{ user.status }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.date_joined }}</td>
+                <td>{{ user.last_login }}</td>
+                <td>
+                    {% if user.is_active %}
+                    <span style="color: green;">Active</span>
+                    {% else %}
+                    <span style="color: red;">Blocked</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'update_status' user.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_id" value="{{ user.id }}">
+                        <select name="status">
+                            <option value="blocked">Block</option>
+                            <option value="active">Unblock</option>
+                        </select>
+                        <button type="submit">Update Status</button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
+<a href="{% url 'ahome' %}"><h4>Back to Admin Panel</h4></a>
 </div>
 
-<script src="{% static 'adminn/userlist.js' %}"></script>
 </body>
 </html>
