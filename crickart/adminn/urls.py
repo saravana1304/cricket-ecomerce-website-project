@@ -9,5 +9,6 @@ urlpatterns = [
     path('update-status/<int:user_id>/', views.update_status, name='update_status'),
 
     path('categories/', views.category_list, name='categories'),
-    path('categories/add/', views.add_category, name='add_category'),  
+    path('categories/add/', views.add_category, name='add_category'), 
+    path('categories/edit/<int:category_id>/', views.update_category, name='edit_category'),
 ]

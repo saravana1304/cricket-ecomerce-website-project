@@ -96,3 +96,33 @@ def add_category(request):
     
     return render(request, 'adminn/addcategory.html')
 
+
+
+def update_category(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    
+    if request.method == 'GET':
+        # Render the edit form with the existing category data
+        return render(request, 'adminn/edit_category.html', {'category': category})
+    elif request.method == 'POST':
+        # Handle form submission for updating the category
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        is_listed = request.POST.get('is_listed')
+        image = request.FILES.get('image')
+        
+        # Update the category fields
+        category.name = name
+        category.description = description
+        category.is_listed = is_listed
+        
+        if image:
+            category.image = image
+        
+        # Save the updated category
+        category.save()
+        
+        # Redirect or render success message
+        return render(request, 'adminn/editcategory.html', {'category': category})
+
+
