@@ -1,14 +1,12 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login,logout
-from django.contrib import messages
-from django.contrib.auth.models import auth,User
 from django.contrib.auth.models import User as DjangoUser
 from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from userapp1.models import UserProfile
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User as DjangoUser
+from .models import Category
+from .views import *
 
 
 # Create your views here.
@@ -63,6 +61,38 @@ def update_status(request, user_id):
         elif new_status == 'active':
             user.is_active = True
         user.save()
-        return redirect('userlist')  # Redirect to the user list page
-    
+        return redirect('userlist')  # Redirect to the user list page 
     return render(request, 'adminn/userlist.html', {'users': DjangoUser.objects.all()})
+
+
+def category_list(request):
+        print('inga vandhichu')
+        categories = Category.objects.all()
+        return render(request, 'adminn/category.html', {'categories': categories})
+
+
+def add_category(request):
+    if request.method=='POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        is_listed = request.POST.get('is_listed')
+        image = request.FILES.get('image')
+
+        if Category.objects.filter(name=name).exists(): 
+            error_message= "Category with this name already exists."
+            return render(request,'adminn/addcategory.html',{'error_message': error_message})
+        
+        if Category.objects.filter(description=description).exists():
+            error_message= "description is already exists."
+            return render(request,'adminn/addcategory.html',{'error_message': error_message})
+        
+        if not image:
+            error_message= "please upload an image."
+            return render(request,'adminn/addcategory.html',{'error_message': error_message})
+
+        category = Category(name=name, description=description, is_listed=is_listed, image=image)
+        category.save()
+        return redirect('categories')
+    
+    return render(request, 'adminn/addcategory.html')
+
