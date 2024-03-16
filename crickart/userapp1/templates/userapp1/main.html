@@ -16,9 +16,9 @@
             <ul class="nav-links">
                 {% if user.is_authenticated %}
                     {% if user.is_superuser %}
-                        <p>🙏🏻Welcome, Admin✔️</p>
-                        <li><a href="{% url 'alogout' %}">🔓Admin Logout</a></li>
-                        <li><a href="{% url 'ahome' %}">👨‍💼Admin Panel</a></li>
+                    <li><a href="{% url 'home' %}">🏠Home</a></li> 
+                    <li><a href="{% url 'userlogin' %}">🔑Login</a></li>
+                    <li><a href="{% url 'contactus' %}">💬Contact Us</a></li>
                     {% else %}
                         <p>🙏🏻Welcome, {{ user.username }}✔️</p>
                         <li><a href="{% url 'logout' %}">🔓Logout</a></li>
@@ -29,7 +29,9 @@
                     {% endif %}
                 {% else %}
                     <li><a href="{% url 'home' %}">🏠Home</a></li>
-                    <li><a href="{% url 'userlogin' %}">🔑Login</a></li>
+                    {% if not user.is_superuser %}
+                        <li><a href="{% url 'userlogin' %}">🔑Login</a></li>
+                    {% endif %}
                     <li><a href="{% url 'contactus' %}">💬Contact Us</a></li>
                 {% endif %}
             </ul>
