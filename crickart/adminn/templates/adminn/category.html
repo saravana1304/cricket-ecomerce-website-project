@@ -2,12 +2,14 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Category List</title>
     <link rel="stylesheet" href="{% static 'adminn/category.css' %}">
 </head>
+
 <body>
     <h1>Category List</h1>
     <div class="button-row">
@@ -36,12 +38,24 @@
                     No Image
                     {% endif %}
                 </td>
-                <td><button class="edit-btn">Edit</button></td>
-                <td><button class="delete-btn">Delete</button></td>  
+                <td><a href="{% url 'editcategory' category_id=category.id %}">
+                    <button class="edit-btn">Edit</button>
+                    </a>
+                </td>
+                <td>
+                    {% if category.is_listed %}
+                    <a href="{% url 'unlistcategory' category_id=category.id %}"><button class="delete-btn">Unlist</button></a>
+                    {% else %}
+                    <a href="{% url 'unlistcategory' category_id=category.id %}"><button style="background-color: green;"  class="delete-btn">List</button></a>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'ahome' %}"><p style="text-align: center;" >Back to Adminpanel</p></a>
+    <a href="{% url 'ahome' %}">
+        <p style="text-align: center;">Back to Adminpanel</p>
+    </a>
 </body>
+
 </html>

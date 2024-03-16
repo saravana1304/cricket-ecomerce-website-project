@@ -14,16 +14,16 @@
         {% csrf_token %}
         <div class="form-group">
             <label for="name">Category Name:</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" value="{{ category.name }}" required>
         </div>
         <div class="form-group">
             <label for="description">Description:</label>
-            <textarea id="description" name="description" rows="4"></textarea>
+            <textarea id="description" name="description" rows="4">{{ category.description }}</textarea>
         </div>
         <div class="form-group">
             <label for="current_image">Current Image:</label>
             {% if category.image %}
-                <img src="{{ category.image.url }}" alt="Current Image">
+                <img src="{{ category.image.url }}" alt="Current Image" style="height: 100px;width: auto;">
             {% else %}
                 <p>No image available</p>
             {% endif %}
@@ -35,8 +35,8 @@
         <div class="form-group">
             <label for="is_listed">Is Listed:</label>
             <select id="is_listed" name="is_listed">
-                <option value="1">Yes</option>
-                <option value="0">No</option>
+                <option value="1" {% if category.is_listed %} selected {% endif %}>Yes</option>
+                <option value="0" {% if not category.is_listed %} selected {% endif %}>No</option>
             </select>
         </div>
         <button type="submit" class="button">Update Category</button>

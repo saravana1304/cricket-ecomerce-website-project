@@ -39,7 +39,7 @@ def adminlogout(request):
         logout(request)
         return redirect('alogin')  # Redirect admin to admin login page:
  
-
+# user list page
 def user_list(request):
     users = DjangoUser.objects.filter(is_superuser=False).order_by('-id')
     if request.method == 'POST':
@@ -51,7 +51,7 @@ def user_list(request):
         return redirect('userlist')  # Redirect to the user list page
     return render(request, 'adminn/userlist.html', {'users': users})
 
-
+# user list update block and unblock
 def update_status(request, user_id):
     user = get_object_or_404(DjangoUser, id=user_id)
     if request.method == 'POST':
@@ -64,13 +64,12 @@ def update_status(request, user_id):
         return redirect('userlist')  # Redirect to the user list page 
     return render(request, 'adminn/userlist.html', {'users': DjangoUser.objects.all()})
 
-
+# category list page
 def category_list(request):
-        print('inga vandhichu')
         categories = Category.objects.all()
         return render(request, 'adminn/category.html', {'categories': categories})
 
-
+#  addcategory page
 def add_category(request):
     if request.method=='POST':
         name = request.POST.get('name')
@@ -97,32 +96,35 @@ def add_category(request):
     return render(request, 'adminn/addcategory.html')
 
 
-
+# update category page
 def update_category(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
-    
+    if request.method=='POST':
+            name=request.POST.get('name')
+            description = request.POST.get('description')
+            is_listed = request.POST.get('is_listed')
+
+            new_image = request.FILES.get('new_image') 
+            if new_image:
+                category.image=new_image
+            
+            category.name=name
+            category.description=description
+            category.is_listed=is_listed
+            category.save()
+            return redirect('categories')
+    return render(request,'adminn/editcategory.html',{'category': category})
+
+
+def unlist_category(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
     if request.method == 'GET':
-        # Render the edit form with the existing category data
-        return render(request, 'adminn/edit_category.html', {'category': category})
-    elif request.method == 'POST':
-        # Handle form submission for updating the category
-        name = request.POST.get('name')
-        description = request.POST.get('description')
-        is_listed = request.POST.get('is_listed')
-        image = request.FILES.get('image')
-        
-        # Update the category fields
-        category.name = name
-        category.description = description
-        category.is_listed = is_listed
-        
-        if image:
-            category.image = image
-        
-        # Save the updated category
+        if category.is_listed:
+            print("2")
+            category.is_listed=False
+        else:
+            category.is_listed=True
         category.save()
-        
-        # Redirect or render success message
-        return render(request, 'adminn/editcategory.html', {'category': category})
 
-
+        return redirect('categories')
+    return redirect('categories')

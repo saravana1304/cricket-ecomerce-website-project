@@ -12,8 +12,5 @@ urlpatterns = [
    
 
     path('otp/',views.otp,name='otp'),
-     path('resendotp/',views.resendotp,name='resendotp'),
-    
-
-   
+    path('resendotp/',views.resendotp,name='resendotp'),  
 ]

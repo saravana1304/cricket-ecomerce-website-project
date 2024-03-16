@@ -52,12 +52,24 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
     </button>
   </div>
 
-  <div class="image">
-    <img class="one" src="{% static 'images/banner/h1.jpg'%}" alt="">
+  <!-- adding category from admin side -->
+  <h1 class="cate">Categories</h1>
+  <div class="categories">
+      {% for category in categories %}
+      <div class="category">
+          <h2>{{ category.name }}</h2>
+          <p>{{ category.description }}</p>
+          {% if category.image %}
+              {% if category.image.url %}
+                  <img class="my_image" src="{{ category.image.url }}" alt="{{ category.name }}">
+              {% else %}
+                  <img class="my_image" src="{{ category.image }}" alt="{{ category.name }}">
+              {% endif %}
+          {% endif %}
+      </div>
+      {% endfor %}
   </div>
-
-
-
+  
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       var myCarousel = new bootstrap.Carousel(document.getElementById('carouselExampleDark'), {

@@ -6,20 +6,21 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from django.contrib import messages
 from .models import UserProfile
+from adminn.models import Category
 
 
 # Create your views here.
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True) #performimg the sessions control,not ot redirect to older pages
 def userindex(request):
-    return render(request,"userapp1/home.html")
+    categories=Category.objects.all().exclude(is_listed=False)
+    context={'categories': categories}
+    return render(request,"userapp1/home.html",context)
 
 def userregister(request):
     form = CreateUserForm()
-
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
-
         if form.is_valid():
             user = form.save()
 
@@ -31,7 +32,7 @@ def userregister(request):
             user_profile.place = form.cleaned_data['place']
             user_profile.save()
 
-            return redirect('otp')
+            return redirect('userlogin')
         else:
             # Add form errors to the messages framework
             for field, errors in form.errors.items():
@@ -81,5 +82,3 @@ def resendotp(request):
 
 def contactus(request):
     return render(request,'userapp1/contact.html')
-
-

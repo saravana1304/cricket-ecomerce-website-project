@@ -1,13 +1,9 @@
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from django.contrib.auth.models import User
-
 import re
-from django.contrib import messages
 from .models import UserProfile
 from django.core.validators import RegexValidator
-
 from django import forms
-from django.forms.widgets import PasswordInput,TextInput
 
 # creating user we use this form 
 class CreateUserForm(UserCreationForm):
@@ -52,8 +48,6 @@ class CreateUserForm(UserCreationForm):
         if any(char.isdigit() for char in username):
             raise forms.ValidationError('Numbers are not allowed in the username')
         return username
-    
-    
     
         
     # Form validation for email
@@ -125,10 +119,6 @@ class CreateUserForm(UserCreationForm):
         )
 
         return user
-
-
-
-
 
 # user athendication for we using this form 
 class UserLoginForm(AuthenticationForm):

@@ -2,13 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 
-
-from django.contrib.auth.models import AbstractUser
-from django.contrib.auth import get_user_model
-from django.conf import settings
-import secrets
-
-
 # Create your models here.
 
 class UserProfile(models.Model):

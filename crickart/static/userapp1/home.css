@@ -62,3 +62,66 @@
 }
 
 
+/*adding style for category */
+
+.category {
+  width: 18%; /* Adjust as needed to accommodate four categories per row */
+  display: inline-block;
+  margin: 10px;
+  vertical-align: top;
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  position: relative;
+  height: 200px;
+  margin-left: 80px;
+  margin-bottom: 500px; /* Add position relative for absolute positioning of overlay */
+}
+
+.category img {
+  width: 100%; /* Ensure the image fills the div */
+  height: auto;
+  max-width: 100%; /* Ensure images don't exceed container width */
+  max-height: 200px; /* Set a maximum height for the images */
+  object-fit: cover; /* Maintain aspect ratio while covering the container */
+}
+
+/* Add hover effect */
+.category:hover img {
+  transform: scale(1.1); /* Scale the image on hover */
+}
+
+/* Add overlay effect */
+.category .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.3s; /* Add smooth transition effect */
+}
+
+.category:hover .overlay {
+  opacity: 1; /* Show overlay on hover */
+}
+
+.category .overlay-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+}
+
+.cate {
+  text-align: center;
+  color: red;
+}
+
+.category h2 {
+  font-weight: bold;
+  color: blue;
+}
