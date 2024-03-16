@@ -1,0 +1,61 @@
+/* product-list.css */
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.product-table th, .product-table td {
+    border: 1px solid #ddd;
+    padding: 20px;
+    font-size: 18px;
+}
+
+.product-table th {
+    background-color: #f2f2f2;
+}
+
+.product-image {
+    max-width: 250px;
+    max-height: 250px;
+    display: block;
+    margin: 0 auto;
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-btn, .delete-btn {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.edit-btn {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+
+.delete-btn {
+    background-color: #f44336; /* Red */
+    color: white;
+}
+
+.delete-btn:hover, .edit-btn:hover {
+    opacity: 0.8;
+}
+
+body {
+    background-color: #ffcccc; /* Light Red */
+}

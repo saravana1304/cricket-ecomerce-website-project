@@ -128,3 +128,11 @@ def unlist_category(request, category_id):
 
         return redirect('categories')
     return redirect('categories')
+
+
+# products list page:
+
+def product_list(request):
+    return render(request,'adminn/product.html')
+
+
