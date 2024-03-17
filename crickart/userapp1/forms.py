@@ -103,7 +103,7 @@ class CreateUserForm(UserCreationForm):
 
         # Check if the phone number is unique
         if UserProfile.objects.filter(phone_number=phone_number).exists():
-            self.add_error('phone_number', 'This phone number is already associated with another user')
+            self.add_error('phone_number', 'This phone number is already exists')
 
         return cleaned_data
     
@@ -121,18 +121,20 @@ class CreateUserForm(UserCreationForm):
         return user
 
 # user athendication for we using this form 
-class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Enter your username'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Enter your password'}))
 
 class UserLoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Enter your username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Enter your password'}))
+
 
     def clean(self):
         cleaned_data = super().clean()
         username = cleaned_data.get('username')
         password = cleaned_data.get('password')
+
+
+        if 'username' in self.fields:
+            self.fields['username'].widget = forms.HiddenInput()
 
         if not username:
             self.add_error('username', 'Username is required')
@@ -149,8 +151,3 @@ class UserLoginForm(AuthenticationForm):
             raise forms.ValidationError('Password does not match')
 
         return cleaned_data
-
-
-    
-
-

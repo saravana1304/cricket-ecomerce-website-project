@@ -4,6 +4,7 @@
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'userapp1/register.css' %}">
+    
     <form method="post">
         {% csrf_token %}
 
@@ -11,19 +12,15 @@
             <div class="form-group">
                 {{ field.label_tag }}
                 {{ field }}
-                {% if field.name == 'email' %}
-                    {% for error in field.errors %}
-                        {% if "Invalid email format. \"@\" is required." not in error %}
-                            <span class="text-danger">{{ error }}</span>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    <span class="text-danger">{{ field.errors }}</span>
-                {% endif %}
+                {% for error in field.errors %}
+                    {% if "Invalid email format. \"@\" is required." not in error %}
+                        <span class="text-danger">{{ error }}</span>
+                    {% endif %}
+                {% endfor %}
             </div>
         {% endfor %}
 
         <button type="submit">Register</button>
-        <p style="color: red;">Already have an account? <a href="{% url 'userlogin' %}">Click for Login</a></p>
+        <p class="login-link">Already have an account? <a href="{% url 'userlogin' %}">Click for Login</a></p>
     </form>
 {% endblock content %}
