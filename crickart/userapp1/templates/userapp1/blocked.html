@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error message</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .message {
+            text-align: center;
+        }
+        .reason {
+            margin-top: 20px;
+        }
+        .reason ul {
+            padding-left: 20px;
+        }
+        .reason ul li {
+            margin-bottom: 10px;
+        }
+        .reason ul li:first-child {
+            margin-top: 0;
+        }
+        .reason ul li:last-child {
+            margin-bottom: 0;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="message">
+            {% for user in users %}
+            <h1>{{ user.name }}</h1>
+            {% endfor %}
+        </div>
+        <div class="content">
+            <p>Sorry for the inconvenience due to some reasons your account has been blocked.</p>
+        </div>
+        <div class="reason">
+            <ul>
+                <li>1. You are not able to log in.</li>
+                <li>2. Kindly contact our help.</li>
+                <li>3. Create a new account and try to login.</li>
+                <li>4. Thanks for choosing Crickart.</li>
+            </ul>
+        </div>
+        <a href="{% url 'home' %}"><button>Go Back</button></a>
+    </div>
+</body>
+</html>

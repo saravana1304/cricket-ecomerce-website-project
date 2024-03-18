@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'userapp1',
     'adminn',     # registering app name 
 
-
 # thiss apps for checking social authendications 
     'django.contrib.sites',
     'allauth',
@@ -73,11 +72,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+
+    'django.contrib.messages.middleware.MessageMiddleware',
+
 # custom middleware for checking social media accounts
     'allauth.account.middleware.AccountMiddleware',
 ]
-
-
 
 ROOT_URLCONF = 'crickart.urls'
 
@@ -152,7 +152,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
 MEDIA_URL = '/images/'
 
 MEDIA_ROOT=BASE_DIR/'static'
@@ -160,8 +159,6 @@ MEDIA_ROOT=BASE_DIR/'static'
 STATICFILES_DIRS=[
     BASE_DIR/'static',
 ]
-
-
 
 
 # Default primary key field type

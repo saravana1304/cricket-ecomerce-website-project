@@ -10,7 +10,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    height: 70vh;
 }
 
 .login-form {
@@ -136,4 +136,3 @@ input[type="submit"]:hover {
 .text-danger {
     color: red;
 }
-

@@ -119,35 +119,4 @@ class CreateUserForm(UserCreationForm):
         )
 
         return user
-
-# user athendication for we using this form 
-
-class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Enter your username'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Enter your password'}))
-
-
-    def clean(self):
-        cleaned_data = super().clean()
-        username = cleaned_data.get('username')
-        password = cleaned_data.get('password')
-
-
-        if 'username' in self.fields:
-            self.fields['username'].widget = forms.HiddenInput()
-
-        if not username:
-            self.add_error('username', 'Username is required')
-
-        if not password:
-            self.add_error('password', 'Password is required')
-
-        user = self.user_cache
-
-        if username and not user:
-            raise forms.ValidationError('Invalid username')
-
-        if password and username and not user.check_password(password):
-            raise forms.ValidationError('Password does not match')
-
-        return cleaned_data
+    
