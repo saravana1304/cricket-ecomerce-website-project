@@ -29,9 +29,6 @@ urlpatterns = [
 
 # this code using to google authentication 
     path('accounts/',include('allauth.urls')),    
-
-
-
 ]
 
 if settings.DEBUG:

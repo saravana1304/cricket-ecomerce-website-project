@@ -7,6 +7,7 @@ from django.views.decorators.cache import cache_control
 from django.contrib import messages
 from .models import UserProfile
 from adminn.models import Category
+from django.contrib.auth.models import auth
 
 
 # Create your views here.
@@ -55,7 +56,7 @@ def userlogin(request):
             password = request.POST.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)
+                auth.login(request, user)
                 return redirect('home')
             else:
                 messages.error(request, 'Invalid username or password')
