@@ -44,28 +44,34 @@ def userregister(request):
 def userlogin(request):
     if request.user.is_authenticated:
         return redirect('home')
-
+    print('1')
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
+        print('2')
+        print(form.is_valid())
+
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        print('username: '+username)
+        print('password: '+password)
+
+        user = authenticate(request, username=username, password=password)
+        print(user)
+        if user:
+            print(user.is_active)
+            if user.is_active:
                 login(request, user)
                 return redirect('home')
-            if not user.is_active:
-                return render(request,'userapp1/blocked.html')
-        # Add non-field errors to messages
-        for error in form.non_field_errors():
-            messages.error(request, error)
+            else:
+                return render(request, 'userapp1/blocked.html')
+        else:
+            messages.error(request, "Invalid username or password")
+            print('4')
+
     else:
-        form = AuthenticationForm(request)
-
-    return render(request,'userapp1/login.html', {'loginform': form})
-
-
-
+        form = AuthenticationForm(request)  
+    print(6)  
+    return render(request, 'userapp1/login.html', {'loginform': form})
 
 
 
