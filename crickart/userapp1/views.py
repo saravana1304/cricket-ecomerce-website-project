@@ -7,8 +7,8 @@ from django.views.decorators.cache import cache_control
 from django.contrib import messages
 from .models import UserProfile
 from adminn.models import Category
-from django.contrib.auth.models import auth
-from django.contrib.auth.forms import AuthenticationForm
+from .forms import UserLoginForm
+
 
 # Create your views here.
 
@@ -41,38 +41,25 @@ def userregister(request):
     return render(request, "userapp1/register.html", context=context)
 
 
+
 def userlogin(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and not request.user.is_superuser:
         return redirect('home')
-    print('1')
+    form = UserLoginForm()
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        print('2')
-        print(form.is_valid())
-
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password')
-        print('username: '+username)
-        print('password: '+password)
-
-        user = authenticate(request, username=username, password=password)
-        print(user)
-        if user:
-            print(user.is_active)
-            if user.is_active:
+        form = UserLoginForm(request, data=request.POST)
+        if form.is_valid():
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
                 login(request, user)
                 return redirect('home')
             else:
-                return render(request, 'userapp1/blocked.html')
+                messages.error(request, 'Invalid username or password')
         else:
-            messages.error(request, "Invalid username or password")
-            print('4')
-
-    else:
-        form = AuthenticationForm(request)  
-    print(6)  
+            form=UserLoginForm()
     return render(request, 'userapp1/login.html', {'loginform': form})
-
 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  #performimg the sessions control,not ot redirect to older pages
