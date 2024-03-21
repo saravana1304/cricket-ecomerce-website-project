@@ -1,8 +1,7 @@
 /* product-list.css */
 
 .container {
-    max-width: 1000px;
-    margin: 0 auto;
+    width: 100%; /* Use full width of the screen */
     padding: 20px;
 }
 
@@ -14,8 +13,8 @@
 
 .product-table th, .product-table td {
     border: 1px solid #ddd;
-    padding: 20px;
-    font-size: 18px;
+    padding: 15px; /* Reduce padding for cells */
+    font-size: 16px; /* Adjust font size */
 }
 
 .product-table th {
@@ -23,8 +22,8 @@
 }
 
 .product-image {
-    max-width: 250px;
-    max-height: 250px;
+    max-width: 200px; /* Adjust max-width for product images */
+    max-height: 200px; /* Adjust max-height for product images */
     display: block;
     margin: 0 auto;
 }
@@ -36,10 +35,10 @@
 }
 
 .edit-btn, .delete-btn {
-    padding: 10px 20px;
+    padding: 8px 16px; /* Adjust padding for buttons */
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px; /* Adjust font size for buttons */
 }
 
 .edit-btn {
@@ -59,3 +58,26 @@
 body {
     background-color: #ffcccc; /* Light Red */
 }
+
+
+.addproduct {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.addproduct button {
+    padding: 12px 24px; /* Increased padding for a bigger button */
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 15px; /* Increased border radius */
+    cursor: pointer;
+    position: relative;
+    left: 250px; /* Position the button 250px from the left */
+}
+
+.addproduct button:hover {
+    background-color: #45a049;
+}
+
+

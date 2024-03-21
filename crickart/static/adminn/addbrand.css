@@ -1,0 +1,63 @@
+/* addproduct.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: burlywood;
+    display: flex;
+    justify-content: center; /* Center the content horizontally */
+    align-items: center; /* Center the content vertically */
+    min-height: 100vh; /* Ensure content takes up at least the full viewport height */
+    flex-direction: column; /* Stack content vertically */
+}
+
+h1 {
+    margin-bottom: 20px;
+    color:red;
+}
+
+.form-container {
+    width: 400px; /* Set a fixed width for the form container */
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea,
+button[type="submit"],
+input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px; /* Smaller font size */
+}
+
+textarea {
+    resize: vertical;
+}
+
+button[type="submit"] {
+    background-color: #28a745; /* Green color */
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #218838; /* Darker shade of green on hover */
+}

@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Brand</title>
+    <link rel="stylesheet" href="{% static 'adminn/addbrand.css' %}">
+</head>
+<body>
+    <h1>Add Brand</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Brand Name:</label>
+            <input type="text" id="name" name="name" required>
+            {% if error_message %}
+                <p style="color: red;">{{ error_message_name }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="is_listed">Is Listed:</label>
+            <select id="is_listed" name="is_listed">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
+            {% if error_message %}
+                <p style="color: red;">{{ error_message_is_listed }}</p>
+            {% endif %}
+        </div>
+        <button type="submit" class="button">Add Brand</button>
+    </form>
+    <a href="{% url 'brandlist' %}">
+        <p style="text-align: center;">Back brandlist</p>
+    </a>
+
+</body>
+</html>

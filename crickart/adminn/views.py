@@ -5,7 +5,7 @@ from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User as DjangoUser
-from .models import Category
+from .models import Category,Brand
 from .views import *
 
 
@@ -120,7 +120,6 @@ def unlist_category(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
     if request.method == 'GET':
         if category.is_listed:
-            print("2")
             category.is_listed=False
         else:
             category.is_listed=True
@@ -129,10 +128,63 @@ def unlist_category(request, category_id):
         return redirect('categories')
     return redirect('categories')
 
+# Brand list page
+def brand_list(request):
+        brand = Brand.objects.all()
+        return render(request, 'adminn/brand.html', {'brand': brand})
+
+
+# Add brand for our site
+def add_brand(request):
+    if request.method=='POST':
+        name = request.POST.get('name')
+        is_listed = request.POST.get('is_listed')
+
+        if Brand.objects.filter(name=name).exists(): 
+            error_message= "Brand with this name already exists."
+            return render(request,'adminn/addbrand.html',{'error_message': error_message})
+        
+        brand = Brand(name=name, is_listed=is_listed,)
+        brand.save()
+        return redirect('brandlist')
+    return render(request, 'adminn/addbrand.html')
+
+
+# update brand for our site
+def update_brand(request, brand_id):
+    brands = get_object_or_404(Brand, pk=brand_id)
+    if request.method=='POST':
+            name=request.POST.get('name')
+            is_listed = request.POST.get('is_listed')
+            brands.name=name
+            brands.is_listed=is_listed
+            brands.save()
+            return redirect('brandlist')
+    return render(request,'adminn/editbrand.html',{'brand': brands})
+
+
+# edit brand for our site
+
+def unlist_brand(request, brand_id):
+    brand = get_object_or_404(Brand, pk=brand_id)
+    if request.method == 'GET':
+        if brand.is_listed:
+            brand.is_listed=False
+        else:
+            brand.is_listed=True
+        brand.save()
+        return redirect('brandlist')
+    return redirect('brandlist')
+
 
 # products list page:
 
 def product_list(request):
     return render(request,'adminn/product.html')
+
+
+def add_product(request):
+    print(1)
+    return render(request,'adminn/addproduct.html')
 
 

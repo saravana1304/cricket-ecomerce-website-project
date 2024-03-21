@@ -1,0 +1,127 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: burlywood;
+}
+
+h1 {
+    margin-bottom: 20px;
+    text-align: center;
+    color:blue;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+img {
+    max-width: 100px;
+    height: auto;
+}
+
+.actions {
+    white-space: nowrap;
+}
+
+.actions a {
+    display: inline-block;
+    padding: 5px 10px;
+    margin-right: 5px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+}
+
+.actions a:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.add-category {
+    margin-top: 20px;
+    display: inline-block;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #28a745;
+    border: 1px solid #28a745;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+}
+
+.add-category:hover {
+    background-color: #218838;
+    border-color: #218838;
+}
+
+.button {
+    display: flex;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+    margin-bottom: 20px;
+    margin-left: 950px;
+}
+
+.button-row {
+    text-align: right; 
+}
+
+.button {
+    display: inline-block;
+    margin-left: 20px; /* Add margin between buttons */
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 3px;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Edit button styling */
+.edit-btn {
+    background-color: brown;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+/* Delete button styling */
+.delete-btn {
+    background-color: red;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+

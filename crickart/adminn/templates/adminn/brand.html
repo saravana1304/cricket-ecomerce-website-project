@@ -1,0 +1,53 @@
+{% load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand List</title>
+    <link rel="stylesheet" href="{% static 'adminn/brand.css' %}">
+</head>
+
+<body>
+    <h1>Brand List</h1>
+    <div class="button-row">
+        <a href="{% url 'addbrand' %}" class="button" style="background-color: green;">Add Brand</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th colspan="3">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for brands in brand %}
+            <tr>
+                <td>{{ brands.id }}</td>
+                <td>{{ brands.name }}</td>
+
+                <td><a href="{% url 'updatebrand' brand_id=brands.id %}">
+                    <button class="edit-btn">Edit</button>
+                    </a>
+                </td>
+                
+                <td>
+                    {% if brands.is_listed %}
+                    <a href="{% url 'unlistbrand' brand_id=brands.id %}"><button style="background-color: red;" class="delete-btn">Unlist</button></a>
+                    {% else %}
+                    <a href="{% url 'unlistbrand' brand_id=brands.id %}"><button style="background-color: green;"  class="delete-btn">List</button></a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'ahome' %}">
+        <p style="text-align: center;">Back to Adminpanel</p>
+    </a>
+</body>
+
+</html>

@@ -10,18 +10,25 @@
 </head>
 <body>
     <div class="container">
-        <h1>Product List</h1>
+        <h1 style="color: red; text-align: center;">Product List</h1>
+        <div class="addproduct">
+            <a href="{% url 'addproduct' %}"><button>Add Product</button></a>
+
+        </div>
         <table class="product-table">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Product Name</th>
                     <th>Category</th>
-                    <th>Price</th>
-                    <th>Stock</th>
+                    <th>brand</th>
+                    <th>description</th>
                     <th>Image1</th>
                     <th>Image2</th>
                     <th>Image3</th>
+                    <th>Stock</th>
+                    <th>Price</th>   
+                    <th>List/Unlist</th>                 
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -30,6 +37,7 @@
                 <tr>
                     <td>{{ product.id }}</td>
                     <td>{{ product.product_name }}</td>
+                    <td>{{ product.brand }}</td>
                     <td>{{ product.category.name }}</td>
                     <td>${{ product.selling_price }}</td>
                     <td>{{ product.stock }}</td>

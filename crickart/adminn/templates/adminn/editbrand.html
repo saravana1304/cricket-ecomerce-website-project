@@ -1,0 +1,33 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Brand</title>
+    <link rel="stylesheet" href="{% static 'adminn/addbrand.css' %}">
+</head>
+<body>
+    <h1>Edit Brand</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Brand Name:</label>
+            <input type="text" id="name" name="name" value="{{ brand.name }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="is_listed">Is Listed:</label>
+            <select id="is_listed" name="is_listed">
+                <option value="1" {% if brands.is_listed %} selected {% endif %}>Yes</option>
+                <option value="0" {% if not brands.is_listed %} selected {% endif %}>No</option>
+            </select>
+        </div>
+        <button type="submit" class="button">Update Brand</button>     
+    </form>
+    <a href="{% url 'brandlist' %}">
+        <p style="text-align: center;">Back to Brandlist</p>
+    </a>
+</body>
+</html>

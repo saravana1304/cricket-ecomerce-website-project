@@ -15,10 +15,19 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = 'Categories'
 
+
+# models for Brand
+class Brand(models.Model):
+    name=models.CharField(max_length=50)
+    is_listed = models.BooleanField(default=True)
+
+
 # models for product
 class Product(models.Model):
     product_name = models.CharField(max_length=50)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    description = models.TextField(blank=True, null=True, verbose_name='Description')
     is_listed = models.BooleanField(default=True)
     image1 = models.ImageField(upload_to='product_images/', null=True, blank=True, verbose_name='Image 1')
     image2 = models.ImageField(upload_to='product_images/', null=True, blank=True, verbose_name='Image 2')
@@ -31,4 +40,5 @@ class Product(models.Model):
         # Add any custom validation logic here
         if self.selling_price is not None and self.selling_price < self.landing_price:
             raise ValidationError("Selling price cannot be less than landing price")
+        
 

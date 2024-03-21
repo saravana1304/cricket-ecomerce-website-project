@@ -1,0 +1,63 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <link rel="stylesheet" href="{% static 'adminn/addproduct.css' %}">
+ 
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="product_name">Product Name:</label><br>
+        <input type="text" id="product_name" name="product_name" required><br><br>
+
+        <label for="category">Category:</label><br>
+        <select id="category" name="category" required>
+            <option value="" disabled selected>Select Category</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="brand">Brand:</label><br>
+        <select id="brand" name="brand" required>
+            <option value="" disabled selected>Select Brand</option>
+            {% for brand in brands %}
+            <option value="{{ brand.id }}">{{ brand.name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description"></textarea><br><br>
+
+        <label for="image1">Image 1:</label><br>
+        <input type="file" id="image1" name="image1"><br><br>
+
+        <label for="image2">Image 2:</label><br>
+        <input type="file" id="image2" name="image2"><br><br>
+
+        <label for="image3">Image 3:</label><br>
+        <input type="file" id="image3" name="image3"><br><br>
+
+        <label for="stock">Stock:</label><br>
+        <input type="number" id="stock" name="stock" value="0" min="0" required><br><br>
+
+        <label for="landing_price">Landing Price:</label><br>
+        <input type="number" id="landing_price" name="landing_price" min="0" step="0.01" required><br><br>
+
+        <label for="selling_price">Selling Price:</label><br>
+        <input type="number" id="selling_price" name="selling_price" min="0" step="0.01"><br><br>
+
+        <label for="is_listed">Listed:</label><br>
+        <select id="is_listed" name="is_listed" required>
+            <option value="1">List</option>
+            <option value="0">Unlist</option>
+        </select><br><br>
+
+        <button type="submit">Add Product</button>
+    </form>
+</body>
+</html>
