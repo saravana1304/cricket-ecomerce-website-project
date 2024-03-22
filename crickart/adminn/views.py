@@ -184,7 +184,9 @@ def product_list(request):
 
 
 def add_product(request):
-    print(1)
-    return render(request,'adminn/addproduct.html')
+    categories = Category.objects.all()
+    brands = Brand.objects.all()
+    return render(request, 'adminn/addproduct.html', {'categories': categories, 'brands': brands})
+   
 
 

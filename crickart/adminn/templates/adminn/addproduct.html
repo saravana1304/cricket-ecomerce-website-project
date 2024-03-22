@@ -1,4 +1,4 @@
-{% load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
     <link rel="stylesheet" href="{% static 'adminn/addproduct.css' %}">
- 
 </head>
 <body>
+    <h2 style="color: red;text-align: center;"> Add New Product</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="product_name">Product Name:</label><br>
@@ -61,3 +61,4 @@
     </form>
 </body>
 </html>
+
