@@ -237,6 +237,39 @@ def unlist_produt(request, product_id):
         return redirect('products')
     return redirect('products')
 
+# update product
 
+def update_product(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+    categories = Category.objects.all()
+    brands = Brand.objects.all()
 
-   
+    if request.method=='POST':
+            product_name=request.POST.get('product_name')
+            category_id = request.POST.get('category')
+            brand_id = request.POST.get('brand')
+            description = request.POST.get('description')
+            stock = request.POST.get('stock')
+            landing_price = request.POST.get('landing_price')
+            selling_price = request.POST.get('selling_price')
+            is_listed = request.POST.get('is_listed')
+
+            new_image = request.FILES.get('new_image') 
+            if new_image:
+                product.image=new_image
+
+            category = get_object_or_404(Category, pk=category_id)
+            brand = get_object_or_404(Brand, pk=brand_id)
+            
+            product.product_name=product_name
+            product.category = category
+            product.brand = brand
+            product.description = description
+            product.stock = stock
+            product.landing_price = landing_price
+            product.selling_price = selling_price
+            product.is_listed = is_listed
+
+            product.save()
+            return redirect('products')
+    return render(request,'adminn/editproduct.html',{'product': product,'categories': categories, 'brands': brands})

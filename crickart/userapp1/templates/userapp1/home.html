@@ -69,6 +69,26 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
       </div>
       {% endfor %}
   </div>
+
+
+  <h1 class="cate">Our Products</h1>
+  <div class="categories">
+      {% for products in product %}
+      <div class="category">
+          <h2>{{ products.name }}</h2>
+          <p>{{ products.description }}</p>
+          {% if product.image %}
+              {% if products.image.url %}
+                  <img class="my_image" src="{{ product.image.url }}" alt="{{ product.name }}">
+              {% else %}
+                  <img class="my_image" src="{{ product.image }}" alt="{{ product.name }}">
+              {% endif %}
+          {% endif %}
+      </div>
+      {% endfor %}
+  </div>
+
+
   
   <script>
     document.addEventListener('DOMContentLoaded', function () {

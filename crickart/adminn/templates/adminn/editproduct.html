@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="{% static 'adminn/addproduct.css' %}">
+</head>
+<body>
+    <h2 style="color: red;text-align: center;"> Edit Product</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="product_name">Product Name:</label><br>
+        <input type="text" id="product_name" name="product_name" value="{{ product.product_name }}" required><br><br>
+
+        <label for="category">Category:</label><br>
+        <select id="category" name="category" required>
+            {% for category in categories %}
+                <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="brand">Brand:</label><br>
+        <select id="brand" name="brand" required>
+            {% for brand in brands %}
+                <option value="{{ brand.id }}" {% if brand.id == product.brand.id %}selected{% endif %}>{{ brand.name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description" required>{{ product.description }}</textarea><br><br>
+
+        <label for="image1">Image 1:</label><br>
+        <input type="file" id="image1" name="image1"><br><br>
+        {% if product.image1 %}
+            <img src="{{ product.image1.url }}" alt="Image 1" width="100"><br><br>
+        {% endif %}
+
+        <label for="image2">Image 2:</label><br>
+        <input type="file" id="image2" name="image2"><br><br>
+        {% if product.image2 %}
+            <img src="{{ product.image2.url }}" alt="Image 2" width="100"><br><br>
+        {% endif %}
+
+        <label for="image3">Image 3:</label><br>
+        <input type="file" id="image3" name="image3"><br><br>
+        {% if product.image3 %}
+            <img src="{{ product.image3.url }}" alt="Image 3" width="100"><br><br>
+        {% endif %}
+
+        <label for="stock">Stock:</label><br>
+        <input type="number" id="stock" name="stock" value="{{ product.stock }}" min="0" required><br><br>
+
+        <label for="landing_price">Landing Price:</label><br>
+        <input type="number" id="landing_price" name="landing_price" value="{{ product.landing_price }}" min="0" step="0.01" required><br><br>
+
+        <label for="selling_price">Selling Price:</label><br>
+        <input type="number" id="selling_price" name="selling_price" value="{{ product.selling_price }}" min="0" step="0.01" required><br><br>
+
+        <label for="is_listed">Listed:</label><br>
+        <select id="is_listed" name="is_listed" required>
+            <option value="1" {% if product.is_listed %}selected{% endif %}>List</option>
+            <option value="0" {% if not product.is_listed %}selected{% endif %}>Unlist</option>
+        </select><br><br>
+
+        <button type="submit">Update Product</button>
+        <a href="{% url 'products' %}">
+            <p style="text-align: center;">Back to Productlist</p>
+        </a>
+    </form>
+</body>
+</html>

@@ -72,7 +72,7 @@
                         {% endif %}   
                     </td>
                     <td>
-                        <a href="#" class="edit-button">Edit</a>
+                        <a href="{% url 'updateproduct' product_id=product.id %}" class="edit-button">Edit</a>
                     </td>
                 </tr>
                 {% endfor %}
