@@ -1,5 +1,13 @@
 /* product-list.css */
 
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: whitesmoke;
+}
+
+
 .container {
     width: 100%; /* Use full width of the screen */
     padding: 20px;
@@ -55,11 +63,6 @@
     opacity: 0.8;
 }
 
-body {
-    background-color: #ffcccc; /* Light Red */
-}
-
-
 .addproduct {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -78,6 +81,27 @@ body {
 
 .addproduct button:hover {
     background-color: #45a049;
+}
+
+/* Adjust image size */
+.product-image {
+    max-width: 100px; /* Set maximum width */
+    max-height: 100px; /* Set maximum height */
+}
+
+
+.edit-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color:brown; /* Green */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 

@@ -5,7 +5,7 @@ from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User as DjangoUser
-from .models import Category,Brand
+from .models import Category,Brand,Product
 from .views import *
 
 
@@ -180,13 +180,63 @@ def unlist_brand(request, brand_id):
 # products list page:
 
 def product_list(request):
-    return render(request,'adminn/product.html')
+    categories = Category.objects.all()
+    brands = Brand.objects.all()
+    products = Product.objects.all()
+    return render(request, 'adminn/product.html', {'categories': categories, 'brands': brands,'products':products})
+    
 
+# Add product page:
 
 def add_product(request):
     categories = Category.objects.all()
     brands = Brand.objects.all()
+    if request.method=='POST':
+        product_name=request.POST.get('product_name')
+        category_id = request.POST.get('category')
+        brand_id = request.POST.get('brand')
+        description=request.POST.get('description')
+        image1 = request.FILES.get('image1')
+        image2 = request.FILES.get('image2')
+        image3 = request.FILES.get('image3')
+        stock = request.POST.get('stock')
+        landing_price = request.POST.get('landing_price')
+        selling_price = request.POST.get('selling_price')
+        is_listed =  request.POST.get('is_listed')
+
+        category_instance = Category.objects.get(id=category_id)
+        brand_instance = Brand.objects.get(id=brand_id)
+
+        product =Product(
+            product_name=product_name,
+            category= category_instance,
+            brand=brand_instance,
+            description=description,
+            image1=image1,
+            image2=image2,
+            image3=image3,
+            stock=stock,
+            landing_price=landing_price,
+            selling_price=selling_price,
+            is_listed=is_listed
+            )
+        product.save()
+        return redirect('products')
     return render(request, 'adminn/addproduct.html', {'categories': categories, 'brands': brands})
+
+# product list and unlist
+
+def unlist_produt(request, product_id):
+    products = get_object_or_404(Product, pk=product_id)
+    if request.method == 'GET':
+        if products.is_listed:
+            products.is_listed=False
+        else:
+            products.is_listed=True
+        products.save()
+        return redirect('products')
+    return redirect('products')
+
+
+
    
-
-

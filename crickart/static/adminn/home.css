@@ -6,7 +6,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
-    background-color: burlywood;
+    background-color: whitesmoke;
 }
 
 header {
@@ -58,7 +58,9 @@ nav {
     display: flex;
     width: 8%;
     margin-top: 25px;
-    margin-left: 25px;   
+    margin-left: 25px; 
+    margin-bottom: 200px; 
+    overflow-x: auto; 
 }
 
 .content-wrapper :hover {

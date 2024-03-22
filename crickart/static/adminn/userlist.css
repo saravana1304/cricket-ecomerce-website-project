@@ -1,5 +1,13 @@
 /* userlist.css */
 
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: whitesmoke;
+}
+
 .container {
     margin: 20px;
 }
