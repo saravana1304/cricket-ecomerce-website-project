@@ -4,10 +4,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib import messages
 from .models import UserProfile
 from adminn.models import Category
-from .forms import UserLoginForm
+from .forms import CreateUserForm,AuthenticationForm
+from django.http import JsonResponse
 
 
 # Create your views here.
@@ -41,25 +43,26 @@ def userregister(request):
     return render(request, "userapp1/register.html", context=context)
 
 
-
-def userlogin(request):
-    if request.user.is_authenticated and not request.user.is_superuser:
-        return redirect('home')
-    form = UserLoginForm()
-    if request.method == 'POST':
-        form = UserLoginForm(request, data=request.POST)
-        if form.is_valid():
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
+@ensure_csrf_cookie
+def userlogin(request):  
+    if request.method=='POST':
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
+        userData= User.objects.filter(username=username)
+        for i in userData:
+            userActive= i.is_active
+        if userActive:
+            user = authenticate(request, username=username, password=password)
+            if user:
                 login(request, user)
-                return redirect('home')
+                return JsonResponse({'success': True})
             else:
-                messages.error(request, 'Invalid username or password')
+                return JsonResponse({'success': False})
         else:
-            form=UserLoginForm()
-    return render(request, 'userapp1/login.html', {'loginform': form})
+            return JsonResponse({'isBlocked': True})
+        
+    return render(request, 'userapp1/login.html')
+
 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  #performimg the sessions control,not ot redirect to older pages

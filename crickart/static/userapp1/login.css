@@ -1,76 +1,86 @@
 /* userapp1/login.css */
 
 body {
-    background-color: #f2f2f2;
     font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
     margin: 0;
-    padding: 0;
 }
 
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
 
-form {
-    max-width: 350px;
-    margin: 50px auto;
+.login-form {
+    background-color: #fff;
+    border: 1px solid #ddd;
     padding: 20px;
-    box-sizing: border-box;
-    margin-bottom: 10px;
-    margin-top: 100px;
-}
-
-form label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
 }
 
 .form-group {
-    margin-bottom: 12px;
+    margin-bottom: 15px;
 }
 
-form input[type="text"],
-form input[type="email"],
-form input[type="password"] {
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+input[type="text"],
+input[type="password"] {
     width: 100%;
-    padding: 8px;
-    margin-bottom: 6px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
     box-sizing: border-box;
 }
 
-form button {
+input[type="submit"] {
     background-color: #4caf50;
     color: #fff;
-    padding: 10px 20px;
+    padding: 10px;
     border: none;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
     width: 100%;
 }
 
-form button:hover {
+input[type="submit"]:hover {
     background-color: #45a049;
 }
 
-form p {
-    margin: 0;
-    padding: 0;
+.social-login {
+    margin-top: 10px;
 }
 
-.form-container {
-    margin-top: 20px;
+.register-link {
+    margin-top: 10px;
+    color: #428bca;
+    text-align: center;
 }
 
-.text-danger {
-    color: red;
+.register-link a {
+    color: #428bca;
+    text-decoration: none;
 }
 
-.login-link {
-    margin-bottom: 10px; 
-    color: red;
-    margin-bottom: 20px;
+.register-link a:hover {
+    text-decoration: underline;
 }
 
+
+/* this code for forget password */
 .forget {
     text-align: center;
+    margin-top: 20px;
+    
 }
 
 .forget a {
@@ -127,3 +137,30 @@ form p {
 .text-danger {
     color: red;
 }
+
+
+.btn {
+    margin-left: 160px;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #0056b3; /* Blue color */
+    color: #fff; /* White text color */
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: green; /* Darker blue color on hover */
+}
+.user{
+    margin-left: 165px;
+}
+.password{
+    margin-left: 150px;
+    margin-top: 20px;
+}
+
+   

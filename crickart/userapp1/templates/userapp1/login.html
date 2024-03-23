@@ -4,36 +4,96 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'userapp1/login.css' %}">
 
-<form method="post">
-    {% csrf_token %}
-    {% for field in loginform %}
-    <div class="form-group">
-        {{ field.label_tag }}
-        
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css"
+    integrity="sha384-BY+fdrpOd3gfeRvTSMT+VUZmA728cfF9Z2G42xpaRkUGu2i3DyzpTURDo5A6CaLK" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<div class="center">
+    <form id="loginForm" class="login-form" method="post">
+        {% csrf_token %}
        
-
-        {{ field }}
-        {% for error in field.errors %}
-        <span class="text-danger">{{ error }}</span><br> <!-- Display error below each field -->
-        {% endfor %}
-    </div>
-    {% endfor %}
-    <button type="submit">Login</button>
-</form>
-
-<div class="forget">
-    <a href="{% url 'otp' %}">Forget Password ? </a>
+        <label class="user" for="">Username</label>
+        <input type="text" id="username" name="username" placeholder="username">
+       
+       
+        <label class="password" for="">Enter Password</label>
+        <input type="password" id="password" name="password" placeholder="password">
+        <button class="btn"  type="submit">Submit</button>
+       
+      
+        
+        <div class="forget">
+            <a href="#">Forget Password ? </a>
+        </div>
+        
+        {% load socialaccount %}
+        
+        <div class="social-login">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"/></svg>
+            <a href="{%provider_login_url 'google'%}?next=/">google Login</i></a>
+        </div>
+        <div class="register">
+            <a href="{% url 'userregister' %}"> Click Here to Register </a>
+        </div>
+    </form>
 </div>
 
-<div class="social-login">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
-        <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
-    </svg>
-    <a href="{% url 'google_login' %}">Google Login</a>
-</div>
 
-<div class="register">
-    <a href="{% url 'userregister' %}"> Click Here to Register </a>
-</div>
-{% endblock content %}
 
+
+<style>
+    .error{
+        color: red;
+    }
+</style>
+
+<script>
+    $('#loginForm').validate({
+        rules: {
+            username: {
+                required: true
+            },
+            password:{
+                required: true
+            }
+        },
+        submitHandler: async function (form, event) {
+            event.preventDefault()
+
+            const formData = new FormData(form);  // Use FormData to include CSRF token
+
+            const response = await fetch('', {
+                method: 'POST',
+                headers: { "X-CSRFToken": formData.get('csrfmiddlewaretoken') },  // Include CSRF token in headers
+                body: formData
+            })
+
+            const responseData = await response.json()
+
+            if(responseData.isBlocked) {
+                return await Swal.fire({
+                    icon: "error",
+                    title: "User Blocked",
+                    text: "Your Account has been Blocked create new Account and try again...😭",
+                });
+            } 
+
+            if (responseData.success) {
+                window.location.href = '/'
+            } else {
+                await Swal.fire({
+                    icon: "error",
+                    title: "Wrong username or password",
+                    text: "Please enter valid credentials",
+                });
+            }
+
+        }
+    })
+</script>
+
+{% endblock %}

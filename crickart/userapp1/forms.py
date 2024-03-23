@@ -120,21 +120,7 @@ class CreateUserForm(UserCreationForm):
         )
 
         return user
-    
-class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Enter your username'}))
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Enter your password'}))
-    def clean(self):
-        print(self)
-        cleaned_data = super().clean()
-        username = cleaned_data.get('username')
-        password = cleaned_data.get('password')
 
-        if not username:
-            self.add_error('username', 'Username is required')
 
-        if not password:
-            self.add_error('password', 'Password is required')
 
-        return cleaned_data
-    
+

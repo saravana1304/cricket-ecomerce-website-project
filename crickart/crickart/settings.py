@@ -72,9 +72,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-
-    'django.contrib.messages.middleware.MessageMiddleware',
-
 # custom middleware for checking social media accounts
     'allauth.account.middleware.AccountMiddleware',
 ]
