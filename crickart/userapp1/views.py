@@ -8,7 +8,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib import messages
 from .models import UserProfile
 from adminn.models import Category
-from .forms import CreateUserForm,AuthenticationForm
+from .forms import CreateUserForm
 from django.http import JsonResponse
 
 

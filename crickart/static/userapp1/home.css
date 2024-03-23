@@ -125,3 +125,36 @@
   font-weight: bold;
   color: blue;
 }
+
+
+/* this css for seach bar */
+
+/* Style for the search container */
+.search-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Style for the search input */
+.search-container input[type=text] {
+  padding: 10px;
+  width: 50%;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+/* Style for the search button */
+.search-container button {
+  padding: 10px 15px;
+  background: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 0 5px 5px 0;
+}
+
+/* Hover effect for the search button */
+.search-container button:hover {
+  background: #555;
+}
