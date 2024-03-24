@@ -75,7 +75,7 @@
   position: relative;
   height: 200px;
   margin-left: 80px;
-  margin-bottom: 500px; /* Add position relative for absolute positioning of overlay */
+  margin-bottom: 100px; /* Add position relative for absolute positioning of overlay */
 }
 
 .category img {
@@ -127,34 +127,103 @@
 }
 
 
-/* this css for seach bar */
-
-/* Style for the search container */
-.search-container {
-  margin-top: 20px;
+/* Style for product list */
+.product-list-container {
   text-align: center;
 }
 
-/* Style for the search input */
-.search-container input[type=text] {
-  padding: 10px;
-  width: 50%;
-  border-radius: 5px;
+.product-item {
+  display: inline-block;
+  width: 200px;
+  margin: 20px;
+}
+
+.product-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.product-title {
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.product-price {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+
+/* Style for product list */
+.product-list-container {
+  text-align: center;
+}
+
+.product-item {
+  width: 150px;
+  margin: 20px;
+}
+
+.product-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.product-title {
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.product-price {
+  margin-top: 5px;
+  font-weight: bold;
+}
+
+
+
+/* Style for the list of products */
+.product-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 150px;
+}
+
+/* Style for each product item */
+.product-item {
+  width: calc(25% - 40px); /* Adjust the width based on the number of products per row */
+  margin: 20px;
+  text-align: left;
   border: 1px solid #ccc;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+/* Style for the product image */
+.product-image {
+  max-width: 150px; /* Adjust the maximum width for smaller images */
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Style for the product title */
+.product-title {
+  margin-top: 10px;
+  margin-bottom: 5px;
   font-size: 16px;
 }
 
-/* Style for the search button */
-.search-container button {
-  padding: 10px 15px;
-  background: #333;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 0 5px 5px 0;
-}
-
-/* Hover effect for the search button */
-.search-container button:hover {
-  background: #555;
+/* Style for the product price */
+.product-price {
+  font-size: 14px;
+  font-weight: bold;
+  color: #007bff; /* Adjust the color as needed */
 }

@@ -7,7 +7,7 @@ from django.views.decorators.cache import cache_control
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib import messages
 from .models import UserProfile
-from adminn.models import Category
+from adminn.models import Category,Product,Brand
 from .forms import CreateUserForm
 from django.http import JsonResponse
 
@@ -16,8 +16,10 @@ from django.http import JsonResponse
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True) #performimg the sessions control,not ot redirect to older pages
 def userindex(request):
-    categories=Category.objects.all().exclude(is_listed=False)
-    context={'categories': categories}
+    categories=Category.objects.filter(is_listed=True)
+    products=Product.objects.filter(is_listed=True)
+    brand=Brand.objects.filter(is_listed=True)
+    context={'categories': categories,'products':products,'brnd':brand}
     return render(request,"userapp1/home.html",context)
 
 
@@ -83,3 +85,16 @@ def resendotp(request):
 
 def contactus(request):
     return render(request,'userapp1/contact.html')
+
+
+
+# CODE FOR DISPLAYING THE PRODUCUTS
+
+def product_deatils(request,product_id):
+    product=Product.objects.get(pk=product_id)
+    similar_products = Product.objects.filter(category=product.category).exclude(pk=product_id)[:4]
+    context={
+        'product':product,
+        'similar_products':similar_products
+    }
+    return render(request,'userapp1/productdetails.html',context)

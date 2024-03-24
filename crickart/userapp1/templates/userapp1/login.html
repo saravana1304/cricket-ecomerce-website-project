@@ -13,18 +13,18 @@
 
 
 <div class="center">
+    
     <form id="loginForm" class="login-form" method="post">
+        <h2 style="color: goldenrod; text-align: center;">User Login Here</h1>
         {% csrf_token %}
        
-        <label class="user" for="">Username</label>
+        <h3><label style="margin-left: 60px;" class="user" for="usernameInput">Username</label></h3>
         <input type="text" id="username" name="username" placeholder="username">
        
-       
-        <label class="password" for="">Enter Password</label>
+        <h3><label style="margin-left: 60px;" class="password" for="">Enter Password</label></h3>
         <input type="password" id="password" name="password" placeholder="password">
         <button class="btn"  type="submit">Submit</button>
        
-      
         
         <div class="forget">
             <a href="#">Forget Password ? </a>
@@ -39,7 +39,9 @@
         <div class="register">
             <a href="{% url 'userregister' %}"> Click Here to Register </a>
         </div>
+
     </form>
+    
 </div>
 
 
