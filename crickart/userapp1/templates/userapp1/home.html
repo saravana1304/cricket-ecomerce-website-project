@@ -85,20 +85,43 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
 
   <!-- CODE FOR DISPLAY THE PRODUCTS TO USER SIDE  -->
 
-  <h1 style="color: red; text-align: center;"> Our Products</h1>
-  <div style="background-color: whitesmoke;" class="product-list-container"> 
+<!-- CODE FOR DISPLAY THE PRODUCTS TO USER SIDE  -->
+
+<h1 style="color: red; text-align: center;">Our Products</h1>
+<div style="background-color: whitesmoke;" class="product-list-container"> 
     <ul class="product-list">
         {% for product in products %}
-            <li class="product-item">
-                <a href="{% url 'productdetails' product.id %}">
-                <img class="product-image" src="{{ product.image1.url }}" alt="{{ product.product_name }}">
-                <h2 class="product-title">{{ product.product_name }}</h2>
-                <p class="product-price">${{ product.selling_price }}</p></a>
-            </li>
+            {% if product.category.is_listed and product.brand.is_listed and product.is_listed %}
+                {% if product.category.is_blocked %}
+                    <!-- Display similar products since the category is blocked -->
+                    {% for similar_product in product.category.similar_products %}
+                        <li class="product-item">
+                            <a href="{% url 'productdetails' similar_product.id %}">
+                                <img class="product-image" src="{{ similar_product.image1.url }}" alt="{{ similar_product.product_name }}">
+                                <h2 class="product-title">{{ similar_product.product_name }}</h2>
+                                <p class="product-price">${{ similar_product.selling_price }}</p>
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% elif product.brand.is_blocked %}
+                    <!-- Do not display products under blocked brand -->
+                {% elif not product.brand.is_listed %}
+                    <!-- Do not display products under unlisted brand -->
+                {% else %}
+                    <!-- Display the product -->
+                    <li class="product-item">
+                        <a href="{% url 'productdetails' product.id %}">
+                            <img class="product-image" src="{{ product.image1.url }}" alt="{{ product.product_name }}">
+                            <h2 class="product-title">{{ product.product_name }}</h2>
+                            <p class="product-price">${{ product.selling_price }}</p>
+                        </a>
+                    </li>
+                {% endif %}
+            {% endif %}
         {% endfor %}
     </ul>
-  </div>
-  
+</div>
+
 
   
 {% endblock %}

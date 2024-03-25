@@ -10,17 +10,31 @@ from .models import UserProfile
 from adminn.models import Category,Product,Brand
 from .forms import CreateUserForm
 from django.http import JsonResponse
+from django.db.models import Q
 
 
 # Create your views here.
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True) #performimg the sessions control,not ot redirect to older pages
 def userindex(request):
-    categories=Category.objects.filter(is_listed=True)
-    products=Product.objects.filter(is_listed=True)
-    brand=Brand.objects.filter(is_listed=True)
-    context={'categories': categories,'products':products,'brnd':brand}
-    return render(request,"userapp1/home.html",context)
+    categories = Category.objects.filter(is_listed=True)
+    products = Product.objects.filter(is_listed=True)
+    brand = Brand.objects.filter(is_listed=True)
+    
+    # Filter similar products based on listed categories, brands, and products
+    similar_products = Product.objects.filter(
+        Q(category__in=categories) & 
+        Q(brand__in=brand) &
+        Q(is_listed=True)
+    )
+
+    context = {
+        'categories': categories,
+        'products': products,
+        'brand': brand,
+        'similar_products': similar_products
+    }
+    return render(request, "userapp1/home.html", context)
 
 
 def userregister(request):
