@@ -11,6 +11,9 @@ from adminn.models import Category,Product,Brand
 from .forms import CreateUserForm
 from django.http import JsonResponse
 from django.db.models import Q
+from django.views.decorators.cache import never_cache
+from django.contrib.sessions.models import Session
+
 
 
 # Create your views here.
@@ -59,18 +62,22 @@ def userregister(request):
     return render(request, "userapp1/register.html", context=context)
 
 
+@never_cache
 @ensure_csrf_cookie
-def userlogin(request):  
+def userlogin(request): 
+    if request.user.is_authenticated:
+        return redirect('home')
     if request.method=='POST':
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
         userData= User.objects.filter(username=username)
-        for i in userData:
-            userActive= i.is_active
+        for user in userData:
+            userActive= user.is_active
         if userActive:
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
+                request.session['authenticated']=True
                 return JsonResponse({'success': True})
             else:
                 return JsonResponse({'success': False})
@@ -85,6 +92,7 @@ def userlogin(request):
 @login_required(login_url='userlogin')
 def userlogout(request):
     logout(request)
+    request.session.flush()
     return redirect('home')
 
 

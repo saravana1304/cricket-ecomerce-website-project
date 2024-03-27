@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product List</title>
     <link rel="stylesheet" href="{% static 'adminn/product.css' %}">
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
 </head>
 <body>
     <div class="container">
@@ -14,7 +17,7 @@
         <div class="addproduct">
             <a href="{% url 'addproduct' %}"><button>Add Product</button></a>
         </div>
-        <table class="product-table">
+        <table id="table" class="product-table">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -82,5 +85,10 @@
     <a href="{% url 'ahome' %}">
         <p style="text-align: center;">Back to Adminpanel</p>
     </a>
+    <script>
+        $(document).ready(function () {
+                    $('#table').DataTable();
+                });
+    </script>
 </body>
 </html>

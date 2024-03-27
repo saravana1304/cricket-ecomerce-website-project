@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User as DjangoUser
 from .models import Category,Brand,Product
 from .views import *
+from django.views.decorators.cache import never_cache
 
 
 # Create your views here.
@@ -17,8 +18,10 @@ def ahome(request):
     return render(request, 'adminn/home.html')
 
 #admin login request 
-@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@never_cache
 def adminlogin(request):
+    if request.user.is_superuser:
+        return redirect('ahome')
     if request.method == 'POST':
         username = request.POST.get('username', '')
         password = request.POST.get('password', '')
@@ -27,6 +30,7 @@ def adminlogin(request):
             if user is not None and user.is_superuser:
                 # Log in the user
                 login(request, user)
+                request.session['authenticated']=True
                 return redirect('ahome')
     return render(request, 'adminn/login.html')
 
@@ -37,6 +41,7 @@ def adminlogout(request):
     # Check if the user is an admin before logging out
     if request.user.is_superuser:
         logout(request)
+        request.session.flush()
         return redirect('alogin')  # Redirect admin to admin login page:
  
 # user list page
@@ -254,10 +259,12 @@ def update_product(request, product_id):
             selling_price = request.POST.get('selling_price')
             is_listed = request.POST.get('is_listed')
 
-            new_image = request.FILES.get('new_image') 
-            if new_image:
-                product.image=new_image
-
+            for i in range(1, 4):
+                image_field_name = 'image{}'.format(i)
+                new_image = request.FILES.get(image_field_name)
+                if new_image:
+                    setattr(product, image_field_name, new_image)
+                    
             category = get_object_or_404(Category, pk=category_id)
             brand = get_object_or_404(Brand, pk=brand_id)
             
