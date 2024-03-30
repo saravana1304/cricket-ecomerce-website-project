@@ -7,9 +7,8 @@ body {
 }
 
 header {
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
+    background-color: rgb(46, 173, 46);
+    color:black;
     position: fixed;
     top: 0;
     width: 100%;
@@ -25,6 +24,8 @@ nav {
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
+    color: white;
+    margin-left: 150px;
 }
 
 .nav-links {

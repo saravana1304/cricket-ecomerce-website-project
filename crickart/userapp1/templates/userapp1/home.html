@@ -15,109 +15,109 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
 
 
 <!-- this code for cursol slidebar -->
-
- <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel" data-bs-interval="3000">
-  <div class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
-  </div>
-  <div class="carousel-inner">
-      <div class="carousel-item active">
-          <img class="slider" src="{% static 'images/banner/h2.jpg' %}" class="d-block w-100" alt="...">
-          <div style="position: absolute; top: 0; right: 0; padding: 15px;">
-              <h3 style="color: white;">Welcome to Ourwebsite</h3>
-              <p style="color: white;">All cricket products available here. You can order here.</p>
-          </div>   
-      </div>
-      <div class="carousel-item">
-          <img class="slider" src="{% static 'images/banner/h1.jpg' %}" class="d-block w-100" alt="...">
-          <div style="position: absolute; top: 270px; right: 25%; padding: 15px; text-align: right;">
-              <h3 style="color:white;">quotes by international cricketers</h3>
-              <p style="color:white;">"Cricket is a game that can ignite passions and unite nations." -</p>
-          </div>  
-      </div>
-      <div class="carousel-item">
-          <img src="{% static 'images/banner/h3.jpg' %}" class="d-block w-100" alt="...">
-          <div style="position: absolute; top: 0; right: 0; padding: 25px;">
-              <h3 style="color:white;">Cricket is an Emotion</h3>
-              <p style="color:white;">We all know cricket is not just game it's an Emotion.</p>
-          </div>  
-      </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-  </button>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 d-flex align-items-center text-primary fw-bold fs-6"><marquee>Experience the thrill of cricket with our comprehensive website, delivering everything for the cricket enthusiast.</marquee></div>
+        <div class="col-6">
+            <h1 class="cate">Categories</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-6">
+             <div id="carouselExampleDark"  class="carousel carousel-dark slide" data-bs-ride="carousel" data-bs-interval="3000">
+              <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+              </div>
+              <div class="carousel-inner">
+                  <div class="carousel-item active">
+                      <img class="slider" src="{% static 'images/banner/h2.jpg' %}" class="d-block" alt="..." style="height: 100%;">
+                      <div style="position: absolute; top: 0; right: 0; padding: 15px;">
+                          <h3 style="color: white;">Welcome to Ourwebsite</h3>
+                          <p style="color: white;">All cricket products available here. You can order here.</p>
+                      </div>   
+                  </div>
+                  <div class="carousel-item">
+                      <img class="slider" src="{% static 'images/banner/h1.jpg' %}" class="d-block" alt="..." style="height: 100%;">
+                      <div style="position: absolute; top: 270px; right: 25%; padding: 15px; text-align: right;">
+                          <h3 style="color:white;">quotes by international cricketers</h3>
+                          <p style="color:white;">"Cricket is a game that can ignite passions and unite nations." -</p>
+                      </div>  
+                  </div>
+                  <div class="carousel-item">
+                      <img src="{% static 'images/banner/h3.jpg' %}" class="d-block" alt="..." style="height: 100%;">
+                      <div style="position: absolute; top: 0; right: 0; padding: 25px;">
+                          <h3 style="color:white;">Cricket is an Emotion</h3>
+                          <p style="color:white;">We all know cricket is not just game it's an Emotion.</p>
+                      </div>  
+                  </div>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+              </button>
+             </div>
+        </div>
+        
+        <div class="col-12 col-md-6">
+            <div style="background-color:whitesmoke;" class="categories">
+                <div class="row">
+                        {% for category in categories %}
+                        <div class="card col-6 col-md-3" style="width:10rem;">
+                            <a href="{% url 'category_view' category.name %}" style="text-decoration: none;">
+                                <img src="{{ category.image.url }}" alt="{{ category.name }}" class="card-img-top category-img">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center" style="text-decoration: none;">{{ category.name}}</h5>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<hr>
-
-
-
-
-  <!-- adding category from admin side -->
-
-  <h1 class="cate">Categories</h1>
-  <div style="background-color:whitesmoke;" class="categories">
-      {% for category in categories %}
-      <div class="category">
-          <h2>{{ category.name }}</h2>
-          <p>{{ category.description }}</p>
-          {% if category.image %}
-              {% if category.image.url %}
-                  <img class="my_image" src="{{ category.image.url }}" alt="{{ category.name }}">
-              {% else %}
-                  <img class="my_image" src="{{ category.image }}" alt="{{ category.name }}">
-              {% endif %}
-          {% endif %}
-      </div>
-      {% endfor %}
-  </div>
   <hr style="color: red;"red>
 
 
-  <!-- CODE FOR DISPLAY THE PRODUCTS TO USER SIDE  -->
-
 <!-- CODE FOR DISPLAY THE PRODUCTS TO USER SIDE  -->
 
-<h1 style="color: red; text-align: center;">Our Products</h1>
-<div style="background-color: whitesmoke;" class="product-list-container"> 
-    <ul class="product-list">
-        {% for product in products %}
-            {% if product.category.is_listed and product.brand.is_listed and product.is_listed %}
-                {% if product.category.is_blocked %}
-                    <!-- Display similar products since the category is blocked -->
-                    {% for similar_product in product.category.similar_products %}
-                        <li class="product-item">
-                            <a href="{% url 'productdetails' similar_product.id %}">
-                                <img class="product-image" src="{{ similar_product.image1.url }}" alt="{{ similar_product.product_name }}">
-                                <h2 class="product-title">{{ similar_product.product_name }}</h2>
-                                <p class="product-price">${{ similar_product.selling_price }}</p>
-                            </a>
-                        </li>
-                    {% endfor %}
-                {% elif product.brand.is_blocked %}
-                    <!-- Do not display products under blocked brand -->
-                {% elif not product.brand.is_listed %}
-                    <!-- Do not display products under unlisted brand -->
-                {% else %}
-                    <!-- Display the product -->
-                    <li class="product-item">
-                        <a href="{% url 'productdetails' product.id %}">
-                            <img class="product-image" src="{{ product.image1.url }}" alt="{{ product.product_name }}">
-                            <h2 class="product-title">{{ product.product_name }}</h2>
-                            <p class="product-price">${{ product.selling_price }}</p>
-                        </a>
-                    </li>
-                {% endif %}
-            {% endif %}
-        {% endfor %}
-    </ul>
+
+<div class="container">
+    <div class="row">
+        <h1 style="color: red; text-align: center;">Our Products</h1>
+        <div class="product-list">
+            {% for category, product in lowest_priced_products.items %}
+            <a  style="text-decoration: none; color: black;"  href="{% url 'productdetails' product.id %}">
+            <div class="card col-md-3 my-2 mx-2 p-3 text-center"  style="width: 16rem;">
+                <img src ="{{ product.image2.url }}" class="product-img" style="height: 170px;width: 200px;" alt="">
+                <i  class="fa-regular fa-heart fa-xl position-absolute top-0 end-0 px-3 py-4 "></i>
+                <div class="card-body">
+                  <h5 class="card-title">{{product.product_name}}</h5>
+                  <div class="d-flex  justify-content-between" >
+                    <p class="card-text fw-bold">₹ {{product.selling_price}}</p>
+                    <s class="card-text text-danger">₹ {{ product.selling_price|add:200 }}</s>
+                  </div>
+                  <a href="#" class="btn btn-success">Shop now</a>
+                </div>
+            </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
 </div>
+
+
+
+
+
+
+
 
 
   
