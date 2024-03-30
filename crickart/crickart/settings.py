@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'userapp1',
     'adminn',     # registering app name 
+    'userprofile',
 
 # thiss apps for checking social authendications 
     'django.contrib.sites',

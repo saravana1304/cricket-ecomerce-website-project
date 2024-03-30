@@ -10,32 +10,37 @@ from .models import UserProfile
 from adminn.models import Category,Product,Brand
 from .forms import CreateUserForm
 from django.http import JsonResponse
-from django.db.models import Q
+from django.db.models import Q,Min
 from django.views.decorators.cache import never_cache
 from django.contrib.sessions.models import Session
-
+from django.contrib import messages
+from django.db.models import Count
 
 
 # Create your views here.
 
-@cache_control(no_cache=True,must_revalidate=True,no_store=True) #performimg the sessions control,not ot redirect to older pages
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def userindex(request):
-    categories = Category.objects.filter(is_listed=True)
-    products = Product.objects.filter(is_listed=True)
-    brand = Brand.objects.filter(is_listed=True)
+    active_categories = Category.objects.filter(is_listed=True)
+    active_products = Product.objects.filter(is_listed=True)
+    active_brands = Brand.objects.filter(is_listed=True)
     
-    # Filter similar products based on listed categories, brands, and products
-    similar_products = Product.objects.filter(
-        Q(category__in=categories) & 
-        Q(brand__in=brand) &
-        Q(is_listed=True)
-    )
+    lowest_priced_products = {}
+
+    for category in active_categories:
+        category_products = active_products.filter(category=category)
+        category_products = category_products.filter(brand__in=active_brands)
+        
+        lowest_priced_product = category_products.aggregate(min_price=Min('selling_price'))
+        lowest_price = lowest_priced_product['min_price']
+        
+        if lowest_price is not None:
+            lowest_priced_product = category_products.filter(selling_price=lowest_price).first()
+            lowest_priced_products[category] = lowest_priced_product
 
     context = {
-        'categories': categories,
-        'products': products,
-        'brand': brand,
-        'similar_products': similar_products
+        'categories': active_categories,
+        'lowest_priced_products': lowest_priced_products
     }
     return render(request, "userapp1/home.html", context)
 
@@ -120,3 +125,18 @@ def product_deatils(request,product_id):
         'similar_products':similar_products
     }
     return render(request,'userapp1/productdetails.html',context)
+
+
+
+
+def category_view(request, name):
+    try:
+        category = Category.objects.get(name=name, is_listed=True)
+        products = Product.objects.filter(category=category, is_listed=True, brand__is_listed=True)
+        products_count = products.count()
+        return render(request, 'userapp1/category.html', {'category': category, 'products': products,'products_count':products_count})
+    except Category.DoesNotExist:
+        messages.warning(request, 'Category does not exist or is not listed')
+        return redirect('category')
+
+        
