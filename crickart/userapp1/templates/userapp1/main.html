@@ -9,8 +9,6 @@
     <title>Welcome Cricket lovers</title>
     {% endblock title%}
 
-    <link rel="stylesheet" href="{% static 'userapp1/home.css' %}">
-
     <link rel="icon" type="image/x-icon" href="{% static 'images/title1.jpg' %}">
     <link rel="stylesheet" href="{% static 'userapp1/navbar.css' %}">
 
@@ -55,9 +53,9 @@
                     <li><a href="{% url 'userlogin' %}">Login</a></li>
                     <li><a href="{% url 'contactus' %}">Contact Us</a></li>
                 {% else %}
-                    <p>Welcome, {{ user.username }}✔️</p>
+                    <a href="{% url 'profile' %}"><p>Welcome, {{ user.username }}✔️</p></a>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
-                    <li><a href="#">Profile</a></li>
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
                     <li><a href="#">Wishlist</a></li>
                     <li><a href="#">Cart</a></li>
                     <li><a href="{% url 'contactus' %}">Contact Us</a></li>

@@ -1,4 +1,4 @@
-
+{% extends 'userapp1/main.html' %}
 
 {% block title%}
 <title>User profile</title>
@@ -18,7 +18,7 @@ integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLAS
             <h3 class="mt-2 me-auto text-danger">{{user.username}}</h3>
             <h5>{{user.email }}</h5>
             <h5>{{ user_profile.phone_number}}</h5>
-            <h5>{{ user_profile.place}}</h5>
+            <h5>{{ user_profile.place}} - {{user_profile.pincode}}</h5>
             <a href="{% url 'logout' %}" class="btn btn-danger btn-lg p-2 mt-3">Logout</a>
             <a href="{% url 'home' %}" class="btn btn-success btn-lg p-2 mt-3 ms-5">Home</a>
             <hr>

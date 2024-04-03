@@ -95,6 +95,7 @@ def userlogin(request):
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  #performimg the sessions control,not ot redirect to older pages
 @login_required(login_url='userlogin')
+@never_cache
 def userlogout(request):
     logout(request)
     request.session.flush()

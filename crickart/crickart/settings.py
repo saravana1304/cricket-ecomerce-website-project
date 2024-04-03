@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'userapp1',
     'adminn',     # registering app name 
+    'userprofile',
 
 # thiss apps for checking social authendications 
     'django.contrib.sites',
@@ -71,6 +72,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 
 # custom middleware for checking social media accounts
     'allauth.account.middleware.AccountMiddleware',
