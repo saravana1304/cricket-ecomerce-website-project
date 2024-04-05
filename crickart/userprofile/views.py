@@ -3,8 +3,9 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from userapp1.models import UserProfile
 from django.views.decorators.cache import never_cache
-from .models import Cart
+from .models import Cart 
 from adminn.models import Product
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -21,7 +22,9 @@ def userprofile(request):
 def cart_view(request):
     if request.user.is_authenticated:  
         cart_items = Cart.objects.filter(user=request.user)
-        return render(request, 'userprofile/usercart.html', {'cart_items': cart_items})
+        total_quantity = sum(item.quantity for item in cart_items)
+        total_price = sum(item.total_price() for item in cart_items) 
+        return render(request, 'userprofile/usercart.html', {'cart_items': cart_items,'total_quantity': total_quantity, 'total_price': total_price})
     else:
         return redirect('userlogin')
 
@@ -29,7 +32,7 @@ def cart_view(request):
 
 def add_to_cart(request, product_id):
     if request.method == 'POST':
-        if not request.user.is_authenticated:  # Check if the user is authenticated
+        if not request.user.is_authenticated:  
             return redirect('userlogin') 
         product = get_object_or_404(Product, pk=product_id)
         quantity = int(request.POST.get('quantity', 1))
@@ -41,10 +44,34 @@ def add_to_cart(request, product_id):
         )
         
         if created:
-            cart_item.quantity = 1
+            cart_item.quantity = 0
 
         if quantity <= product.stock:  
             cart_item.quantity += quantity
             cart_item.save()
 
         return redirect('cartview')
+    
+
+
+def delete_item_from_cart(request, item_id):
+    try:
+        cart_item = Cart.objects.get(id=item_id, user=request.user)
+        cart_item.delete() 
+        return JsonResponse({'message': 'Item deleted successfully'})
+    except Cart.DoesNotExist:
+        return JsonResponse({'error': 'Item not found'}, status=404)
+
+
+
+def clear_cart(request):
+    if request.method == 'POST':
+        cart_items = Cart.objects.filter(user=request.user)
+        cart_items.delete()
+        response_data = {'success': True, 'message': 'Your cart has been cleared successfully.'}
+        return JsonResponse(response_data)
+    else:
+        response_data = {'success': False, 'error': 'Invalid request method.'}
+        return JsonResponse(response_data, status=400)  # Bad request status for invalid method
+
+          
