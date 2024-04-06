@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 from adminn.models import Product
+from userapp1.models import UserProfile
+
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -13,4 +15,11 @@ class Cart(models.Model):
     
     def total_price(self):
         return self.quantity * self.selling_price
+
+class Address(models.Model):
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='addresses')
+    phone_number = models.CharField(max_length=20)
+    place = models.CharField(max_length=100)
+    address = models.CharField(max_length=255)
+    pincode = models.CharField(max_length=20)
 

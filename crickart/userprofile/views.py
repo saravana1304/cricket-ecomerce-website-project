@@ -2,10 +2,15 @@ from django.shortcuts import render,redirect,HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from userapp1.models import UserProfile
+from userprofile.models import Address
 from django.views.decorators.cache import never_cache
 from .models import Cart 
 from adminn.models import Product
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .forms import AddressForm
+
+
 
 # Create your views here.
 
@@ -15,9 +20,26 @@ def userprofile(request):
         return redirect('home')
     else:
         user_profile = UserProfile.objects.get(user=request.user)
+        addresses = Address.objects.filter(user_profile=user_profile)
         request.session['user_profile_id'] = user_profile.id
-        return render(request,'userprofile/profile.html',{'user_profile': user_profile})
-    
+        return render(request,'userprofile/profile.html',{'user_profile': user_profile,'addresses':addresses})
+
+
+@login_required(login_url='userlogin')
+def add_address(request):
+    if request.method == 'POST':
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            address = form.save(commit=False)
+            address.user_profile_id = request.session.get('user_profile_id')
+            address.save()
+            return JsonResponse({'success': True, 'message': 'Address added successfully'}, status=200)
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid form data'}, status=400)
+    else:
+        form = AddressForm()
+    return render(request, 'userprofile/addaddress.html', {'form': form})
+
 
 def cart_view(request):
     if request.user.is_authenticated:  
@@ -72,6 +94,17 @@ def clear_cart(request):
         return JsonResponse(response_data)
     else:
         response_data = {'success': False, 'error': 'Invalid request method.'}
-        return JsonResponse(response_data, status=400)  # Bad request status for invalid method
+        return JsonResponse(response_data, status=400)  
 
+
+
+
+@login_required(login_url='userlogin')
+def checkout_page(request):
+    try:
+        user_profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        user_profile = None
+
+    return render(request, 'userprofile/checkout.html', {'user_profile': user_profile})
           

@@ -22,6 +22,20 @@ integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLAS
             <a href="{% url 'logout' %}" class="btn btn-danger btn-lg p-2 mt-3">Logout</a>
             <a href="{% url 'home' %}" class="btn btn-success btn-lg p-2 mt-3 ms-5">Home</a>
             <hr>
+
+                <h2>Addresses:</h2>
+                <ul>
+                {% for address in addresses %}
+                    <li>
+                        Phone Number: {{ address.phone_number }} <br>
+                        Place: {{ address.place }} <br>
+                        Address: {{ address.address }} <br>
+                        Pincode: {{ address.pincode }} <br>
+                    </li>
+                {% endfor %}
+                </ul>
+
+
             <div class="row mt-4">
                 <div class="col">
                     <a href="">
@@ -29,7 +43,7 @@ integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLAS
                     </a>
                 </div>
                 <div class="col">
-                    <a href="">
+                    <a href="{% url 'addaddress'%}">
                         <button class="btn  btn-secondary btn-block">Address</button>
                     </a>
                 </div>
