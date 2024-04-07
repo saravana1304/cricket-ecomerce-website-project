@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from userapp1.models import UserProfile
 from userprofile.models import Address
 from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import cache_control
 from .models import Cart 
 from adminn.models import Product
 from django.http import JsonResponse
@@ -13,7 +14,7 @@ from .forms import AddressForm
 
 
 # Create your views here.
-
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache
 def userprofile(request):
     if not  request.user.is_authenticated:
@@ -41,6 +42,9 @@ def add_address(request):
     return render(request, 'userprofile/addaddress.html', {'form': form})
 
 
+
+@cache_control(no_cache=True,must_revalidate=True,no_store=True) 
+@never_cache
 def cart_view(request):
     if request.user.is_authenticated:  
         cart_items = Cart.objects.filter(user=request.user)

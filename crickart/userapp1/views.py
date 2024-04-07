@@ -20,6 +20,7 @@ from django.db.models import Count
 # Create your views here.
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@never_cache
 def userindex(request):
     active_categories = Category.objects.filter(is_listed=True)
     active_products = Product.objects.filter(is_listed=True)
@@ -45,6 +46,7 @@ def userindex(request):
     return render(request, "userapp1/home.html", context)
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def userregister(request):
     form = CreateUserForm()
     if request.method == 'POST':
@@ -67,7 +69,7 @@ def userregister(request):
     return render(request, "userapp1/register.html", context=context)
 
 
-@never_cache
+
 @ensure_csrf_cookie
 def userlogin(request): 
     if request.user.is_authenticated:
@@ -93,9 +95,9 @@ def userlogin(request):
 
 
 
-@cache_control(no_cache=True,must_revalidate=True,no_store=True)  #performimg the sessions control,not ot redirect to older pages
-@login_required(login_url='userlogin')
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache
+@login_required(login_url='userlogin')
 def userlogout(request):
     logout(request)
     request.session.flush()
@@ -117,7 +119,7 @@ def contactus(request):
 
 
 # CODE FOR DISPLAYING THE PRODUCUTS
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def product_deatils(request,product_id):
     product=Product.objects.get(pk=product_id)
     similar_products = Product.objects.filter(category=product.category).exclude(pk=product_id)[:4]
