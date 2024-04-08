@@ -1,23 +1,25 @@
+{% extends 'adminn/home.html' %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product List</title>
-    <link rel="stylesheet" href="{% static 'adminn/product.css' %}">
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
-</head>
-<body>
-    <div class="container">
-        <h1 style="color: red; text-align: center;">Product List</h1>
-        <div class="addproduct">
-            <a href="{% url 'addproduct' %}"><button>Add Product</button></a>
-        </div>
-        <table id="table" class="product-table">
+{% block content %}
+
+
+<style>
+    .addproduct{
+        width: 150px;
+        height: 40px;
+        margin-top: 60px !important;
+        margin-bottom: -70px;
+        margin-left: 850px;
+    }
+
+</style>
+
+  
+<a href="{% url 'addproduct' %}"><button class="btn btn-success addproduct mt-3">Add Product</button></a>
+    <div class="container ms-4" >
+        <table id="table" class="product-table mb-3">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -90,5 +92,4 @@
                     $('#table').DataTable();
                 });
     </script>
-</body>
-</html>
+{% endblock content %}

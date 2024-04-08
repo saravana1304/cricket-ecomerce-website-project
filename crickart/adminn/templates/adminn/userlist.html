@@ -1,16 +1,13 @@
-{% load static%}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User List</title>
-    <link rel="stylesheet" href="{% static 'adminn/userlist.css' %}">
-</head>
-<body>
-<div class="container">
-    <h1>User List</h1>  
-    <table class="user-table">
+{% extends 'adminn/home.html' %}
+
+{% load static %}
+
+{% block content %}
+
+
+
+
+    <table class="user-table mt-5 ms-4">
         <thead>
             <tr>
                 <th>ID</th>
@@ -57,3 +54,4 @@
 
 </body>
 </html>
+{% endblock content %}

@@ -1,19 +1,12 @@
-{% load static%}
+{% extends 'adminn/home.html' %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category List</title>
-    <link rel="stylesheet" href="{% static 'adminn/category.css' %}">
-</head>
 
-<body>
-    <h1>Category List</h1>
+{% block content %}
+
     <div class="button-row">
-        <a href="{% url 'add_category' %}" class="button" style="background-color: green;">Add Category</a>
+        <a href="{% url 'add_category' %}" class="button mt-5 me-5" style="background-color: green;">Add Category</a>
     </div>
     <table>
         <thead>
@@ -59,3 +52,5 @@
 </body>
 
 </html>
+
+{% endblock content %}

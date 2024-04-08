@@ -47,6 +47,7 @@ def userindex(request):
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@never_cache
 def userregister(request):
     form = CreateUserForm()
     if request.method == 'POST':
@@ -70,7 +71,8 @@ def userregister(request):
 
 
 
-@ensure_csrf_cookie
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@never_cache
 def userlogin(request): 
     if request.user.is_authenticated:
         return redirect('home')
@@ -120,6 +122,7 @@ def contactus(request):
 
 # CODE FOR DISPLAYING THE PRODUCUTS
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@never_cache
 def product_deatils(request,product_id):
     product=Product.objects.get(pk=product_id)
     similar_products = Product.objects.filter(category=product.category).exclude(pk=product_id)[:4]
@@ -131,7 +134,8 @@ def product_deatils(request,product_id):
 
 
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@never_cache
 def category_view(request, name):
     try:
         category = Category.objects.get(name=name, is_listed=True)

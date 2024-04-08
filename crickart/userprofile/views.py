@@ -55,7 +55,8 @@ def cart_view(request):
         return redirect('userlogin')
 
 
-
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)  
+@never_cache
 def add_to_cart(request, product_id):
     if request.method == 'POST':
         if not request.user.is_authenticated:  
@@ -79,7 +80,8 @@ def add_to_cart(request, product_id):
         return redirect('cartview')
     
 
-
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)  
+@never_cache
 def delete_item_from_cart(request, item_id):
     try:
         cart_item = Cart.objects.get(id=item_id, user=request.user)
@@ -89,7 +91,8 @@ def delete_item_from_cart(request, item_id):
         return JsonResponse({'error': 'Item not found'}, status=404)
 
 
-
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)  
+@never_cache
 def clear_cart(request):
     if request.method == 'POST':
         cart_items = Cart.objects.filter(user=request.user)

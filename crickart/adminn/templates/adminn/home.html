@@ -6,62 +6,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome Cricket lovers</title>
+    
+
+    {% block title %}
+    
+    <title>Welcome Admin</title>
     <link rel="icon" type="image/x-icon" href="{% static 'images/title1.jpg' %}">
+
+    {% endblock title %}
+    
+
+
+    <!-- Link for bootstrap class -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Link for jquery for form validation ajx  class -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+    <!-- Link for database table searching process -->
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+
+
+    <!-- Styleshet for all html pages  -->
+
     <link rel="stylesheet" href="{% static 'adminn/home.css' %}">
+    <link rel="stylesheet" href="{% static 'adminn/category.css' %}">
+    <link rel="stylesheet" href="{% static 'adminn/brand.css' %}">
+    <link rel="stylesheet" href="{% static 'adminn/userlist.css' %}">
+    <link rel="stylesheet" href="{% static 'adminn/product.css' %}">
+
+
+    
+    <style>
+        /* Custom CSS to set navbar text color to white */
+        .navbar-nav .nav-link {
+            color: white !important;
+        }
+    </style>
+
 </head>
 
 <body>
-    <header>
-        <nav>
-            <div class="logo">⚾Cric-kart⛹️-admin page👨🏻‍💻</div>
-            {% if user.is_authenticated and user.is_superuser %}
-            <div class="user-welcome">🙏🏻Welcome, {{ user.username }}✔️</div>
-            <ul class="nav-links">
-                <li><a href="{% url 'alogout' %}">🔓Logout</a></li>
-            </ul>
-            {% else %}
-            <ul class="nav-links">
-                <li><a href="{% url 'alogin' %}">🔓Admin Login</a></li>
-            </ul>
-            {% endif %}
-        </nav>
-    </header>
-    
-    
-
-    <div class="content-wrapper" >
-        {% block content %}
-
-        {% if user.is_authenticated and user.is_superuser %}
-        <center>
-        <div class="dashboard-container" >
-            <ul class="dashboard-links">
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">SalesReport</a></li>
-                <li><a href="{% url 'categories' %}">Category</a></li>
-                <li><a href="{% url 'brandlist' %}">Brand</a></li>
-                <li><a href="{% url 'userlist' %}">UserList</a></li>
-                <li><a href="{% url 'products' %}">Products</a></li>
-                <li><a href="#">OrderDetails</a></li>
-                <li><a href="#">Coupon</a></li>
-                <li><a href="#">Trending</a></li>
-                <li><a href="#">Offers</a></li>
-                <li><a href="#">Banner</a></li>
-            </ul>
+    <nav class="navbar navbar-expand-lg navbar-light bg-success fixed-top mb-5">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="#">⚾Cric-kart⛹️-admin page👨🏻‍💻</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                {% if user.is_authenticated and user.is_superuser %}
+                <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link ms-5" href="#">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">SalesReport</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'categories' %}">Category</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'brandlist' %}">Brand</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'products' %}">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'userlist' %}">UserList</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">OrderDetails</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Coupon</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Trending</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Offers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Banner</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item text-danger">
+                        <a class="nav-link me-5 text-danger" href="{% url 'alogout' %}"><span style="color: yellow;">🔓 Logout</span></a>
+                    </li>
+                </ul>
+                {% else %}
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'alogin' %}">🔓 Admin Login</a>
+                    </li> 
+                </ul>
+                {% endif %}
+            </div>
         </div>
-        </center>
-    
-
-        {% endif %}
-
+    </nav>
+        {% block content %}
+        <!-- Your content goes here -->
         {% endblock content %}
-    </div>
-    
 
     <footer>
         <p>&copy; 2024 Cricket Website. All rights reserved.</p>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+        integrity="sha384-Xug4maU3AqKAJsXLw3FtgOgrV/eSZy4x5YIc6JX9KhCus39Fg4h4hDplC+5Ei6z2"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.2/js/bootstrap.min.js"
+        integrity="sha384-mCkziJlM8B8rYLHteXVf7XQssFv/ixHp2n0VQoTz+O8r/x/hVk6HyQ6IKc3mIPIw"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

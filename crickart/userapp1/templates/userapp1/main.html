@@ -46,34 +46,25 @@
 
 
 <body>
-
-<header>
-    <nav class="d-flex align-items-baseline">
-        <a href="/" class="logo" style="text-decoration: none;">⚾Cric-kart⛹️</div>
-        <ul class="nav-links d-flex align-items-baseline">
-            {% if user.is_authenticated %}
-                {% if user.is_superuser %}
-                    <li><a href="{% url 'home' %}">Home</a></li> 
-                    <li><a href="{% url 'userlogin' %}">Login</a></li>
-                    <li><a href="{% url 'contactus' %}">Contact Us</a></li>
-                {% else %}
+    <header>
+        <nav class="d-flex align-items-baseline">
+            <a href="/" class="logo" style="text-decoration: none;">⚾Cric-kart⛹️</div>
+            <ul class="nav-links d-flex align-items-baseline">
+                {% if user.is_authenticated %}
                     <a href="{% url 'profile' %}"><p>Welcome, {{ user.username }}✔️</p></a>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                     <li><a href="{% url 'profile' %}">Profile</a></li>
                     <li><a href="#">Wishlist</a></li>
                     <li><a href="{% url 'cartview' %}">Cart</a></li>
                     <li><a href="{% url 'contactus' %}">Contact Us</a></li>
-                {% endif %}
-            {% else %}
-                <li><a href="{% url 'home' %}">Home</a></li>
-                {% if not user.is_superuser %}
+                {% else %}
+                    <li><a href="{% url 'home' %}">Home</a></li>
                     <li><a href="{% url 'userlogin' %}">Login</a></li>
+                    <li><a href="{% url 'contactus' %}">Contact Us</a></li>
                 {% endif %}
-                <li><a href="{% url 'contactus' %}">Contact Us</a></li>
-            {% endif %}
-        </ul>
-    </nav>
-</header>
+            </ul>
+        </nav>
+    </header>
 
 <main class="main-content">
     {% block content %}
