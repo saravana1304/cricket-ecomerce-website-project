@@ -6,6 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
     <link rel="stylesheet" href="{% static 'adminn/addproduct.css' %}">
+    <style>
+        /* Additional styles for image previews */
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .preview-image {
+            max-width: 100px;
+            max-height: 100px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .preview-image-container {
+            position: relative;
+            margin-right: 10px;
+        }
+        .remove-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
     <h2 style="color: red;text-align: center;"> Add New Product</h2>
@@ -33,14 +67,9 @@
         <label for="description">Description:</label><br>
         <textarea id="description" name="description"></textarea><br><br>
 
-        <label for="image1">Image 1:</label><br>
-        <input type="file" id="image1" name="image1"><br><br>
-
-        <label for="image2">Image 2:</label><br>
-        <input type="file" id="image2" name="image2"><br><br>
-
-        <label for="image3">Image 3:</label><br>
-        <input type="file" id="image3" name="image3"><br><br>
+        <div class="preview-container" id="imagePreviewContainer"></div>
+        <label for="images">Images:</label><br>
+        <input type="file" id="images" name="images[]" accept="image/*"><br><br>
 
         <label for="stock">Stock:</label><br>
         <input type="number" id="stock" name="stock" value="0" min="0" required><br><br>
@@ -62,5 +91,43 @@
             <p style="text-align: center;">Back to Productlist</p>
         </a>
     </form>
+
+    <script>
+        // Function to handle image preview and remove button
+        function handleImagePreview(event) {
+            const container = document.getElementById('imagePreviewContainer');
+            container.innerHTML = '';
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const image = document.createElement('img');
+                    image.className = 'preview-image';
+                    image.src = e.target.result;
+                    const containerDiv = document.createElement('div');
+                    containerDiv.className = 'preview-image-container';
+                    containerDiv.appendChild(image);
+                    const removeButton = document.createElement('button');
+                    removeButton.className = 'remove-button';
+                    removeButton.textContent = 'X';
+                    removeButton.onclick = function () {
+                        container.removeChild(containerDiv);
+                    };
+                    containerDiv.appendChild(removeButton);
+                    container.appendChild(containerDiv);
+                }
+                reader.readAsDataURL(file);
+            }
+            // Add another file input field after selecting an image
+            const newInput = document.createElement('input');
+            newInput.type = 'file';
+            newInput.name = 'images[]';
+            newInput.accept = 'image/*';
+            newInput.addEventListener('change', handleImagePreview);
+            container.appendChild(newInput);
+        }
+        document.getElementById('images').addEventListener('change', handleImagePreview);
+    </script>
 </body>
 </html>

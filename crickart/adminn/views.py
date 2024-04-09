@@ -235,6 +235,7 @@ def add_product(request):
         return redirect('products')
     return render(request, 'adminn/addproduct.html', {'categories': categories, 'brands': brands})
 
+
 # product list and unlist
 def unlist_produt(request, product_id):
     products = get_object_or_404(Product, pk=product_id)
