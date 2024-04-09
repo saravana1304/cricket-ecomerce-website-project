@@ -5,17 +5,26 @@
 
 {% block content %}
 
+
+<style>
+    .addcat{
+        margin-top: 80px;
+        margin-bottom: -80px;
+        margin-right: 450px;
+    }
+</style>
+
     <div class="button-row">
-        <a href="{% url 'add_category' %}" class="button mt-5 me-5" style="background-color: green;">Add Category</a>
+        <a href="{% url 'add_category' %}" class="button addcat " style="background-color: green;">Add Category</a>
     </div>
-    <table>
+    <table id="table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Image</th>
-                <th colspan="3">Actions</th>
+                <th>Actions</th> 
             </tr>
         </thead>
         <tbody>
@@ -31,26 +40,31 @@
                     No Image
                     {% endif %}
                 </td>
-                <td><a href="{% url 'editcategory' category_id=category.id %}">
-                    <button class="edit-btn">Edit</button>
-                    </a>
-                </td>
                 <td>
+                    <a href="{% url 'editcategory' category_id=category.id %}">
+                        <button class="edit-btn">Edit</button>
+                    </a>
                     {% if category.is_listed %}
-                    <a href="{% url 'unlistcategory' category_id=category.id %}"><button class="delete-btn">Unlist</button></a>
+                    <a href="{% url 'unlistcategory' category_id=category.id %}">
+                        <button class="delete-btn">Unlist</button>
+                    </a>
                     {% else %}
-                    <a href="{% url 'unlistcategory' category_id=category.id %}"><button style="background-color: green;"  class="delete-btn">List</button></a>
+                    <a href="{% url 'unlistcategory' category_id=category.id %}">
+                        <button style="background-color: green;" class="delete-btn">List</button>
+                    </a>
                     {% endif %}
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'ahome' %}">
-        <p style="text-align: center;">Back to Adminpanel</p>
-    </a>
-</body>
+    
 
-</html>
+
+    <script>
+        $(document).ready(function () {
+                    $('#table').DataTable();
+                });
+    </script>
 
 {% endblock content %}

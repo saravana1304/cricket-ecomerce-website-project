@@ -106,8 +106,8 @@ img {
 }
 
 /* Edit button styling */
-.edit-btn {
-    background-color: brown;
+#brandedit {
+    background-color: brown !important;
     color: white;
     padding: 8px 16px;
     border: none;

@@ -19,7 +19,7 @@
   
 <a href="{% url 'addproduct' %}"><button class="btn btn-success addproduct mt-3">Add Product</button></a>
     <div class="container ms-4" >
-        <table id="table" class="product-table mb-3">
+        <table id="table" class="product-table  mt-5">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -84,12 +84,14 @@
             </tbody>
         </table>
     </div>
-    <a href="{% url 'ahome' %}">
-        <p style="text-align: center;">Back to Adminpanel</p>
-    </a>
+
+
+
     <script>
         $(document).ready(function () {
                     $('#table').DataTable();
                 });
     </script>
+
+    
 {% endblock content %}

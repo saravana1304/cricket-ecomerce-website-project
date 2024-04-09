@@ -35,6 +35,7 @@
     <link rel="stylesheet" href="{% static 'adminn/brand.css' %}">
     <link rel="stylesheet" href="{% static 'adminn/userlist.css' %}">
     <link rel="stylesheet" href="{% static 'adminn/product.css' %}">
+    
 
 
     
@@ -50,7 +51,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-success fixed-top mb-5">
         <div class="container-fluid">
-            <a class="navbar-brand text-white" href="#">⚾Cric-kart⛹️-admin page👨🏻‍💻</a>
+            <a class="navbar-brand text-white" href="{% url 'ahome' %}">⚾Cric-kart⛹️-admin page👨🏻‍💻</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -95,6 +96,10 @@
                 </ul>
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item text-danger">
+                        <a class="nav-link"><span style="color:yellow">{{user.username}}</span></a>
+
+                    </li>
+                    <li class="nav-item text-danger">
                         <a class="nav-link me-5 text-danger" href="{% url 'alogout' %}"><span style="color: yellow;">🔓 Logout</span></a>
                     </li>
                 </ul>
@@ -109,7 +114,7 @@
         </div>
     </nav>
         {% block content %}
-        <!-- Your content goes here -->
+
         {% endblock content %}
 
     <footer>

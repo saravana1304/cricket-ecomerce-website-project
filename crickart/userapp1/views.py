@@ -103,7 +103,9 @@ def userlogin(request):
 def userlogout(request):
     logout(request)
     request.session.flush()
-    return redirect('home')
+    response = redirect('home')
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    return response
 
 
 def otp(request):

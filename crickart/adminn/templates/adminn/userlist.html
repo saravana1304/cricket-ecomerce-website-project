@@ -5,9 +5,19 @@
 {% block content %}
 
 
+<style>
+    .user-table {
+        margin-top: 100px !important;
+        margin-bottom: 120px;
+    }
 
+    #usertable{
+        margin-top: 150px;
+    }
 
-    <table class="user-table mt-5 ms-4">
+</style>
+
+    <table class="user-table ms-4">
         <thead>
             <tr>
                 <th>ID</th>
@@ -49,9 +59,15 @@
             {% endfor %}
         </tbody>
     </table>
-<a href="{% url 'ahome' %}"><h4>Back to Admin Panel</h4></a>
 </div>
 
-</body>
-</html>
+
+<!-- <script>
+    $(document).ready(function () {
+                $('#usertable').DataTable();
+            });
+</script> -->
+
+
+
 {% endblock content %}

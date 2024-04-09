@@ -16,6 +16,7 @@ from .forms import AddressForm
 # Create your views here.
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache
+@login_required(login_url='userlogin')
 def userprofile(request):
     if not  request.user.is_authenticated:
         return redirect('home')
