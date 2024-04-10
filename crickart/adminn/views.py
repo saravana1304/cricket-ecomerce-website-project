@@ -11,8 +11,17 @@ from django.views.decorators.cache import never_cache
 
 
 # Create your views here.
+# Decorator to check if the user is a superuser
+def admin_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return redirect('alogin')  
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
 
 # admin home page request
+@admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='alogin')
 def ahome(request):
@@ -46,6 +55,7 @@ def adminlogout(request):
         return redirect('alogin')  # Redirect admin to admin login page:
  
 # user list page
+@admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='alogin')
 def user_list(request):
@@ -60,6 +70,8 @@ def user_list(request):
     return render(request, 'adminn/userlist.html', {'users': users})
 
 # user list update block and unblock
+@admin_required
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def update_status(request, user_id):
     user = get_object_or_404(DjangoUser, id=user_id)
     if request.method == 'POST':
@@ -73,6 +85,7 @@ def update_status(request, user_id):
     return render(request, 'adminn/userlist.html', {'users': DjangoUser.objects.all()})
 
 # category list page
+@admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='alogin')
 def category_list(request):
@@ -80,6 +93,8 @@ def category_list(request):
         return render(request, 'adminn/category.html', {'categories': categories})
 
 #  addcategory page
+@admin_required
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def add_category(request):
     if request.method=='POST':
         name = request.POST.get('name')
@@ -107,6 +122,8 @@ def add_category(request):
 
 
 # update category page
+@admin_required
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def update_category(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
     if request.method=='POST':
@@ -126,6 +143,8 @@ def update_category(request, category_id):
     return render(request,'adminn/editcategory.html',{'category': category})
 
 # unlist category from admin side 
+@admin_required
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def unlist_category(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
     if request.method == 'GET':
@@ -139,6 +158,7 @@ def unlist_category(request, category_id):
     return redirect('categories')
 
 # Brand list page
+@admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='alogin')
 def brand_list(request):
@@ -147,6 +167,8 @@ def brand_list(request):
 
 
 # Add brand for our site
+@admin_required
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def add_brand(request):
     if request.method=='POST':
         name = request.POST.get('name')
@@ -163,6 +185,8 @@ def add_brand(request):
 
 
 # update brand for our site
+@admin_required
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def update_brand(request, brand_id):
     brands = get_object_or_404(Brand, pk=brand_id)
     if request.method=='POST':
@@ -176,6 +200,8 @@ def update_brand(request, brand_id):
 
 
 # edit brand for our site
+@admin_required
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def unlist_brand(request, brand_id):
     brand = get_object_or_404(Brand, pk=brand_id)
     if request.method == 'GET':
@@ -189,6 +215,7 @@ def unlist_brand(request, brand_id):
 
 
 # products list page:
+@admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='alogin')
 def product_list(request):
@@ -199,6 +226,8 @@ def product_list(request):
     
 
 # Add product page:
+@admin_required
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def add_product(request):
     categories = Category.objects.all()
     brands = Brand.objects.all()
@@ -237,6 +266,8 @@ def add_product(request):
 
 
 # product list and unlist
+@admin_required
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def unlist_produt(request, product_id):
     products = get_object_or_404(Product, pk=product_id)
     if request.method == 'GET':
@@ -249,6 +280,8 @@ def unlist_produt(request, product_id):
     return redirect('products')
 
 # update product
+@admin_required
+@cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def update_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     categories = Category.objects.all()

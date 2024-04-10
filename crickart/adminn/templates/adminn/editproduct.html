@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Product</title>
     <link rel="stylesheet" href="{% static 'adminn/addproduct.css' %}">
-    
 </head>
 <body>
     <h2 style="color: red;text-align: center;"> Edit Product</h2>
@@ -32,23 +31,19 @@
         <label for="description">Description:</label><br>
         <textarea id="description" name="description" required>{{ product.description }}</textarea><br><br>
 
-        <label for="image1">Image 1:</label><br>
-        <input type="file" id="image1" name="image1"><br><br>
-        {% if product.image1 %}
-            <img src="{{ product.image1.url }}" alt="Image 1" width="100"><br><br>
-        {% endif %}
-
-        <label for="image2">Image 2:</label><br>
-        <input type="file" id="image2" name="image2"><br><br>
-        {% if product.image2 %}
-            <img src="{{ product.image2.url }}" alt="Image 2" width="100"><br><br>
-        {% endif %}
-
-        <label for="image3">Image 3:</label><br>
-        <input type="file" id="image3" name="image3"><br><br>
-        {% if product.image3 %}
-            <img src="{{ product.image3.url }}" alt="Image 3" width="100"><br><br>
-        {% endif %}
+        {% for i in "123" %}
+            <label for="image{{ i }}">Image {{ i }}:</label><br>
+            <input type="file" id="image{{ i }}" name="image{{ i }}" onchange="previewImage(this, 'preview{{ i }}')"><br><br>
+            {% if product.image1 and i == '1' %}
+                <img id="preview{{ i }}" src="{{ product.image1.url }}" alt="Image 1" width="100"><br><br>
+            {% elif product.image2 and i == '2' %}
+                <img id="preview{{ i }}" src="{{ product.image2.url }}" alt="Image 2" width="100"><br><br>
+            {% elif product.image3 and i == '3' %}
+                <img id="preview{{ i }}" src="{{ product.image3.url }}" alt="Image 3" width="100"><br><br>
+            {% else %}
+                <img id="preview{{ i }}" src="#" alt="Preview Image {{ i }}" style="display:none;"><br><br>
+            {% endif %}
+        {% endfor %}
 
         <label for="stock">Stock:</label><br>
         <input type="number" id="stock" name="stock" value="{{ product.stock }}" min="0" required><br><br>
@@ -70,5 +65,21 @@
             <p style="text-align: center;">Back to Productlist</p>
         </a>
     </form>
+
+    <script>
+        function previewImage(input, previewId) {
+            var preview = document.getElementById(previewId);
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.style.display = null;
+            }
+        }
+    </script>
 </body>
 </html>
