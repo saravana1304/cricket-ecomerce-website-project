@@ -14,6 +14,9 @@ from .forms import AddressForm
 
 
 # Create your views here.
+
+# code for viewing user profile 
+
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache
 @login_required(login_url='userlogin')
@@ -26,7 +29,7 @@ def userprofile(request):
         request.session['user_profile_id'] = user_profile.id
         return render(request,'userprofile/profile.html',{'user_profile': user_profile,'addresses':addresses})
 
-
+# code for add address
 @login_required(login_url='userlogin')
 def add_address(request):
     if request.method == 'POST':
@@ -43,6 +46,7 @@ def add_address(request):
     return render(request, 'userprofile/addaddress.html', {'form': form})
 
 
+# code for cart_view
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True) 
 @never_cache
@@ -55,6 +59,7 @@ def cart_view(request):
     else:
         return redirect('userlogin')
 
+# code for add_to_cart 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache
@@ -81,6 +86,8 @@ def add_to_cart(request, product_id):
         return redirect('cartview')
     
 
+# delete from the cart 
+
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache
 def delete_item_from_cart(request, item_id):
@@ -91,6 +98,7 @@ def delete_item_from_cart(request, item_id):
     except Cart.DoesNotExist:
         return JsonResponse({'error': 'Item not found'}, status=404)
 
+# clear cart for delete all items 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache
@@ -105,7 +113,7 @@ def clear_cart(request):
         return JsonResponse(response_data, status=400)  
 
 
-
+# check_outpage  
 
 @login_required(login_url='userlogin')
 def checkout_page(request):

@@ -19,6 +19,8 @@ from django.db.models import Count
 
 # Create your views here.
 
+# user index request
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
 def userindex(request):
@@ -45,6 +47,7 @@ def userindex(request):
     }
     return render(request, "userapp1/home.html", context)
 
+# user register page 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
@@ -70,6 +73,7 @@ def userregister(request):
     return render(request, "userapp1/register.html", context=context)
 
 
+# user login page 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
@@ -95,7 +99,7 @@ def userlogin(request):
         
     return render(request, 'userapp1/login.html')
 
-
+# user log_out page 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache
@@ -122,7 +126,8 @@ def contactus(request):
 
 
 
-# CODE FOR DISPLAYING THE PRODUCUTS
+# code for product deyails 
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
 def product_deatils(request,product_id):
@@ -135,6 +140,7 @@ def product_deatils(request,product_id):
     return render(request,'userapp1/productdetails.html',context)
 
 
+# code for cart_view
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
