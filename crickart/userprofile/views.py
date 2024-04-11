@@ -46,6 +46,36 @@ def add_address(request):
     return render(request, 'userprofile/addaddress.html', {'form': form})
 
 
+# code for updating address
+@login_required(login_url='userlogin')
+def update_address(request, address_id):
+    address = get_object_or_404(Address, id=address_id)
+   
+    if request.method == 'POST':
+        form = AddressForm(request.POST, instance=address)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True, 'message': 'Address updated successfully'}, status=200)
+        else:
+            return JsonResponse({'success': False, 'error': 'Invalid form data'}, status=400)
+    else:
+        form = AddressForm(instance=address)
+    
+    return render(request, 'userprofile/editaddress.html', {'form': form})
+
+
+# code for delete address for user
+def delete_address(request, address_id):
+    try:
+        address = get_object_or_404(Address, id=address_id)
+        address.delete()
+        return JsonResponse({'success': True})
+    except UserProfile.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Address does not exist'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
 # code for cart_view
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True) 

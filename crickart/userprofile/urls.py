@@ -3,14 +3,11 @@ from . import views
 
 
 urlpatterns = [
-   
-    path('profile/',views.userprofile,name='profile'), 
-     path('add_address/', views.add_address, name='addaddress'),
 
-
-
-
-
+    path('profile/', views.userprofile, name='profile'), 
+    path('add_address/', views.add_address, name='addaddress'),
+    path('update_address/<int:address_id>/', views.update_address, name='updateaddress'),
+    path('delete_address/<int:address_id>/', views.delete_address, name='deleteaddress'),
 
 
     path('cartview/',views.cart_view,name='cartview'),

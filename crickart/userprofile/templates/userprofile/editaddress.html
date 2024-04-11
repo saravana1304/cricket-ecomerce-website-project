@@ -1,0 +1,123 @@
+{% extends 'userapp1/main.html' %}
+
+{% block title %}
+<title>Edit Address</title>
+{% endblock title %}
+
+{% block content %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        max-width: 400px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    label {
+        font-weight: bold;
+    }
+    input[type="text"], select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .button-container {
+        text-align: center;
+    }
+    input[type="submit"] {
+        background-color: #4CAF50; /* Green */
+        color: rgb(9, 176, 48);
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+</style>
+
+<div class="container">
+    <h1>Edit Address</h1>
+    <form id="addressForm" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="button-container">
+            <button type="submit">Update Address</button>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Function to show sweet alert and redirect to profile page
+    function showAlertAndRedirect(message) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: message,
+            timer: 3000, // Auto close alert after 3 seconds
+            showConfirmButton: false
+        }).then(() => {
+            window.location.href = "{% url 'profile' %}"; // Redirect to profile page
+        });
+    }
+
+    // Function to handle form submission
+    document.getElementById('addressForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        fetch(window.location.pathname, {  // Use current URL for submission
+            method: 'POST',
+            body: new FormData(this),
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlertAndRedirect(data.message);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.error || 'An error occurred',
+                }).then(() => {
+                    window.location.href = "{% url 'profile' %}"; // Redirect to profile page
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred',
+            }).then(() => {
+                window.location.href = "{% url 'profile' %}"; // Redirect to profile page
+            });
+        });
+    });
+</script>
+
+{% endblock content %}
