@@ -145,12 +145,21 @@ def clear_cart(request):
 
 # check_outpage  
 
-@login_required(login_url='userlogin')
+@login_required
 def checkout_page(request):
-    try:
-        user_profile = UserProfile.objects.get(user=request.user)
-    except UserProfile.DoesNotExist:
-        user_profile = None
+    user = request.user
+    user_profile_address = UserProfile.objects.filter(user=user).first()  
+    adminn_product = Product.objects.all()  
+    usercart = Cart.objects.all()
+    shipping=Address.objects.all()
 
-    return render(request, 'userprofile/checkout.html', {'user_profile': user_profile})
-          
+
+    context = {
+        'user': user,
+        'userprofile_address': user_profile_address,
+        'adminn_product': adminn_product,
+        'usercart' : usercart,
+        'shipping' : shipping,
+    }
+
+    return render(request, 'userprofile/checkout.html', context)        

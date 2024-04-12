@@ -43,10 +43,35 @@
         margin-bottom: 10px;
         float: right;
     }
+    .wallet {
+        width: 150px;
+        height: 150px;
+        background-color: #f0f0f0;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 0 auto;
+    }
+
+    .balance {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .currency {
+        font-size: 16px;
+        color: #666;
+    }
+    .fa-indian-rupee-sign {
+        font-size: 38px;
+    }
 </style>
 
 <div class="container">
-    <h1>User Profile</h1>
+    <h1 style="color: darkorange">User Profile</h1>
     <div class="row">
         <div class="col-md-6">
             <h2>Welcome</h2>
@@ -90,10 +115,43 @@
             </table>
         </div>
         <div class="col-md-6">
-            <h2>Manage Address</h2>
-            <h3>Add</h3>
-            <h3>Edit</h3>
-            <h3>Change Password</h3>
+            <h2 style="color: red;margin-left: 290px;">Wallet Balance</h2>
+            <div class="wallet mt-4">
+                    <div class="balance"></div>
+                    <i class="fa-solid fa-indian-rupee-sign"><h5 style="margin-top:20px; color:black;">500</h5></i>
+                </div>
+                <h2 style="margin-top: 50px; color: red; text-align: center;">Manage Orders</h2>
+                <div class="row mt-5">
+                    <div class="col-md-3">
+                        <h4 style="text-align: center;">Total orders</h4>
+                        <div class="wallet mt-4">
+                            <div class="balance"></div>
+                            <h5 style="margin-top:20px; color:black;">25</h5></i>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <h4 style="text-align: center;">Pending</h4>
+                        <div class="wallet mt-4">
+                            <div class="balance"></div>
+                           <h5 style="margin-top:20px; color:black;">8</h5></i>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <h4 style="text-align: center;">Delivered</h4>
+                        <div class="wallet mt-4">
+                            <div class="balance"></div>
+                          <h5 style="margin-top:20px; color:black;">17</h5></i>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <h4 style="text-align: center;color: #212529;">Amout</h4>
+                        <div class="wallet mt-4">
+                            <div class="balance"></div>
+                           ><h5 style="margin-top:20px; color:black;">7500</h5></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
