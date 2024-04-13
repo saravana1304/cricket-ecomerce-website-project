@@ -10,6 +10,9 @@ from adminn.models import Product
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .forms import AddressForm
+from collections import Counter
+from django.db.models import F
+
 
 
 
@@ -93,30 +96,54 @@ def cart_view(request):
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache
+@never_cache
 def add_to_cart(request, product_id):
     if request.method == 'POST':
-        if not request.user.is_authenticated:  
-            return redirect('userlogin') 
+        if not request.user.is_authenticated:
+            return redirect('userlogin')
+
         product = get_object_or_404(Product, pk=product_id)
-        quantity = int(request.POST.get('quantity', 1))
-        
+        max_quantity = product.stock  # Maximum quantity available for the product
+
+        requested_quantity = int(request.POST.get('quantity', 1))
+
+        if requested_quantity > max_quantity:
+            requested_quantity = max_quantity  # Limit the quantity to the maximum available
+
+        # Check if the item already exists in the cart
         cart_item, created = Cart.objects.get_or_create(
             user=request.user,
             product=product,
-            selling_price=product.selling_price 
+            selling_price=product.selling_price
         )
-        
-        if created:
-            cart_item.quantity = 0
 
-        if quantity <= product.stock:  
-            cart_item.quantity += quantity
+        if not created:  # Item already exists in the cart
+            cart_item.quantity += requested_quantity  # Increase the quantity
+            if cart_item.quantity > max_quantity:
+                cart_item.quantity = max_quantity  # Limit the quantity to the maximum available
+            cart_item.save()
+        else:
+            cart_item.quantity = requested_quantity
             cart_item.save()
 
         return redirect('cartview')
     
 
-# delete from the cart 
+# code for increase qty 
+
+def update_cart_item_quantity(request, item_id, quantity):
+    try:
+        cart_item = Cart.objects.get(id=item_id, user=request.user)
+        cart_item.quantity = quantity
+        cart_item.save()
+        return JsonResponse({'success': True, 'message': 'Cart item quantity updated successfully'})
+    except Cart.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Cart item not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}) 
+    
+
+# code for  delete from the cart 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache
@@ -148,18 +175,42 @@ def clear_cart(request):
 @login_required
 def checkout_page(request):
     user = request.user
-    user_profile_address = UserProfile.objects.filter(user=user).first()  
-    adminn_product = Product.objects.all()  
-    usercart = Cart.objects.all()
-    shipping=Address.objects.all()
+    user_profile_address = UserProfile.objects.filter(user=user).first()
+    shipping_addresses = Address.objects.filter(user_profile=user_profile_address)
 
+    if request.method == 'POST' and 'product_id' in request.POST:
+        product_id = request.POST.get('product_id')
+        quantity = int(request.POST.get('quantity', 1))
+        product = Product.objects.get(pk=product_id)
+
+        existing_item = Cart.objects.filter(user=user, product=product).first()
+
+        if existing_item:
+            existing_item.quantity = F('quantity') + quantity
+            existing_item.save()
+        else:
+            new_item = Cart(user=user, product=product, quantity=quantity, selling_price=product.selling_price)
+            new_item.save()
+
+        return redirect('checkout_page')
+
+    usercart = Cart.objects.filter(user=user)
+    
+    total_price_list = []
+    for item in usercart:
+        total_price_list.append(item.quantity * item.selling_price)
+    total_price = sum(total_price_list)
+
+    # Calculate total price for each item
+    for cart_item in usercart:
+        cart_item.total_price = cart_item.quantity * cart_item.selling_price
 
     context = {
         'user': user,
         'userprofile_address': user_profile_address,
-        'adminn_product': adminn_product,
-        'usercart' : usercart,
-        'shipping' : shipping,
+        'cart_items': usercart,
+        'shipping_addresses': shipping_addresses,
+        'total_price': total_price,
     }
 
-    return render(request, 'userprofile/checkout.html', context)        
+    return render(request, 'userprofile/checkout.html', context)

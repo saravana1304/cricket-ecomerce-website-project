@@ -69,7 +69,6 @@ crossorigin="anonymous" referrerpolicy="no-referrer" />
                     <td class="total-price" id="total_price_{{ item.id }}">{{ item.total_price }}</td>
                 </tr>
                 {% endfor %}
-
             </tbody>
         </table>
     </div>
@@ -109,6 +108,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer" />
             quantity--;
             quantityInput.value = quantity;
             updateTotalPrice(itemId);
+            updateCartItemQuantity(itemId, quantity); // Update cart item quantity
         }
     }
 
@@ -119,6 +119,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer" />
             quantity++;
             quantityInput.value = quantity;
             updateTotalPrice(itemId); // Update total price when increasing quantity
+            updateCartItemQuantity(itemId, quantity); // Update cart item quantity
         } else {
             Swal.fire({
                 title: 'Product Stock Reached',
@@ -128,6 +129,24 @@ crossorigin="anonymous" referrerpolicy="no-referrer" />
                 confirmButtonText: 'OK'
             });
         }
+    }
+
+    function updateCartItemQuantity(itemId, quantity) {
+        fetch(`/update-cart-item-quantity/${itemId}/${quantity}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                console.error('Failed to update cart item quantity:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     }
 
     function updateTotalPrice(itemId) {

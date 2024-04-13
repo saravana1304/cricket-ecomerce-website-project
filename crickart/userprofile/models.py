@@ -16,6 +16,8 @@ class Cart(models.Model):
     def total_price(self):
         return self.quantity * self.selling_price
 
+
+
 class Address(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='addresses')
     phone_number = models.CharField(max_length=20)

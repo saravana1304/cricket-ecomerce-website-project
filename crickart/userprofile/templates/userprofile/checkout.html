@@ -5,83 +5,93 @@
 {% endblock title %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-5">
     <div class="row">
         <!-- Left Side -->
         <div class="col-md-6">
-            <h2>User Information</h2>
-            <table class="table">
-                <tr>
-                    <td>User Name</td>
-                    <td>{{ user.username }}</td>
-                </tr>
-                <tr>
-                    <td>Mobile</td>
-                    <td>{{ userprofile_address.phone_number }}</td>
-                </tr>
-                <tr>
-                    <td>Pincode</td>
-                    <td>{{ userprofile_address.pincode }}</td>
-                </tr>
-            </table>
-
-            <h2>Payment Method</h2>
-            <!-- Add payment method selection options here -->
-            <input type="radio" id="razerpay" name="payment_method" value="razerpay">
-            <label for="razerpay">Razer Pay</label><br>
-            <input type="radio" id="netbanking" name="payment_method" value="netbanking">
-            <label for="netbanking">Net Banking</label><br>
-            <input type="radio" id="cashondelivery" name="payment_method" value="cashondelivery">
-            <label for="cashondelivery">Cash on Delivery</label><br>
-
-            <h2>Shipping Address</h2>
-            <div class="shipping-address-options">
-                {% for address in shipping %}
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="shipping_address" id="address{{ address.id }}" value="{{ address.id }}">
-                    <label class="form-check-label" for="address{{ address.id }}">
-                        {{ shipping.address }}, {{ address.place }}, {{ address.pincode }}
-                    </label>
-                </div>
-                {% endfor %}
+            <div class="user-info-container">
+                <h2>User Information</h2>
+                <table class="table table-bordered text-center">
+                    <tr>
+                        <th>User Name</th>
+                        <td>{{ user.username }}</td>
+                    </tr>
+                    <tr>
+                        <th>Mobile</th>
+                        <td>{{ userprofile_address.phone_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Pincode</th>
+                        <td>{{ userprofile_address.pincode }}</td>
+                    </tr>
+                </table>
             </div>
-            
 
+            <div class="payment-method-container">
+                <h2>Payment Method</h2>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="payment_method" id="razerpay" value="razerpay">
+                    <label class="form-check-label" for="razerpay">Razer Pay</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="payment_method" id="netbanking" value="netbanking">
+                    <label class="form-check-label" for="netbanking">Net Banking</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="payment_method" id="cashondelivery" value="cashondelivery">
+                    <label class="form-check-label" for="cashondelivery">Cash on Delivery</label>
+                </div>
+            </div>
 
-
-    
-
-            <h2>Order Summary</h2>
-            <!-- Display all the orders from the user here -->
+            <div class="shipping-address-container">
+                <h2>Shipping Address</h2>
+                <div class="shipping-address-options">
+                    {% for address in shipping_addresses %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="shipping_address" id="address{{ address.id }}" value="{{ address.id }}">
+                        <label class="form-check-label" for="address{{ address.id }}">
+                            {{ address.address }}, {{ address.place }}, {{ address.pincode }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
 
         <!-- Right Side -->
         <div class="col-md-6">
-            <h2>Product Summary</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for cart_item in cart_items %}
-                    <tr>
-                        <td>{{ cart_item.product.product_name }}</td>
-                        <td>{{ cart_item.quantity }}</td>
-                        <td>{{ cart_item.selling_price }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div class="product-summary-container">
+                <h2>Product Summary</h2>
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cart_item in cart_items %}
+                        <tr>
+                            <td>{{ cart_item.product.product_name }}</td>
+                            <td>{{ cart_item.quantity }}</td>
+                            <td>{{ cart_item.selling_price }}</td>
+                            <td>{{ cart_item.total_price }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-            <h2>Total Price</h2>
-            <!-- Calculate and display total price here -->
+            <div class="total-price-container">
+                <h2>Total Price</h2>
+                <p>{{ total_price }}</p>
+            </div>
 
-            <!-- Place Order Button -->
-            <button type="button" class="btn btn-primary">Place Order</button>
+            <div class="place-order-button">
+                <button type="button" class="btn btn-success">Place Order</button>
+            </div>
         </div>
     </div>
 </div>
