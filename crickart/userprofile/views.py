@@ -1,8 +1,7 @@
-from django.shortcuts import render,redirect,HttpResponse
-from django.contrib.auth.models import User
+from django.shortcuts import render,redirect
 from django.shortcuts import render, redirect, get_object_or_404
 from userapp1.models import UserProfile
-from userprofile.models import Address
+from userprofile.models import Address,Order
 from django.views.decorators.cache import never_cache
 from django.views.decorators.cache import cache_control
 from .models import Cart 
@@ -10,13 +9,10 @@ from adminn.models import Product
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .forms import AddressForm
-from collections import Counter
 from django.db.models import F
+from django.db import transaction
+from datetime import datetime, timedelta,timezone
 
-
-
-
-# Create your views here.
 
 # code for viewing user profile 
 
@@ -214,3 +210,55 @@ def checkout_page(request):
     }
 
     return render(request, 'userprofile/checkout.html', context)
+
+
+# function for place order
+@transaction.atomic
+def place_order(request):
+    try:
+        user = request.user
+        user_profile_address = UserProfile.objects.get(user=user)
+        payment_method = request.POST.get('payment_method')
+        address_method = request.POST.get('address_method')
+
+        if not user_profile_address:
+            raise ValueError("User profile address not found.")
+
+        if not payment_method:
+            raise ValueError("Payment method is required.")
+
+        if not address_method:
+            raise ValueError("Address method is required.")
+
+        # Fetch the products from the cart and extract their IDs
+        cart_items = Cart.objects.filter(user=user)
+        product_ids = [item.product_id for item in cart_items]
+
+        # Create the order
+        with transaction.atomic():
+            order = Order.objects.create(
+                user_profile=user_profile_address,
+                total_qty=sum(item.quantity for item in cart_items),
+                total_price=sum(item.total_price() for item in cart_items),
+                address=address_method,
+                payment=payment_method,
+                delivery_status='Pending',
+                order_date=timezone.now(),
+            )
+
+            # Associate products with the order
+            order.product_set.set(product_ids)
+
+            # Clear the user's cart
+            cart_items.delete()
+
+        return JsonResponse({'success': True, 'message': 'Your order has been placed successfully!'})
+
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+
+
+@login_required
+def user_order(request):
+    return render(request,'userprofile/userorder.html')

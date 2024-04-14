@@ -34,11 +34,13 @@
                     <label class="form-check-label" for="razerpay">Razer Pay</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="payment_method" id="netbanking" value="netbanking">
+                    <input class="form-check-input" type="radio" name="payment_method" id="netbanking"
+                        value="netbanking">
                     <label class="form-check-label" for="netbanking">Net Banking</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="payment_method" id="cashondelivery" value="cashondelivery">
+                    <input class="form-check-input" type="radio" name="payment_method" id="cashondelivery"
+                        value="cashondelivery">
                     <label class="form-check-label" for="cashondelivery">Cash on Delivery</label>
                 </div>
             </div>
@@ -48,7 +50,8 @@
                 <div class="shipping-address-options">
                     {% for address in shipping_addresses %}
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="shipping_address" id="address{{ address.id }}" value="{{ address.id }}">
+                        <input class="form-check-input" type="radio" name="shipping_address"
+                            id="address{{ address.id }}" value="{{ address.id }}">
                         <label class="form-check-label" for="address{{ address.id }}">
                             {{ address.address }}, {{ address.place }}, {{ address.pincode }}
                         </label>
@@ -84,15 +87,109 @@
                 </table>
             </div>
 
-            <div class="total-price-container">
-                <h2>Total Price</h2>
-                <p>{{ total_price }}</p>
+            <div class="total-price-container mt-5">
+                <h2 style="margin-left: 450px;">Total Price</h2>
+                <h4 style="margin-left: 520px;color: red;">{{ total_price }}</h4>
             </div>
-
-            <div class="place-order-button">
-                <button type="button" class="btn btn-success">Place Order</button>
+            <div class="place-order-button mt-3">
+                <button id="place-order-btn" type="button" class="btn btn-success" style="margin-left: 250px;">Place
+                    Order</button>
             </div>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+
+
+    $('#place-order-btn').click(function () {
+        const paymentMethod = $('input[name="payment_method"]:checked').val();
+        const addressMethod = $('input[name="shipping_address"]:checked').val(); // Get selected shipping address
+        if (!paymentMethod) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please select a payment method.'
+            });
+            return;
+        }
+        if (!addressMethod) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please select a shipping address.'
+            });
+            return;
+        }
+        console.log(paymentMethod);
+        console.log(addressMethod);
+        if (confirm('Are you sure you want to place the order?')) {
+
+            const formData = new FormData();
+            formData.append("payment_method", paymentMethod)
+            formData.append("address_method", addressMethod)
+
+            const csrftoken = getCookie('csrftoken');
+            console.log(csrftoken);
+            fetch('/place_order/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: data.message
+                        }).then(() => {
+                            window.location.href = '/profile/'; // Redirect to profile page
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Failed to place order: ' + data.message
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'An unexpected error occurred.'
+                    });
+                });
+        }
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+
+</script>
 {% endblock %}

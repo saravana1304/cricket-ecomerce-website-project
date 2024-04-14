@@ -40,5 +40,3 @@ class Product(models.Model):
         # Add any custom validation logic here
         if self.selling_price is not None and self.selling_price < self.landing_price:
             raise ValidationError("Selling price cannot be less than landing price")
-        
-

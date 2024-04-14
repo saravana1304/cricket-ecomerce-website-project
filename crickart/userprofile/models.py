@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.core.validators import MinValueValidator
 from adminn.models import Product
 from userapp1.models import UserProfile
+
 
 
 class Cart(models.Model):
@@ -25,3 +27,14 @@ class Address(models.Model):
     address = models.CharField(max_length=255)
     pincode = models.CharField(max_length=20)
 
+
+class Order(models.Model):
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='orders')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='products')  
+    total_qty = models.PositiveIntegerField(validators=[MinValueValidator(1)])
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    address = models.CharField(max_length=255) 
+    payment = models.CharField(max_length=20, blank=True, null=True)
+    delivery_status = models.CharField(max_length=20)
+    order_date = models.DateField(auto_now_add=True)
+   
