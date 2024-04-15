@@ -6,16 +6,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
 
     {% block title %}
-    
     <title>Welcome Admin</title>
     <link rel="icon" type="image/x-icon" href="{% static 'images/title1.jpg' %}">
-
     {% endblock title %}
-    
-
 
     <!-- Link for bootstrap class -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -27,18 +22,13 @@
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
 
-
     <!-- Styleshet for all html pages  -->
-
     <link rel="stylesheet" href="{% static 'adminn/home.css' %}">
     <link rel="stylesheet" href="{% static 'adminn/category.css' %}">
     <link rel="stylesheet" href="{% static 'adminn/brand.css' %}">
     <link rel="stylesheet" href="{% static 'adminn/userlist.css' %}">
     <link rel="stylesheet" href="{% static 'adminn/product.css' %}">
-    
 
-
-    
     <style>
         /* Custom CSS to set navbar text color to white */
         .navbar-nav .nav-link {
@@ -64,7 +54,7 @@
                         <a class="nav-link ms-5" href="#">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">SalesReport</a>
+                        <a class="nav-link" href="{% url 'userlist' %}">UserList</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'categories' %}">Category</a>
@@ -76,10 +66,10 @@
                         <a class="nav-link" href="{% url 'products' %}">Products</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'userlist' %}">UserList</a>
+                        <a class="nav-link" href="#">OrderDetails</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">OrderDetails</a>
+                        <a class="nav-link" href="#">SalesReport</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Coupon</a>
@@ -97,25 +87,26 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item text-danger">
                         <a class="nav-link"><span style="color:yellow">{{user.username}}</span></a>
-
                     </li>
                     <li class="nav-item text-danger">
-                        <a class="nav-link me-5 text-danger" href="{% url 'alogout' %}"><span style="color: yellow;">🔓 Logout</span></a>
+                        <a class="nav-link me-5 text-danger" href="{% url 'alogout' %}"><span
+                                style="color: yellow;">🔓 Logout</span></a>
                     </li>
                 </ul>
                 {% else %}
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'alogin' %}">🔓 Admin Login</a>
-                    </li> 
+                    </li>
                 </ul>
                 {% endif %}
             </div>
         </div>
     </nav>
-        {% block content %}
 
-        {% endblock content %}
+    {% block content %}
+
+    {% endblock content %}
 
     <footer>
         <p>&copy; 2024 Cricket Website. All rights reserved.</p>

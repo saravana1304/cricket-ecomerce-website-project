@@ -1,3 +1,92 @@
-<h1>
-    hello this is user order html page...
-</h1>
+{% extends 'userapp1/main.html' %}
+
+{% block title %}
+<title>User orders</title>
+{% endblock title %}
+
+{% block content %}
+<style>
+  .table-wrapper {
+    margin-left: 20px; 
+    margin-right: 20px;
+    margin-top: 20ox;
+    margin-bottom: 25px;
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table th,
+  .table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+    text-align: center;
+  }
+
+  .table th {
+    background-color: #f8f9fa;
+    color: #333;
+  }
+
+  .table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  .table tbody tr:hover {
+    background-color: #e0e0e0;
+  }
+
+  .table img {
+    max-width: 100px;
+    display: block;
+    margin: auto;
+  }
+
+  .table td.text-left {
+    text-align: left;
+    text-align: center;
+  }
+
+  .table td.text-right {
+    text-align: right;
+  }
+</style>
+
+<h1 class="mt-5 text-primary mb-3" style="text-align: center;"> Hi... {{user.username}} Your Orders</h1>
+<div class="table-wrapper">
+  <table class="table ">
+    <thead>
+      <tr>
+        <th scope="col">Order ID</th>
+        <th scope="col">Product Image</th>
+        <th scope="col">Product Name</th>
+        <th scope="col">Total Qty</th>
+        <th scope="col">Total Price</th>
+        <th scope="col">Order Date</th>
+        <th scope="col">Address</th>
+        <th scope="col">Payment</th>
+        <th scope="col">Delivery Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in user_orders %}
+      {% for product in order.products.all %}
+      <tr>
+        <td>{{ order.id }}</td>
+        <td><img src="{{ product.image1.url }}" alt="{{ product.product_name }}"></td>
+        <td>{{ product.product_name }}</td>
+        <td>{{ order.total_qty }}</td>
+        <td>{{ order.total_price }}</td>
+        <td>{{ order.order_date }}</td>
+        <td>{{ order.address }}</td>
+        <td>{{ order.payment }}</td>
+        <td class="text-right" style="color: red; font-weight: 500;">{{ order.delivery_status }}</td>
+      </tr>
+      {% endfor %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}

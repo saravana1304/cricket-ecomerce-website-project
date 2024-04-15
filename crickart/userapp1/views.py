@@ -17,7 +17,6 @@ from django.contrib import messages
 from django.db.models import Count
 
 
-# Create your views here.
 
 # user index request
 
@@ -46,6 +45,7 @@ def userindex(request):
         'lowest_priced_products': lowest_priced_products
     }
     return render(request, "userapp1/home.html", context)
+
 
 # user register page 
 
@@ -99,6 +99,7 @@ def userlogin(request):
         
     return render(request, 'userapp1/login.html')
 
+
 # user log_out page 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
@@ -112,21 +113,26 @@ def userlogout(request):
     return response
 
 
+# function for genarating otp
+
 def otp(request):
     return render(request,'userapp1/otp.html')
 
+
+# function for resend otp 
 
 def resendotp(request):
     return render(request,'userapp1/resendotp.html')
 
 
+# function for contact us page 
 
 def contactus(request):
     return render(request,'userapp1/contact.html')
 
 
 
-# code for product deyails 
+# function for product deyails 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
@@ -140,7 +146,7 @@ def product_deatils(request,product_id):
     return render(request,'userapp1/productdetails.html',context)
 
 
-# code for cart_view
+# function  for cart_view
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
@@ -153,5 +159,3 @@ def category_view(request, name):
     except Category.DoesNotExist:
         messages.warning(request, 'Category does not exist or is not listed')
         return redirect('category')
-
-        

@@ -10,8 +10,9 @@ from .views import *
 from django.views.decorators.cache import never_cache
 
 
-# Create your views here.
+
 # Decorator to check if the user is a superuser
+
 def admin_required(view_func):
     def wrapper(request, *args, **kwargs):
         if not request.user.is_superuser:
@@ -21,6 +22,7 @@ def admin_required(view_func):
 
 
 # admin home page request
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='alogin')
@@ -28,6 +30,7 @@ def ahome(request):
     return render(request, 'adminn/home.html')
 
 #admin login request 
+
 @never_cache
 def adminlogin(request):
     if request.user.is_superuser:
@@ -46,6 +49,7 @@ def adminlogin(request):
 
 
 # admin logout request
+
 @login_required(login_url='alogin')
 def adminlogout(request):
     # Check if the user is an admin before logging out
@@ -55,6 +59,7 @@ def adminlogout(request):
         return redirect('alogin')  # Redirect admin to admin login page:
  
 # user list page
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='alogin')
@@ -70,6 +75,7 @@ def user_list(request):
     return render(request, 'adminn/userlist.html', {'users': users})
 
 # user list update block and unblock
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def update_status(request, user_id):
@@ -84,7 +90,9 @@ def update_status(request, user_id):
         return redirect('userlist')  # Redirect to the user list page 
     return render(request, 'adminn/userlist.html', {'users': DjangoUser.objects.all()})
 
+
 # category list page
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='alogin')
@@ -92,7 +100,9 @@ def category_list(request):
         categories = Category.objects.all()
         return render(request, 'adminn/category.html', {'categories': categories})
 
-#  addcategory page
+
+# addcategory page
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def add_category(request):
@@ -122,6 +132,7 @@ def add_category(request):
 
 
 # update category page
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def update_category(request, category_id):
@@ -143,6 +154,7 @@ def update_category(request, category_id):
     return render(request,'adminn/editcategory.html',{'category': category})
 
 # unlist category from admin side 
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def unlist_category(request, category_id):
@@ -157,7 +169,9 @@ def unlist_category(request, category_id):
         return redirect('categories')
     return redirect('categories')
 
+
 # Brand list page
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='alogin')
@@ -167,6 +181,7 @@ def brand_list(request):
 
 
 # Add brand for our site
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def add_brand(request):
@@ -185,6 +200,7 @@ def add_brand(request):
 
 
 # update brand for our site
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def update_brand(request, brand_id):
@@ -200,6 +216,7 @@ def update_brand(request, brand_id):
 
 
 # edit brand for our site
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def unlist_brand(request, brand_id):
@@ -215,6 +232,7 @@ def unlist_brand(request, brand_id):
 
 
 # products list page:
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='alogin')
@@ -226,6 +244,7 @@ def product_list(request):
     
 
 # Add product page:
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def add_product(request):
@@ -266,6 +285,7 @@ def add_product(request):
 
 
 # product list and unlist
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def unlist_produt(request, product_id):
@@ -279,7 +299,9 @@ def unlist_produt(request, product_id):
         return redirect('products')
     return redirect('products')
 
+
 # update product
+
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 def update_product(request, product_id):

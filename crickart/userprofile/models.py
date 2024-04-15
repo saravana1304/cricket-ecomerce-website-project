@@ -30,11 +30,10 @@ class Address(models.Model):
 
 class Order(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='orders')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='products')  
+    products = models.ManyToManyField(Product, related_name='orders')
     total_qty = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     total_price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     address = models.CharField(max_length=255) 
     payment = models.CharField(max_length=20, blank=True, null=True)
     delivery_status = models.CharField(max_length=20)
     order_date = models.DateField(auto_now_add=True)
-   

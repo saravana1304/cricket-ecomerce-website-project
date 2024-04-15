@@ -4,31 +4,48 @@ from userapp1.models import UserProfile
 from userprofile.models import Address,Order
 from django.views.decorators.cache import never_cache
 from django.views.decorators.cache import cache_control
-from .models import Cart 
+from .models import Cart,Order
 from adminn.models import Product
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .forms import AddressForm
-from django.db.models import F
-from django.db import transaction
-from datetime import datetime, timedelta,timezone
+from django.db.models import F,Sum,Count
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 
-# code for viewing user profile 
+
+# function for viewing user profile 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache
 @login_required(login_url='userlogin')
+
 def userprofile(request):
-    if not  request.user.is_authenticated:
+    if not request.user.is_authenticated:
         return redirect('home')
     else:
         user_profile = UserProfile.objects.get(user=request.user)
         addresses = Address.objects.filter(user_profile=user_profile)
-        request.session['user_profile_id'] = user_profile.id
-        return render(request,'userprofile/profile.html',{'user_profile': user_profile,'addresses':addresses})
 
-# code for add address
+        # Filter orders related to the current user_profile
+        user_orders = Order.objects.filter(user_profile=user_profile)
+
+        total_orders_count = user_orders.count()
+        pending_orders_count = user_orders.filter(delivery_status='Pending').count()
+        total_amount = user_orders.aggregate(total=Sum('total_price'))['total'] or 0
+    
+        context = {
+            'total_orders': total_orders_count,
+            'pending_orders': pending_orders_count,
+            'total_amount': total_amount
+        }
+        request.session['user_profile_id'] = user_profile.id
+        return render(request, 'userprofile/profile.html', {'user_profile': user_profile, 'addresses': addresses, 'context': context})
+
+
+# function for add address
+
 @login_required(login_url='userlogin')
 def add_address(request):
     if request.method == 'POST':
@@ -45,7 +62,8 @@ def add_address(request):
     return render(request, 'userprofile/addaddress.html', {'form': form})
 
 
-# code for updating address
+# function  for updating address
+
 @login_required(login_url='userlogin')
 def update_address(request, address_id):
     address = get_object_or_404(Address, id=address_id)
@@ -63,7 +81,8 @@ def update_address(request, address_id):
     return render(request, 'userprofile/editaddress.html', {'form': form})
 
 
-# code for delete address for user
+# function for delete address for user
+
 def delete_address(request, address_id):
     try:
         address = get_object_or_404(Address, id=address_id)
@@ -73,9 +92,9 @@ def delete_address(request, address_id):
         return JsonResponse({'success': False, 'error': 'Address does not exist'})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
+    
 
-
-# code for cart_view
+# function for cart_view
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True) 
 @never_cache
@@ -88,10 +107,9 @@ def cart_view(request):
     else:
         return redirect('userlogin')
 
-# code for add_to_cart 
+# function for add_to_cart 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
-@never_cache
 @never_cache
 def add_to_cart(request, product_id):
     if request.method == 'POST':
@@ -125,7 +143,7 @@ def add_to_cart(request, product_id):
         return redirect('cartview')
     
 
-# code for increase qty 
+# function  for increase qty 
 
 def update_cart_item_quantity(request, item_id, quantity):
     try:
@@ -139,7 +157,7 @@ def update_cart_item_quantity(request, item_id, quantity):
         return JsonResponse({'success': False, 'error': str(e)}) 
     
 
-# code for  delete from the cart 
+# function for delete from the cart 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache
@@ -151,7 +169,7 @@ def delete_item_from_cart(request, item_id):
     except Cart.DoesNotExist:
         return JsonResponse({'error': 'Item not found'}, status=404)
 
-# clear cart for delete all items 
+# function for delete all items in cart
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache
@@ -166,7 +184,7 @@ def clear_cart(request):
         return JsonResponse(response_data, status=400)  
 
 
-# check_outpage  
+# function for check_outpage  
 
 @login_required
 def checkout_page(request):
@@ -213,29 +231,33 @@ def checkout_page(request):
 
 
 # function for place order
-@transaction.atomic
+
+@csrf_exempt
+@login_required
 def place_order(request):
     try:
+        print('1')
         user = request.user
-        user_profile_address = UserProfile.objects.get(user=user)
+        user_profile_address = get_object_or_404(UserProfile, user=user)
         payment_method = request.POST.get('payment_method')
         address_method = request.POST.get('address_method')
 
-        if not user_profile_address:
-            raise ValueError("User profile address not found.")
+        print('payment')
+        print(payment_method)
 
-        if not payment_method:
-            raise ValueError("Payment method is required.")
+        print('adress')
+        print(address_method)
 
-        if not address_method:
-            raise ValueError("Address method is required.")
-
-        # Fetch the products from the cart and extract their IDs
         cart_items = Cart.objects.filter(user=user)
+        print(cart_items)
+        if not cart_items.exists():
+            raise ValueError("No items in the cart.")
+
         product_ids = [item.product_id for item in cart_items]
+        print(product_ids)
+        try:
 
         # Create the order
-        with transaction.atomic():
             order = Order.objects.create(
                 user_profile=user_profile_address,
                 total_qty=sum(item.quantity for item in cart_items),
@@ -243,22 +265,27 @@ def place_order(request):
                 address=address_method,
                 payment=payment_method,
                 delivery_status='Pending',
-                order_date=timezone.now(),
+                order_date=timezone.localtime(timezone.now()),
             )
-
-            # Associate products with the order
-            order.product_set.set(product_ids)
-
+            for product_id in product_ids:
+                product = Product.objects.get(id=product_id)
+                order.products.add(product)
+            order.save()
+            for item in cart_items:
+                item.product.stock -= item.quantity
+                item.product.save()
+            print(order)
             # Clear the user's cart
             cart_items.delete()
-
-        return JsonResponse({'success': True, 'message': 'Your order has been placed successfully!'})
+        except Exception as e:
+            print(e)
+        return JsonResponse({'success': True})
 
     except Exception as e:
         return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
 
-
 @login_required
 def user_order(request):
-    return render(request,'userprofile/userorder.html')
+    user_orders = Order.objects.filter(user_profile=request.user.userprofile)
+    return render(request, 'userprofile/userorder.html', {'user_orders': user_orders})

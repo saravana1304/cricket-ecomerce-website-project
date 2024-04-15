@@ -81,6 +81,7 @@
             <h5>{{ user_profile.place }} - {{ user_profile.pincode }}</h5>
             <a href="{% url 'logout' %}" class="btn btn-danger btn-lg mt-3">Logout</a>
             <a href="{% url 'home' %}" class="btn btn-success btn-lg mt-3 ms-2">Home</a>
+            <a href="#" class="btn btn-danger btn-lg mt-3">Forget Password</a>
             <hr>
 
             <div class="clearfix">
@@ -120,34 +121,35 @@
                     <div class="balance"></div>
                     <i class="fa-solid fa-indian-rupee-sign"><h5 style="margin-top:20px; color:black;">500</h5></i>
                 </div>
+                <a href="{% url 'user_order' %}"><button type="button" class="ms-5" style="background-color: green; color: white; font-size: 1.51em;">View Orders</button></a>
                 <h2 style="margin-top: 50px; color: red; text-align: center;">Manage Orders</h2>
                 <div class="row mt-5">
                     <div class="col-md-3">
                         <h4 style="text-align: center;">Total orders</h4>
                         <div class="wallet mt-4">
                             <div class="balance"></div>
-                            <h5 style="margin-top:20px; color:black;">25</h5></i>
+                            <h5 style="margin-top:20px; color:black;">{{ context.total_orders }}</h5></i>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <h4 style="text-align: center;">Pending</h4>
                         <div class="wallet mt-4">
                             <div class="balance"></div>
-                           <h5 style="margin-top:20px; color:black;">8</h5></i>
+                           <h5 style="margin-top:20px; color:red;">{{ context.pending_orders }}</h5></i>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <h4 style="text-align: center;">Delivered</h4>
                         <div class="wallet mt-4">
                             <div class="balance"></div>
-                          <h5 style="margin-top:20px; color:black;">17</h5></i>
+                          <h5 style="margin-top:20px; color:black;">0</h5></i>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <h4 style="text-align: center;color: #212529;">Amout</h4>
                         <div class="wallet mt-4">
                             <div class="balance"></div>
-                           ><h5 style="margin-top:20px; color:black;">7500</h5></i>
+                           <h5 style="margin-top:20px; color:black;">{{ context.total_amount }}</h5></i>
                         </div>
                     </div>
                 </div>
