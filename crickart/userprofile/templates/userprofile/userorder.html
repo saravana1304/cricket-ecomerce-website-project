@@ -52,6 +52,23 @@
   .table td.text-right {
     text-align: right;
   }
+  .green-button {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.green-button:hover {
+    background-color: darkgreen;
+}
+
 </style>
 
 <h1 class="mt-5 text-primary mb-3" style="text-align: center;"> Hi... {{user.username}} Your Orders</h1>
@@ -68,6 +85,7 @@
         <th scope="col">Address</th>
         <th scope="col">Payment</th>
         <th scope="col">Delivery Status</th>
+        <th scope="col">Details</th>
       </tr>
     </thead>
     <tbody>
@@ -83,6 +101,13 @@
         <td>{{ order.address }}</td>
         <td>{{ order.payment }}</td>
         <td class="text-right" style="color: red; font-weight: 500;">{{ order.delivery_status }}</td>
+        <td>
+          <a href="{% url 'order_details' order_id=order.id %}" class="custom-button">
+              <button class="green-button">View More</button>
+          </a>
+      </td>
+      
+
       </tr>
       {% endfor %}
       {% endfor %}

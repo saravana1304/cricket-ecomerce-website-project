@@ -11,10 +11,6 @@ urlpatterns = [
     path('update_address/<int:address_id>/', views.update_address, name='updateaddress'),
     path('delete_address/<int:address_id>/', views.delete_address, name='deleteaddress'),
     
-    # urls for displaying user orders 
-
-    path('user_order/', views.user_order, name='user_order'), 
-
     # urls for user cart based functions
 
     path('cartview/',views.cart_view,name='cartview'),
@@ -27,5 +23,10 @@ urlpatterns = [
 
     path('checkout/', views.checkout_page, name='checkout'),
     path('place_order/', views.place_order, name='place_order'),
+        
+    # urls for displaying user orders 
+
+    path('user_order/', views.user_order, name='user_order'),
+    path('order/<int:order_id>/', views.order_details, name='order_details'),
 
 ]

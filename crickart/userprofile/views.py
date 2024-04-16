@@ -236,7 +236,7 @@ def checkout_page(request):
 @login_required
 def place_order(request):
     try:
-        print('1')
+        print('inside function')
         user = request.user
         user_profile_address = get_object_or_404(UserProfile, user=user)
         payment_method = request.POST.get('payment_method')
@@ -289,3 +289,15 @@ def place_order(request):
 def user_order(request):
     user_orders = Order.objects.filter(user_profile=request.user.userprofile)
     return render(request, 'userprofile/userorder.html', {'user_orders': user_orders})
+
+
+
+@login_required
+def order_details(request, order_id):
+    # Retrieve the order based on the order_id
+    order = get_object_or_404(Order, id=order_id)
+    # You can add more logic here if needed
+    context = {
+        'order': order
+    }
+    return render(request, 'userprofile/orderproduct.html', context)
