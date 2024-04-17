@@ -284,6 +284,7 @@ def place_order(request):
     except Exception as e:
         return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
+# function for displaying user order
 
 @login_required
 def user_order(request):
@@ -291,13 +292,14 @@ def user_order(request):
     return render(request, 'userprofile/userorder.html', {'user_orders': user_orders})
 
 
+# function for displaying every product details 
 
 @login_required
 def order_details(request, order_id):
     # Retrieve the order based on the order_id
     order = get_object_or_404(Order, id=order_id)
-    # You can add more logic here if needed
     context = {
-        'order': order
+        'order': order,
+        'products': order.products.all()  # Retrieve associated products
     }
     return render(request, 'userprofile/orderproduct.html', context)

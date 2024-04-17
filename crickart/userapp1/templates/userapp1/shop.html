@@ -1,0 +1,80 @@
+{% extends 'userapp1/main.html' %}
+
+{% block title %}
+    <title>Order Details</title>
+{% endblock title %}
+
+{% block content %}
+
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Filtering Options Section (Left Side) -->
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Filter Options</h5>
+                    <hr>
+                    <h6 class="card-subtitle mb-2 text-muted">Filter by Name</h6>
+                    <input type="text" class="form-control mb-3" placeholder="Search by name...">
+                    <h6 class="card-subtitle mb-2 text-muted">Filter by Price</h6>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="price1">
+                        <label class="form-check-label" for="price1">
+                            $100 - $500
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="price2">
+                        <label class="form-check-label" for="price2">
+                            $500 - $1000
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="price3">
+                        <label class="form-check-label" for="price3">
+                            $1000 - $1500
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="price4">
+                        <label class="form-check-label" for="price4">
+                            $1500 and above
+                        </label>
+                    </div>
+                    <button class="btn btn-primary mt-3">Apply Filters</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Product Display Section (Right Side) -->
+        <div class="col-md-9">
+            <!-- Shop Page Header -->
+            <div class="text-center mb-4">
+                <h1>Welcome to Our Shop</h1>
+                <p>Discover our amazing products</p>
+            </div>
+            
+            <!-- Product Cards Section -->
+            <div class="row">
+                <!-- Product Cards Loop -->
+                {% for item in product %}
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <img src="{{ item.image2.url }}" class="card-img-top" alt="{{ item.product_name }}">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ item.product_name }}</h5>
+                            <a href="#" class="btn btn-primary mt-auto">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock content %}

@@ -48,7 +48,7 @@
 <!-- Similar products section -->
 {% if similar_products %}
 <h1 class="mt-5 text-center text-success">Similar Products</h1>
-<div class="container my-5 text-center">
+<div class="container text-center" style="margin-bottom: 150px;">  
     <div class="row">
         {% for similar_product in similar_products %}
         {% if similar_product.category.is_listed and similar_product.brand.is_listed and similar_product.is_listed %}
@@ -58,7 +58,7 @@
                 <p class="product-name text-black fw-bold my-3">{{ similar_product.product_name }}</p>
                 <p class="product-price text-danger">${{ similar_product.selling_price }}</p>
             </a>
-            <a href="#" class="btn btn-success">Shop Now</a>
+            <a href="{% url 'shop_view' %}" class="btn btn-success">Shop Now</a>
         </div>
         {% endif %}
         {% endfor %}

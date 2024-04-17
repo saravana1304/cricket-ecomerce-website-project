@@ -20,9 +20,10 @@ urlpatterns = [
     path('productdetails/<int:product_id>/',views.product_deatils,name='productdetails'),
 
 
-    # category details
+    # category and shop details
     
     path('category/<str:name>/', views.category_view, name='category_view'),
+    path('shop/',views.shop_view,name='shop_view'),
 
 
 ]

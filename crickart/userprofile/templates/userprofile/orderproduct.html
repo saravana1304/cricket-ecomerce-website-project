@@ -5,16 +5,95 @@
 {% endblock title %}
 
 {% block content %}
-    <h2>Product Details</h2>
-    <div class="product-details">
-        <div class="product-image">
-            <img src="{{ order.product.image1.url }}" alt="Product Image">
+
+
+<div class="container" style="margin-bottom: 100px;">
+    <!-- Go Back Button -->
+    <div class="text-left mt-3">
+        <a href="{% url 'user_order' %}" class="btn btn-primary" style="margin-left: 950px; margin-top: 50px;">Go Back to Orders</a>
+    </div>
+    
+    <!-- Product Details Section -->
+    <div class="text-center mb-4">
+        <h2>Product Details</h2>
+    </div>
+    <div class="row">
+        <!-- Product Card Section -->
+        <div class="col-md-6">
+            {% for product in products %}
+            <div class="card mb-3">
+                <img src="{{ product.image1.url }}" class="card-img-top" alt="{{ product.product_name }}" style="max-width: 250px;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.product_name }}</h5>
+                    <p class="card-text">{{ product.description }}</p>
+                    <h3 style="color: red;"><i class="far fa-rupee-sign"></i>  {{product.selling_price}}</h3>
+                    
+                </div>
+            </div>
+            {% endfor %}
         </div>
-        <div class="product-info">
-            <h3>{{ order.product.name }}</h3>
-            <p><strong>Description:</strong> {{ order.product.description }}</p>
-            <p><strong>Price:</strong> ${{ order.product.price }}</p>
-            <!-- Add more product details as needed -->
+        <!-- Order Details and Shipping Address Section -->
+        <div class="col-md-6">
+            <div class="row">
+                <!-- Order Details Section -->
+                <div class="col-md-12 mb-4">
+                    <h2>Order Details</h2>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td><strong>Order ID:</strong></td>
+                                <td>{{ order.id }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Order Quantity:</strong></td>
+                                <td>{{ order.total_qty }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Price:</strong></td>
+                                <td>${{ order.total_price }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Order Date:</strong></td>
+                                <td>{{ order.order_date }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Payment:</strong></td>
+                                <td>{{ order.payment }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Status:</strong></td>
+                                <td style="color: red;font-size:larger;font-weight:500">{{ order.delivery_status }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><button class="btn btn-danger btn-block">Cancel Order</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Shipping Address Section -->
+                <div class="col-md-12">
+                    <h2>Shipping Address</h2>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td><strong>User Name:</strong></td>
+                                <td>{{ order.user_profile.user.username }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Address:</strong></td>
+                                <td>{{ order.address }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+</div>
+
+
+
+
+
 {% endblock %}
+

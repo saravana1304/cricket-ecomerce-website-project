@@ -159,3 +159,18 @@ def category_view(request, name):
     except Category.DoesNotExist:
         messages.warning(request, 'Category does not exist or is not listed')
         return redirect('category')
+
+
+# function  for shop view filter and category wise
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@never_cache
+def shop_view(request):
+    product = Product.objects.filter(
+        category__is_displayed=True,
+        brand__is_displayed=True,
+        is_active=True
+    )
+
+    print(product)
+    return render(request,'userapp1/shop.html',{'product':product})
