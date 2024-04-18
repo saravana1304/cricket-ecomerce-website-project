@@ -1,70 +1,158 @@
 {% extends 'userapp1/main.html' %}
 
 {% block title %}
-    <title>Order Details</title>
+    <title>Shop Page</title>
 {% endblock title %}
 
 {% block content %}
+<style>
+    .sticky-top {
+        top: 60px;
+    }
+    .filter-button {
+        margin-bottom: 10px;
+    }
+    .product-card {
+        width: 300px; /* Adjust the height as needed */
+    }
+</style>
 
-
-<div class="container mt-4">
+<div class="container-fluid mt-4">
     <div class="row">
         <!-- Filtering Options Section (Left Side) -->
-        <div class="col-md-3">
-            <div class="card">
+        <div class="col-md-2">
+            <div class="card sticky-top">
                 <div class="card-body">
                     <h5 class="card-title">Filter Options</h5>
                     <hr>
-                    <h6 class="card-subtitle mb-2 text-muted">Filter by Name</h6>
-                    <input type="text" class="form-control mb-3" placeholder="Search by name...">
-                    <h6 class="card-subtitle mb-2 text-muted">Filter by Price</h6>
+                    <!-- Sort by Name -->
+                    <h6 class="card-subtitle mb-2 text-muted">Sort by Name</h6>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="price1">
-                        <label class="form-check-label" for="price1">
+                        <input class="form-check-input" type="radio" name="sortName" id="sortNameAZ">
+                        <label class="form-check-label" for="sortNameAZ">
+                            A-Z
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sortName" id="sortNameZA">
+                        <label class="form-check-label" for="sortNameZA">
+                            Z-A
+                        </label>
+                    </div>
+
+                    <!-- Sort by Price -->
+                    <h6 class="card-subtitle mb-2 mt-3 text-muted">Sort by Price</h6>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="sortPrice" id="sortPrice1">
+                        <label class="form-check-label" for="sortPrice1">
                             $100 - $500
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="price2">
-                        <label class="form-check-label" for="price2">
+                        <input class="form-check-input" type="radio" name="sortPrice" id="sortPrice2">
+                        <label class="form-check-label" for="sortPrice2">
                             $500 - $1000
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="price3">
-                        <label class="form-check-label" for="price3">
+                        <input class="form-check-input" type="radio" name="sortPrice" id="sortPrice3">
+                        <label class="form-check-label" for="sortPrice3">
                             $1000 - $1500
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="price4">
-                        <label class="form-check-label" for="price4">
+                        <input class="form-check-input" type="radio" name="sortPrice" id="sortPrice4">
+                        <label class="form-check-label" for="sortPrice4">
                             $1500 and above
                         </label>
                     </div>
-                    <button class="btn btn-primary mt-3">Apply Filters</button>
+
+                    <!-- Filter by Item -->
+                    <h6 class="card-subtitle mb-2 mt-3 text-muted">Filter by Item</h6>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="ball">
+                        <label class="form-check-label" for="ball">
+                            Ball
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="bat">
+                        <label class="form-check-label" for="bat">
+                            Bat
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="gloves">
+                        <label class="form-check-label" for="gloves">
+                            Gloves
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="helmet">
+                        <label class="form-check-label" for="helmet">
+                            Helmet
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="cap">
+                        <label class="form-check-label" for="cap">
+                            Cap
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="stump">
+                        <label class="form-check-label" for="stump">
+                            Stump
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="t-shirt">
+                        <label class="form-check-label" for="t-shirt">
+                            T-Shirt
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="shoes">
+                        <label class="form-check-label" for="shoes">
+                            Shoes
+                        </label>
+                    </div>
+
+                    <!-- Filter Apply Buttons -->
+                    <button class="btn btn-primary mt-3 filter-button" id="applyNameFilter">Apply Name Filter</button>
                 </div>
             </div>
         </div>
-        
+
         <!-- Product Display Section (Right Side) -->
-        <div class="col-md-9">
+        <div class="col-md-10">
             <!-- Shop Page Header -->
-            <div class="text-center mb-4">
-                <h1>Welcome to Our Shop</h1>
-                <p>Discover our amazing products</p>
+            <div class="text-center mb-4 sticky-top bg-white p-3">
+                <h1 style="color: blue;">Welcome to Crickart</h1><hr>
+                
+            </div>
+
+            <!-- Search Bar -->
+            <div class="sticky-top bg-white p-3 mb-3" style="margin-top: -70px; width: 750px;margin-left: 370px;">
+                <div class="input-group">
+                    <input type="text" class="form-control" style="width: 50px; height: 60px;" placeholder="Search products...">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" style="height:60px;width: 100px;" type="button">Search</button>
+                    </div>
+                </div>
             </div>
             
             <!-- Product Cards Section -->
             <div class="row">
                 <!-- Product Cards Loop -->
-                {% for item in product %}
+                {% for item in products %}
                 <div class="col-md-3 mb-4">
-                    <div class="card h-100">
-                        <img src="{{ item.image2.url }}" class="card-img-top" alt="{{ item.product_name }}">
+                    <div class="card h-100 product-card">
+                        <img src="{{ item.image2.url }}" class="card-img-top img-fluid" style="width: auto; height: 200px;" alt="{{ item.product_name }}">
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">{{ item.product_name }}</h5>
-                            <a href="#" class="btn btn-primary mt-auto">View Details</a>
+                            <h5 class="card-title">{{item.product_name }}</h5>
+                            <h5 style="color: red;">{{item.selling_price}}</h5>
+                            <a href="{% url 'productdetails' item.id %}" class="btn btn-primary mt-auto">View Details</a>
                         </div>
                     </div>
                 </div>
@@ -73,8 +161,5 @@
         </div>
     </div>
 </div>
-
-
-
 
 {% endblock content %}

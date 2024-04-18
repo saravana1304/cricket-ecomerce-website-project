@@ -166,11 +166,10 @@ def category_view(request, name):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
 def shop_view(request):
-    product = Product.objects.filter(
-        category__is_displayed=True,
-        brand__is_displayed=True,
-        is_active=True
+    products = Product.objects.filter(
+        category__is_listed=True,
+        brand__is_listed=True,
+        is_listed=True
     )
-
-    print(product)
-    return render(request,'userapp1/shop.html',{'product':product})
+    print(products)
+    return render(request,'userapp1/shop.html',{'products':products})

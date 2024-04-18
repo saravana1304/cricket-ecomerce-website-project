@@ -29,4 +29,9 @@ urlpatterns = [
     path('user_order/', views.user_order, name='user_order'),
     path('order/<int:order_id>/', views.order_details, name='order_details'),
 
+    # urls for managing wishlist
+    path('wishlist/', views.wish_list, name='wish_list'),
+
+
+
 ]

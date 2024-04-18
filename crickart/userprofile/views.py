@@ -303,3 +303,8 @@ def order_details(request, order_id):
         'products': order.products.all()  # Retrieve associated products
     }
     return render(request, 'userprofile/orderproduct.html', context)
+
+@login_required
+def wish_list(request):
+    return render(request,'userprofile/wishlist.html')  
+
