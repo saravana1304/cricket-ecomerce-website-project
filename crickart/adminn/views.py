@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User as DjangoUser
 from .models import Category,Brand,Product
+from userprofile.models import Order
 from .views import *
 from django.views.decorators.cache import never_cache
 
@@ -347,7 +348,17 @@ def update_product(request, product_id):
 # function for displaying order details 
 
 def order_details(request):
-    return render(request,'adminn/orderdetails.html')
+    orders = Order.objects.all()
+    user_names = [order.user_profile.user.username for order in orders]  # Assuming user_profile has a ForeignKey to the User model
+    product_names = [order.product.product_name for order in orders]
+    context = {
+        'orders': orders,
+        'user_names': user_names,
+        'product_names': product_names
+    }
+    return render(request, 'adminn/orderdetails.html', context)
+
+
 
 
 

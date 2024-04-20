@@ -4,13 +4,42 @@
 
 {% block content %}
 
+<h1 style="margin-top: 30px;">Order Details</h1>
+<h2>This is my order page</h2>
 
-
-<h1 style="margin-top: 30px;"> hiii </h1>
-<h2>this is my order page</h2>
-
-
-
-
+<table>
+    <tr>
+        <th>Order ID</th>
+        <th>User Name</th>
+        <th>Product Name</th>
+        <th>Total Qty</th>
+        <th>Total Price</th>
+        <th>Address</th>
+        <th>Order Date</th>
+        <th>Payment</th>
+        <th>Action</th>
+    </tr>
+    {% for item in orders %}
+    <tr>
+        <td>{{ item.id }}</td>
+        <td>{{ item.user.username }}</td> <!-- Accessing the username of the user associated with the order -->
+        <td>{{ item.product.product_name }}</td> <!-- Accessing the product name associated with the order -->
+        <td>{{ item.total_qty }}</td>
+        <td>{{ item.total_price }}</td>
+        <td>{{ item.address }}</td>
+        <td>{{ item.order_date }}</td>
+        <td>{{ item.payment }}</td>
+        <td>
+            <select>
+                <option value="Pending" {% if item.delivery_status == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="Confirmed" {% if item.delivery_status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                <option value="Shipped" {% if item.delivery_status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                <option value="Cancelled" {% if item.delivery_status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                <option value="Delivered" {% if item.delivery_status == 'Delivered' %}selected{% endif %}>Delivered</option>
+            </select>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 
 {% endblock content %}
