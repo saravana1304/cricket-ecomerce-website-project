@@ -1,1 +1,41 @@
-<h1>this is my wishlist</h1>
+{% extends 'userapp1/main.html' %}
+
+{% block title %}
+    <title>Order Wishlist</title>
+{% endblock title %}
+
+{% block content%}
+
+
+<style>
+    .wish_listimg {
+        display: block;
+        margin: 0 auto; 
+        width: 30%; 
+        margin-top: 120px;
+    }
+
+    .wishlist-line {
+            border: none; 
+            background-color: #790bc8;
+            height: 5px;
+            margin: 20px 0; 
+        }
+
+</style>
+
+<h1> Hi...{{user.username}} your wish list</h1> <hr class="wishlist-line"> 
+   
+{% if wishlist_items %}
+        <ul>
+            {% for item in wishlist_items %}
+                <li>{{ item.product.product_name }} - <a href="#">Remove</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <img  class="wish_listimg" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScn3cDAaPGPaqdRGUxteAxQdQOSNdkioEvB05zjg5DFg&s"  alt="wishlistpage">
+    {% endif %}
+
+
+    
+{% endblock content%}
