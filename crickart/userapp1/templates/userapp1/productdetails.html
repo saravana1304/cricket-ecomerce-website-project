@@ -36,7 +36,9 @@
                     <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="10">
                 </div>
                 <button type="button" class="btn btn-warning" onclick="addToCart()"><i class="fa-solid fa-cart-shopping"></i> ADD TO CART</button>
-                <button type="button" class="btn btn-danger ms-3"><i class="fa-regular fa-heart"></i> ADD TO WISHLIST</button>
+                <button type="button" class="btn btn-danger ms-3" id="addToWishlistBtn">
+                    <i class="fa-regular fa-heart"></i> ADD TO WISHLIST
+                </button> 
             </form>
             {% else %}
             <button type="button" class="btn btn-danger ms-3">OUTOF STOCK</button>
@@ -85,6 +87,26 @@
             }
         }
     }
+
+    document.getElementById('addToWishlistBtn').addEventListener('click', function() {
+        // Get the product ID from the button's data attribute or any other source
+        var productId = 123; // Replace with the actual product ID
+
+        // Make an AJAX request to add the product to the wishlist
+        $.ajax({
+            url: '/wishlist/add/' + productId + '/',
+            method: 'GET',
+            success: function(response) {
+                // Handle success response
+                console.log(response);
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                console.error(xhr.responseText);
+            }
+        });
+    });
+    
 </script>
 
 {% endblock %}

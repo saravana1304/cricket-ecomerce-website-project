@@ -18,7 +18,7 @@ from django.db.models import Count
 
 
 
-# user index request
+# function for displaying index page to users
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
@@ -47,7 +47,7 @@ def userindex(request):
     return render(request, "userapp1/home.html", context)
 
 
-# user register page 
+# function for user register page 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
@@ -73,7 +73,7 @@ def userregister(request):
     return render(request, "userapp1/register.html", context=context)
 
 
-# user login page 
+# function for user login page 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
@@ -100,7 +100,7 @@ def userlogin(request):
     return render(request, 'userapp1/login.html')
 
 
-# user log_out page 
+# function for  user log_out page 
 
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)  
 @never_cache

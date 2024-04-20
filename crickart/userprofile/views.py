@@ -4,7 +4,7 @@ from userapp1.models import UserProfile
 from userprofile.models import Address,Order
 from django.views.decorators.cache import never_cache
 from django.views.decorators.cache import cache_control
-from .models import Cart,Order
+from .models import Cart,Order,Wishlist
 from adminn.models import Product
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -170,8 +170,9 @@ def delete_item_from_cart(request, item_id):
         return JsonResponse({'error': 'Item not found'}, status=404)
 
 # function for delete all items in cart
-
-@cache_control(no_cache=True,must_revalidate=True,no_store=True)  
+    
+@login_required
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
 def clear_cart(request):
     if request.method == 'POST':
@@ -181,7 +182,7 @@ def clear_cart(request):
         return JsonResponse(response_data)
     else:
         response_data = {'success': False, 'error': 'Invalid request method.'}
-        return JsonResponse(response_data, status=400)  
+        return JsonResponse(response_data, status=400)
 
 
 # function for check_outpage  
@@ -304,7 +305,42 @@ def order_details(request, order_id):
     }
     return render(request, 'userprofile/orderproduct.html', context)
 
+
+# function for viewing the wishlist items 
 @login_required
 def wish_list(request):
-    return render(request,'userprofile/wishlist.html')  
+    wishlist_items = Wishlist.objects.filter(user=request.user)
+    return render(request, 'userprofile/wishlist.html', {'wishlist_items': wishlist_items})  
 
+
+# function for adding item to wishlist
+@login_required
+def add_to_wishlist(request, product_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'message': 'Please log in to add to wishlist'})
+
+    product = get_object_or_404(Product, id=product_id)
+    user_wishlist = Wishlist.objects.filter(user=request.user, product=product)
+    user_cart = Cart.objects.filter(user=request.user, product=product)
+    
+    if user_wishlist.exists():
+        return JsonResponse({'success': False, 'message': 'Product already exists in wishlist'})
+    elif user_cart.exists():
+        return JsonResponse({'success': False, 'message': 'Product already exists in cart'})
+    else:
+        wishlist_item = Wishlist.objects.create(user=request.user, product=product)
+        return JsonResponse({'success': True, 'message': 'Product added to wishlist successfully'})
+
+
+# function for remove item from wishlist
+@login_required
+def remove_from_wishlist(request, item_id):
+    item = get_object_or_404(Wishlist, id=item_id)
+    item.delete()
+    return JsonResponse({'success': True})
+
+
+# function for remove all items from wishlist
+def clear_wishlist(request):
+    Wishlist.objects.filter(user=request.user).delete()
+    return redirect('wish_list') 

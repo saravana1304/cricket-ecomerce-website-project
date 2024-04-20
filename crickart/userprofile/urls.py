@@ -31,7 +31,8 @@ urlpatterns = [
 
     # urls for managing wishlist
     path('wishlist/', views.wish_list, name='wish_list'),
-
-
+    path('wishlist/add/<int:product_id>/', views.add_to_wishlist, name='add_to_wishlist'),
+    path('remove_from_wishlist/<int:item_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
+    path('clear_wishlist/', views.clear_wishlist, name='clear_wishlist')
 
 ]
