@@ -21,7 +21,7 @@ def admin_required(view_func):
     return wrapper
 
 
-# admin home page request
+# function for admin home page request
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -29,7 +29,7 @@ def admin_required(view_func):
 def ahome(request):
     return render(request, 'adminn/home.html')
 
-#admin login request 
+# function for admin login request 
 
 @never_cache
 def adminlogin(request):
@@ -48,7 +48,7 @@ def adminlogin(request):
     return render(request, 'adminn/login.html')
 
 
-# admin logout request
+# function for admin logout request
 
 @login_required(login_url='alogin')
 def adminlogout(request):
@@ -58,7 +58,7 @@ def adminlogout(request):
         request.session.flush()
         return redirect('alogin')  # Redirect admin to admin login page:
  
-# user list page
+# function for user list page
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -74,7 +74,8 @@ def user_list(request):
         return redirect('userlist')  # Redirect to the user list page
     return render(request, 'adminn/userlist.html', {'users': users})
 
-# user list update block and unblock
+
+# function for user list update block and unblock
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -91,7 +92,7 @@ def update_status(request, user_id):
     return render(request, 'adminn/userlist.html', {'users': DjangoUser.objects.all()})
 
 
-# category list page
+# function for category list page
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -101,7 +102,7 @@ def category_list(request):
         return render(request, 'adminn/category.html', {'categories': categories})
 
 
-# addcategory page
+# function for addcategory page
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -131,7 +132,7 @@ def add_category(request):
     return render(request, 'adminn/addcategory.html')
 
 
-# update category page
+# function for update category page
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -153,7 +154,8 @@ def update_category(request, category_id):
             return redirect('categories')
     return render(request,'adminn/editcategory.html',{'category': category})
 
-# unlist category from admin side 
+
+# function for unlist category from admin side 
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -170,7 +172,7 @@ def unlist_category(request, category_id):
     return redirect('categories')
 
 
-# Brand list page
+# function for Brand list page
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -180,7 +182,7 @@ def brand_list(request):
         return render(request, 'adminn/brand.html', {'brand': brand})
 
 
-# Add brand for our site
+# function for Add brand for our site
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -199,7 +201,7 @@ def add_brand(request):
     return render(request, 'adminn/addbrand.html')
 
 
-# update brand for our site
+# function for update brand for our site
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -215,7 +217,7 @@ def update_brand(request, brand_id):
     return render(request,'adminn/editbrand.html',{'brand': brands})
 
 
-# edit brand for our site
+# function for edit brand for our site
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -231,7 +233,7 @@ def unlist_brand(request, brand_id):
     return redirect('brandlist')
 
 
-# products list page:
+# function for products list page:
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -243,7 +245,7 @@ def product_list(request):
     return render(request, 'adminn/product.html', {'categories': categories, 'brands': brands,'products':products})
     
 
-# Add product page:
+# function for Add product page:
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -284,7 +286,7 @@ def add_product(request):
     return render(request, 'adminn/addproduct.html', {'categories': categories, 'brands': brands})
 
 
-# product list and unlist
+# function for product list and unlist
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -300,7 +302,7 @@ def unlist_produt(request, product_id):
     return redirect('products')
 
 
-# update product
+# function for update product
 
 @admin_required
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
@@ -340,3 +342,16 @@ def update_product(request, product_id):
             product.save()
             return redirect('products')
     return render(request,'adminn/editproduct.html',{'product': product,'categories': categories, 'brands': brands})
+
+
+# function for displaying order details 
+
+def order_details(request):
+    return render(request,'adminn/orderdetails.html')
+
+
+
+
+
+def sales_report(request):
+    return render(request,'adminn/salesreport.html')

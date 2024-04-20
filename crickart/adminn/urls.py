@@ -2,6 +2,9 @@ from . import views
 from django.urls import path
 
 urlpatterns = [
+
+    # urls for admin sign and user management
+
     path('alogin/',views.adminlogin,name='alogin'),
     path('ahome/',views.ahome,name='ahome'),
     path('alogout/',views.adminlogout,name='alogout'),
@@ -28,4 +31,17 @@ urlpatterns = [
     path('products/add',views.add_product,name='addproduct'),
     path('products/unlist/<int:product_id>/', views.unlist_produt, name='unlistproduct'),
     path('products/edit/<int:product_id>/', views.update_product, name='updateproduct'),
+
+    # urls for admin order details and order management
+
+    path('orders/',views.order_details,name='orders_view'),
+
+
+
+    
+    # urls for sales report in admin side 
+
+    path('sales/',views.sales_report,name='sales_report'),   
+
+
 ]
