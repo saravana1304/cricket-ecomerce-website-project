@@ -33,12 +33,14 @@ def userprofile(request):
 
         total_orders_count = user_orders.count()
         pending_orders_count = user_orders.filter(delivery_status='Pending').count()
+        delivered_orders_count = user_orders.filter(delivery_status='Delivered').count()
         total_amount = user_orders.aggregate(total=Sum('total_price'))['total'] or 0
     
         context = {
             'total_orders': total_orders_count,
             'pending_orders': pending_orders_count,
-            'total_amount': total_amount
+            'total_amount': total_amount,
+            'delivered_orders':delivered_orders_count,
         }
         request.session['user_profile_id'] = user_profile.id
         return render(request, 'userprofile/profile.html', {'user_profile': user_profile, 'addresses': addresses, 'context': context})

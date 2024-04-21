@@ -1,13 +1,43 @@
 {% extends 'adminn/home.html' %}
-
 {% load static %}
 
 {% block content %}
+<style>
+    /* Table styles */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
 
-<h1 style="margin-top: 30px;">Order Details</h1>
-<h2>This is my order page</h2>
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
 
-<table>
+    th {
+        background-color: #f2f2f2;
+    }
+
+    /* Alternating row colors */
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    /* Hover effect */
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    /* Define colors for order status */
+    .status-pending { color: orange; }
+    .status-confirmed { color: blue; }
+    .status-shipped { color: purple; }
+    .status-cancelled { color: red; }
+    .status-delivered { color: green; }
+</style>
+
+<table style="margin-top: 60px;">
     <tr>
         <th>Order ID</th>
         <th>User Name</th>
@@ -17,29 +47,66 @@
         <th>Address</th>
         <th>Order Date</th>
         <th>Payment</th>
+        <th>Order Status</th>
         <th>Action</th>
     </tr>
-    {% for item in orders %}
+    {% for order in orders %}
     <tr>
-        <td>{{ item.id }}</td>
-        <td>{{ item.user.username }}</td> <!-- Accessing the username of the user associated with the order -->
-        <td>{{ item.product.product_name }}</td> <!-- Accessing the product name associated with the order -->
-        <td>{{ item.total_qty }}</td>
-        <td>{{ item.total_price }}</td>
-        <td>{{ item.address }}</td>
-        <td>{{ item.order_date }}</td>
-        <td>{{ item.payment }}</td>
+        <td>{{ order.id }}</td>
+        <td>{{ order.user_profile.user.username }}</td>
         <td>
-            <select>
-                <option value="Pending" {% if item.delivery_status == 'Pending' %}selected{% endif %}>Pending</option>
-                <option value="Confirmed" {% if item.delivery_status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
-                <option value="Shipped" {% if item.delivery_status == 'Shipped' %}selected{% endif %}>Shipped</option>
-                <option value="Cancelled" {% if item.delivery_status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
-                <option value="Delivered" {% if item.delivery_status == 'Delivered' %}selected{% endif %}>Delivered</option>
+            {% for product in order.products.all %}
+                {{ product.product_name }}
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </td>
+        <td>{{ order.total_qty }}</td>
+        <td>{{ order.total_price }}</td>
+        <td>{{ order.address }}</td>
+        <td>{{ order.order_date }}</td>
+        <td>{{ order.payment }}</td>
+        <td class="order-status status-{{ order.delivery_status|lower }}">{{ order.delivery_status }}</td>
+        <td>
+            <select class="status-select" data-order-id="{{ order.id }}">
+                <option value="Pending" {% if order.delivery_status == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="Confirmed" {% if order.delivery_status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                <option value="Shipped" {% if order.delivery_status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                <option value="Cancelled" {% if order.delivery_status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                <option value="Delivered" {% if order.delivery_status == 'Delivered' %}selected{% endif %}>Delivered</option>
             </select>
         </td>
     </tr>
     {% endfor %}
 </table>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.status-select').change(function() {
+        var orderId = $(this).data('order-id');
+        var newStatus = $(this).val();
+        
+        $.ajax({
+            type: 'POST',
+            url: '/update_order_status/',
+            data: {
+                'order_id': orderId,
+                'new_status': newStatus,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Update UI based on successful response
+                    $('.status-' + newStatus.toLowerCase()).text(newStatus).addClass('status-' + newStatus.toLowerCase());
+                } else {
+                    console.error('Error: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error: ' + error);
+            }
+        });
+    });
+});
+</script>
 {% endblock content %}

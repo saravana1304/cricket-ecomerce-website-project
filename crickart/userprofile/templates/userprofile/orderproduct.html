@@ -6,7 +6,6 @@
 
 {% block content %}
 
-
 <div class="container" style="margin-bottom: 100px;">
     <!-- Go Back Button -->
     <div class="text-left mt-3">
@@ -27,7 +26,6 @@
                     <h5 class="card-title">{{ product.product_name }}</h5>
                     <p class="card-text">{{ product.description }}</p>
                     <h3 style="color: red;"><i class="far fa-rupee-sign"></i>  {{product.selling_price}}</h3>
-                    
                 </div>
             </div>
             {% endfor %}
@@ -64,9 +62,15 @@
                                 <td><strong>Status:</strong></td>
                                 <td style="color: red;font-size:larger;font-weight:500">{{ order.delivery_status }}</td>
                             </tr>
+                            {% if order.delivery_status == 'Delivered' %}
+                            <tr>
+                                <td colspan="2"><button class="btn btn-warning btn-block">Return</button></td>
+                            </tr>
+                            {% else %}
                             <tr>
                                 <td colspan="2"><button class="btn btn-danger btn-block">Cancel Order</button></td>
                             </tr>
+                            {% endif %}
                         </tbody>
                     </table>
                 </div>
@@ -91,9 +95,4 @@
     </div>
 </div>
 
-
-
-
-
 {% endblock %}
-

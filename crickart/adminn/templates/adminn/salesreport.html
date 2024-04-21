@@ -1,15 +1,68 @@
 {% extends 'adminn/home.html' %}
-
 {% load static %}
 
 {% block content %}
+<style>
+    /* Table styles */
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
 
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
 
+    th {
+        background-color: #f2f2f2;
+    }
 
-<h1 style="margin-top: 30px;"> hiii </h1>
-<h2>this is my sales report page</h2>
+    /* Alternating row colors */
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
 
+    /* Hover effect */
+    tr:hover {
+        background-color: #ddd;
+    }
 
+    /* Define colors for order status */
+    .status-delivered { color: green; }
+</style>
 
+<table style="margin-top: 60px;">
+    <tr>
+        <th>Order ID</th>
+        <th>User Name</th>
+        <th>Product Name</th>
+        <th>Total Qty</th>
+        <th>Total Price</th>
+        <th>Address</th>
+        <th>Order Date</th>
+        <th>Payment</th>
+        <th>Order Status</th>>
+    </tr>
+    {% for order in orders %}
+    <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.user_profile.user.username }}</td>
+        <td>
+            {% for product in order.products.all %}
+                {{ product.product_name }}
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </td>
+        <td>{{ order.total_qty }}</td>
+        <td>{{ order.total_price }}</td>
+        <td>{{ order.address }}</td>
+        <td>{{ order.order_date }}</td>
+        <td>{{ order.payment }}</td>
+        <td class="order-status status-{{ order.delivery_status|lower }}">{{ order.delivery_status }}</td>
+    </tr>
+    {% endfor %}
+</table>
 
 {% endblock content %}

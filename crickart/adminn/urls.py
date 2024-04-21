@@ -35,6 +35,7 @@ urlpatterns = [
     # urls for admin order details and order management
 
     path('orders/',views.order_details,name='orders_view'),
+    path('update_order_status/', views.update_order_status, name='update_order_status'),
 
 
 

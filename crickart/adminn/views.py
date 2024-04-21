@@ -9,7 +9,7 @@ from .models import Category,Brand,Product
 from userprofile.models import Order
 from .views import *
 from django.views.decorators.cache import never_cache
-
+from django.http import JsonResponse
 
 
 # Decorator to check if the user is a superuser
@@ -349,20 +349,45 @@ def update_product(request, product_id):
 
 def order_details(request):
     orders = Order.objects.all()
-    user_names = [order.user_profile.user.username for order in orders]  # Assuming user_profile has a ForeignKey to the User model
-    product_names = [order.product.product_name for order in orders]
+    product_names = [", ".join([product.product_name for product in order.products.all()]) for order in orders]
     context = {
         'orders': orders,
-        'user_names': user_names,
         'product_names': product_names
     }
     return render(request, 'adminn/orderdetails.html', context)
 
 
+# function for updating order status for admin side
+
+def update_order_status(request):
+    print('1')
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        print('order')
+        print(order_id)
+        new_status = request.POST.get('new_status')
+        print('new status')
+        print(new_status)
+        
+        # Update order status in the database
+        try:
+            order = Order.objects.get(pk=order_id)
+            order.delivery_status = new_status
+            order.save()
+            return JsonResponse({'success': True})
+        except Order.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Order does not exist'})
+    
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 
-
-
+# function for display the sales report admin side
 
 def sales_report(request):
-    return render(request,'adminn/salesreport.html')
+    delivered_orders = Order.objects.filter(delivery_status='Delivered')
+    product_names = [", ".join([product.product_name for product in order.products.all()]) for order in delivered_orders]
+    context = {
+        'orders': delivered_orders,
+        'product_names': product_names
+    }
+    return render(request, 'adminn/salesreport.html', context)
