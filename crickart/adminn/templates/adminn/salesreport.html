@@ -33,36 +33,50 @@
     .status-delivered { color: green; }
 </style>
 
-<table style="margin-top: 60px;">
-    <tr>
-        <th>Order ID</th>
-        <th>User Name</th>
-        <th>Product Name</th>
-        <th>Total Qty</th>
-        <th>Total Price</th>
-        <th>Address</th>
-        <th>Order Date</th>
-        <th>Payment</th>
-        <th>Order Status</th>>
-    </tr>
-    {% for order in orders %}
-    <tr>
-        <td>{{ order.id }}</td>
-        <td>{{ order.user_profile.user.username }}</td>
-        <td>
-            {% for product in order.products.all %}
-                {{ product.product_name }}
-                {% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </td>
-        <td>{{ order.total_qty }}</td>
-        <td>{{ order.total_price }}</td>
-        <td>{{ order.address }}</td>
-        <td>{{ order.order_date }}</td>
-        <td>{{ order.payment }}</td>
-        <td class="order-status status-{{ order.delivery_status|lower }}">{{ order.delivery_status }}</td>
-    </tr>
-    {% endfor %}
+
+<h1 style="margin-top: 50px; text-align: center; font-size: 24px; font-weight: bold; text-decoration: underline;color: black;">Crick-Kart Sales Report</h1>
+
+
+<table id="orderTable" >
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>User Name</th>
+            <th>Product Name</th>
+            <th>Total Qty</th>
+            <th>Total Price</th>
+            <th>Address</th>
+            <th>Order Date</th>
+            <th>Payment</th>
+            <th>Order Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.user_profile.user.username }}</td>
+            <td>
+                {% for product in order.products.all %}
+                    {{ product.product_name }}
+                    {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ order.total_qty }}</td>
+            <td>{{ order.total_price }}</td>
+            <td>{{ order.address }}</td>
+            <td>{{ order.order_date }}</td>
+            <td>{{ order.payment }}</td>
+            <td class="order-status status-{{ order.delivery_status|lower }}">{{ order.delivery_status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
+
+<script>
+    $(document).ready(function () {
+        $('#orderTable').DataTable();
+    });
+</script>
 
 {% endblock content %}
