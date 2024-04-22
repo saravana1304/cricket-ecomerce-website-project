@@ -28,13 +28,13 @@
                     <!-- Sort by Name -->
                     <h6 class="card-subtitle mb-2 text-muted">Sort by Name</h6>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="sortName" id="sortNameAZ">
+                        <input class="form-check-input" type="radio" name="sortName" id="sortNameAZ" value="AZ">
                         <label class="form-check-label" for="sortNameAZ">
                             A-Z
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="sortName" id="sortNameZA">
+                        <input class="form-check-input" type="radio" name="sortName" id="sortNameZA" value="ZA">
                         <label class="form-check-label" for="sortNameZA">
                             Z-A
                         </label>
@@ -43,25 +43,25 @@
                     <!-- Sort by Price -->
                     <h6 class="card-subtitle mb-2 mt-3 text-muted">Sort by Price</h6>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="sortPrice" id="sortPrice1">
+                        <input class="form-check-input" type="radio" name="sortPrice" id="sortPrice1" value="1" >
                         <label class="form-check-label" for="sortPrice1">
                             $100 - $500
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="sortPrice" id="sortPrice2">
+                        <input class="form-check-input" type="radio" name="sortPrice" id="sortPrice2" value="2">
                         <label class="form-check-label" for="sortPrice2">
                             $500 - $1000
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="sortPrice" id="sortPrice3">
+                        <input class="form-check-input" type="radio" name="sortPrice" id="sortPrice3" value="3">
                         <label class="form-check-label" for="sortPrice3">
                             $1000 - $1500
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="sortPrice" id="sortPrice4">
+                        <input class="form-check-input" type="radio" name="sortPrice" id="sortPrice4" value="4">
                         <label class="form-check-label" for="sortPrice4">
                             $1500 and above
                         </label>
@@ -119,7 +119,7 @@
                     </div>
 
                     <!-- Filter Apply Buttons -->
-                    <button class="btn btn-primary mt-3 filter-button" id="applyNameFilter">Apply Name Filter</button>
+                    <button class="btn btn-warning mt-3 filter-button" id="applyFilter">Apply Filter</button>
                 </div>
             </div>
         </div>
@@ -143,7 +143,7 @@
             </div>
             
             <!-- Product Cards Section -->
-            <div class="row">
+            <div class="row" style="margin-bottom: 120px;">
                 <!-- Product Cards Loop -->
                 {% for item in products %}
                 <div class="col-md-3 mb-4">
@@ -161,5 +161,31 @@
         </div>
     </div>
 </div>
+
+
+
+
+<script>
+    $(document).ready(function() {
+        $('#applyFilter').click(function() {
+            var filters = {
+                'sortName': $('input[name=sortName]:checked').val(),
+                'sortPrice': $('input[name=sortPrice]:checked').val(),
+                // Add more filter options here
+            };
+            $.ajax({
+                type: 'GET',
+                url: '/filter_products/',
+                data: filters,
+                success: function(response) {
+                    $('.row').html(response); // Update product display area with filtered results
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error: ' + error);
+                }
+            });
+        });
+    });
+</script>
 
 {% endblock content %}

@@ -391,3 +391,4 @@ def sales_report(request):
         'product_names': product_names
     }
     return render(request, 'adminn/salesreport.html', context)
+
