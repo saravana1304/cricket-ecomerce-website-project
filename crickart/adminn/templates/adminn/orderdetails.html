@@ -38,56 +38,77 @@
 </style>
 
 <h1 style="margin-top: 50px; text-align: center; font-size: 24px; font-weight: bold; text-decoration: underline;color: black;">Crick-Kart Order Management</h1>
-<table id="orderTable" style="margin-top: 20px;margin-bottom: 50px;">
-    <thead>
-        <tr>
-            <th>Order ID</th>
-            <th>User Name</th>
-            <th>Product Name</th>
-            <th>Total Qty</th>
-            <th>Total Price</th>
-            <th>Address</th>
-            <th>Order Date</th>
-            <th>Payment</th>
-            <th>Order Status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for order in orders %}
-        <tr>
-            <td>{{ order.id }}</td>
-            <td>{{ order.user_profile.user.username }}</td>
-            <td>
-                {% for product in order.products.all %}
-                    {{ product.product_name }}
-                    {% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </td>
-            <td>{{ order.total_qty }}</td>
-            <td>{{ order.total_price }}</td>
-            <td>{{ order.address }}</td>
-            <td>{{ order.order_date }}</td>
-            <td>{{ order.payment }}</td>
-            <td class="order-status status-{{ order.delivery_status|lower }}">{{ order.delivery_status }}</td>
-            <td>
-                <select class="status-select" data-order-id="{{ order.id }}">
-                    <option value="Pending" {% if order.delivery_status == 'Pending' %}selected{% endif %}>Pending</option>
-                    <option value="Confirmed" {% if order.delivery_status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
-                    <option value="Shipped" {% if order.delivery_status == 'Shipped' %}selected{% endif %}>Shipped</option>
-                    <option value="Cancelled" {% if order.delivery_status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
-                    <option value="Delivered" {% if order.delivery_status == 'Delivered' %}selected{% endif %}>Delivered</option>
-                </select>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+
+<table style="margin-top: 60px;">
+    <tr>
+        <th>Order ID</th>
+        <th>User Name</th>
+        <th>Product Name</th>
+        <th>Total Qty</th>
+        <th>Total Price</th>
+        <th>Address</th>
+        <th>Order Date</th>
+        <th>Payment</th>
+        <th>Order Status</th>
+        <th>Action</th>
+    </tr>
+    {% for order in orders %}
+    <tr>
+        <td>{{ order.id }}</td>
+        <td>{{ order.user_profile.user.username }}</td>
+        <td>
+            {% for product in order.products.all %}
+                {{ product.product_name }}
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </td>
+        <td>{{ order.total_qty }}</td>
+        <td>{{ order.total_price }}</td>
+        <td>{{ order.address }}</td>
+        <td>{{ order.order_date }}</td>
+        <td>{{ order.payment }}</td>
+        <td class="order-status status-{{ order.delivery_status|lower }}">{{ order.delivery_status }}</td>
+        <td>
+            <select class="status-select" data-order-id="{{ order.id }}">
+                <option value="Pending" {% if order.delivery_status == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="Confirmed" {% if order.delivery_status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                <option value="Shipped" {% if order.delivery_status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                <option value="Cancelled" {% if order.delivery_status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                <option value="Delivered" {% if order.delivery_status == 'Delivered' %}selected{% endif %}>Delivered</option>
+            </select>
+        </td>
+    </tr>
+    {% endfor %}
 </table>
 
 
 <script>
 $(document).ready(function() {
-    $('#orderTable').DataTable();
+    $('.status-select').change(function() {
+        var orderId = $(this).data('order-id');
+        var newStatus = $(this).val();
+        
+        $.ajax({
+            type: 'POST',
+            url: '/update_order_status/',
+            data: {
+                'order_id': orderId,
+                'new_status': newStatus,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Update UI based on successful response
+                    $('.status-' + newStatus.toLowerCase()).text(newStatus).addClass('status-' + newStatus.toLowerCase());
+                } else {
+                    console.error('Error: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error: ' + error);
+            }
+        });
+    });
 });
 </script>
 
