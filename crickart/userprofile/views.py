@@ -291,7 +291,8 @@ def place_order(request):
 
 @login_required
 def user_order(request):
-    user_orders = Order.objects.filter(user_profile=request.user.userprofile)
+    user_orders = Order.objects.filter(user_profile=request.user.userprofile).order_by('-id')
+
     return render(request, 'userprofile/userorder.html', {'user_orders': user_orders})
 
 

@@ -178,9 +178,8 @@ def shop_view(request):
 
 def filter_products(request):
     sort_name = request.GET.get('sortName')
-    print(sort_name)
     sort_price = request.GET.get('sortPrice')
-    print(sort_price)
+    category_id = request.GET.get('category')
 
     filtered_products = Product.objects.filter(
         category__is_listed=True,
@@ -188,30 +187,34 @@ def filter_products(request):
         is_listed=True
     )
 
-    print('filterred prodcts')
-    print(filtered_products.count())
-
-    sk=[]
     if sort_name == 'AZ':
-        print('az')
-        print(filtered_products)
-        sk = filtered_products.order_by('product_name')
-        
-        print('saravana',sk)
+        filtered_products = filtered_products.order_by('product_name')
     elif sort_name == 'ZA':
-        sk = filtered_products.order_by('-product_name')
+        filtered_products = filtered_products.order_by('-product_name')
 
     if sort_price == '1':
-        sk = filtered_products.filter(price__range=(100, 500))
+        filtered_products = filtered_products.filter(selling_price__range=(100, 500))
     elif sort_price == '2':
-        sk = filtered_products.filter(price__range=(500, 1000))
+        filtered_products = filtered_products.filter(selling_price__range=(500, 1000))
     elif sort_price == '3':
-        sk = filtered_products.filter(price__range=(1000, 1500))
+        filtered_products = filtered_products.filter(selling_price__range=(1000, 1500))
     elif sort_price == '4':
-        sk = filtered_products.filter(price__gte=1500)
+        filtered_products = filtered_products.filter(selling_price__gte=1500)
 
-    serialized_products = [{'product_name': product.product_name, 'selling_price': product.selling_price, 'image_url': product.image2.url} for product in sk]
+    if category_id:
+        filtered_products = filtered_products.filter(category_id=category_id)
 
-    print(serialized_products)
-    return render(request,'userapp1/shop.html', {'products': serialized_products})
+    # Serialize products including image URLs
+    serialized_products = [{
+        'product_name': product.product_name,
+        'selling_price': product.selling_price,
+        'image_url': product.image1.url if product.image1 else '',  # Use image1 URL if available
+        'id': product.id
+    } for product in filtered_products]
+
+    return render(request, 'userapp1/shop.html', {
+        'products': serialized_products,
+        'categories': Category.objects.all()  # Pass all categories to the template
+    })
+
 

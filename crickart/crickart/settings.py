@@ -105,7 +105,7 @@ WSGI_APPLICATION = 'crickart.wsgi.application'
 DATABASES = {                                    # registering postgres app into settings
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cricketwebsite',
+        'NAME': 'cricketweb',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': 'localhost',   # Set to the PostgreSQL server's host
