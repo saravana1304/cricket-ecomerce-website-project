@@ -1,5 +1,7 @@
 # Created by https://www.gitignore.io
 
+googleAuth.json
+
 ### OSX ###
 .DS_Store
 .AppleDouble

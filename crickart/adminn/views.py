@@ -99,7 +99,7 @@ def update_status(request, user_id):
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='alogin')
 def category_list(request):
-        categories = Category.objects.all()
+        categories = Category.objects.all().order_by('-id')
         return render(request, 'adminn/category.html', {'categories': categories})
 
 
@@ -179,7 +179,7 @@ def unlist_category(request, category_id):
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
 @login_required(login_url='alogin')
 def brand_list(request):
-        brand = Brand.objects.all()
+        brand = Brand.objects.order_by('-id')
         return render(request, 'adminn/brand.html', {'brand': brand})
 
 
