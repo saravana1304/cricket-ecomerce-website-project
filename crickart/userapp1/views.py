@@ -138,7 +138,7 @@ def contactus(request):
 @never_cache
 def product_deatils(request,product_id):
     product=Product.objects.get(pk=product_id)
-    similar_products = Product.objects.filter(category=product.category).exclude(pk=product_id)[:4]
+    similar_products = Product.objects.filter(category=product.category).exclude(pk=product_id)[:5]
     context={
         'product':product,
         'similar_products':similar_products

@@ -3,7 +3,7 @@
 {% block content %}
 <h1>Available Products in {{ category.name }} {{products_count}}</h1>
 {% if products %}
-<div class="container">
+<div class="container" style="margin-bottom: 120px;">
     <div class="row">
         {% for product in products %}
         <div class="card col-md-3 my-2 mx-2 p-3"  style="width: 16rem;">

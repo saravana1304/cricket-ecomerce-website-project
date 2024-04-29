@@ -118,7 +118,7 @@
 <div class="clear-wishlist-button" style="text-align: center; margin-top: 20px;">
     <form id="clear-wishlist-form" action="{% url 'clear_wishlist' %}" method="post" onsubmit="confirmClearWishlist(); return false;">
         {% csrf_token %}
-        <button type="submit">Clear Wishlist</button> <!-- Clear Wishlist Button -->
+        <button style="margin-bottom: 50px;margin-bottom: 100px;" type="submit">Clear Wishlist</button> <!-- Clear Wishlist Button -->
     </form>
 </div>
 

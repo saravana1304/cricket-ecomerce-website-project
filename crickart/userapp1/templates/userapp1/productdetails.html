@@ -15,12 +15,12 @@
         <div class="col-md-6">
             <div class="row">
                 <div class="col-10">
-                    <img id="mainImg" src="{{ product.image1.url }}" alt="{{ product.product_name }}" class="img-fluid">
+                    <img style="height: 500px;width: 450px; border :5px solid black;" id="mainImg" src="{{ product.image1.url }}" alt="{{ product.product_name }}" class="img-fluid">
                 </div>
-                <div class="col-2 d-flex flex-column align-items-end justify-content-end">
-                    <img id="img1" onclick="clickedImg1('{{ product.image1.url }}')" src="{{ product.image1.url }}" alt="{{ product.product_name }}" class="img-fluid my-3">
-                    <img id="img2" onclick="clickedImg1('{{ product.image2.url }}')" src="{{ product.image2.url }}" alt="{{ product.product_name }}" class="img-fluid my-3">
-                    <img id="img3" onclick="clickedImg1('{{ product.image3.url }}')" src="{{ product.image3.url }}" alt="{{ product.product_name }}" class="img-fluid my-3">
+                <div class="col-2 d-flex flex-column align-items-end justify-content-center">
+                    <img style="border: 3px solid black; margin-right: 30px; height: 100px; width: 100px;" id="img1" onclick="clickedImg1('{{ product.image1.url }}')" src="{{ product.image1.url }}" alt="{{ product.product_name }}" class="img-fluid my-3">
+                    <img style="border: 3px solid black; margin-right: 30px; height: 100px; width: 100px;" id="img2" onclick="clickedImg1('{{ product.image2.url }}')" src="{{ product.image2.url }}" alt="{{ product.product_name }}" class="img-fluid my-3">
+                    <img style="border: 3px solid black; margin-right: 30px; height: 100px; width: 100px;" id="img3" onclick="clickedImg1('{{ product.image3.url }}')" src="{{ product.image3.url }}" alt="{{ product.product_name }}" class="img-fluid my-3">
                 </div>
             </div>
         </div>
@@ -32,13 +32,13 @@
             <form id="add-to-cart-form" method="post" action="{% url 'add_to_cart' product_id=product.id %}">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <label for="quantity" class="form-label">Quantity:</label>
-                    <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="10">
+                    <label for="quantity" class="form-label" style="margin-left: 20px;color: red;font-weight: bold;">Select Quantity</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="10" style="width: 300px;">
                 </div>
                 <button type="button" class="btn btn-warning" onclick="addToCart()"><i class="fa-solid fa-cart-shopping"></i> ADD TO CART</button>
-                <button type="button" class="btn btn-danger ms-3" id="addToWishlistBtn">
+                <a href=""><button type="button" class="btn btn-danger ms-3" id="addToWishlistBtn">
                     <i class="fa-regular fa-heart"></i> ADD TO WISHLIST
-                </button> 
+                </button></a>
             </form>
             {% else %}
             <button type="button" class="btn btn-danger ms-3">OUTOF STOCK</button>
@@ -49,18 +49,18 @@
 
 <!-- Similar products section -->
 {% if similar_products %}
-<h1 class="mt-5 text-center text-success">Similar Products</h1>
+<h1 class="mt-5 text-center text-danger">Similar Products</h1>
 <div class="container text-center" style="margin-bottom: 150px;">  
     <div class="row">
         {% for similar_product in similar_products %}
         {% if similar_product.category.is_listed and similar_product.brand.is_listed and similar_product.is_listed %}
-        <div class="col-md-3 my-3 mx-3">
+        <div class="col-md-2 my-3 mx-3 border border-5">
             <a class="text-decoration-none" href="{% url 'productdetails' similar_product.id %}">
-                <img src="{{ similar_product.image1.url }}" alt="{{ similar_product.product_name }}" class="img-fluid" style="height: 220px; width: 300px;">
-                <p class="product-name text-black fw-bold my-3">{{ similar_product.product_name }}</p>
+                <img style="height: 150px;width: 150px; margin-top: 20px;" src="{{ similar_product.image1.url }}" alt="{{ similar_product.product_name }}" class="img-fluid" style="height: 220px; width: 300px;">
+                <p class="product-name text-black fw-bold my-2">{{ similar_product.product_name }}</p>
                 <p class="product-price text-danger">${{ similar_product.selling_price }}</p>
             </a>
-            <a href="{% url 'shop_view' %}" class="btn btn-success">Shop Now</a>
+            <a style="margin-bottom: 25px;" href="{% url 'shop_view' %}" class="btn btn-success">Shop Now</a>
         </div>
         {% endif %}
         {% endfor %}

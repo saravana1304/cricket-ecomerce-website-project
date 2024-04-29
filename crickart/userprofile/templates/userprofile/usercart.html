@@ -14,8 +14,8 @@ crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         .cart-item-image {
-            max-width: 100px;
-            height: auto;
+            max-width: 70px;
+            height: 70px;
         }
 
         .btn-sm {
@@ -45,15 +45,15 @@ crossorigin="anonymous" referrerpolicy="no-referrer" />
             </thead>
             <tbody>
                 {% for item in cart_items %}
-                <tr>
+                <tr class="" >
                     <td>
-                        <div class="d-flex">
+                        <div class="d-flex justify-content-start align-items-strt">
                             <img style="width: 100px;" src="{{ item.product.image1.url }}" alt="{{ item.product.product_name }}" class="cart-item-image mx-3">
                             <img src="{{ item.product.image2.url }}" alt="{{ item.product.product_name }}" class="cart-item-image mx-3">
                             <img src="{{ item.product.image3.url }}" alt="{{ item.product.product_name }}" class="cart-item-image mx-3">
-                            <div class="d-flex justify-content-center mt-5">
+                            <div class=" mt-2">
                                 <a href="{% url 'delete_item_from_cart' item.id %}" class="delete-item-btn">
-                                    <i class="fa-solid fa-trash fa-3x"></i>
+                                    <i class="fa-solid fa-trash fa-2x" style="margin-left: 50px; margin-top: 10px;"></i>
                                 </a>
                             </div>
                         </div>

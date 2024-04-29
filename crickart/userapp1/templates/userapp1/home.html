@@ -68,11 +68,11 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
             <div style="background-color:whitesmoke;" class="categories">
                 <div class="row">
                         {% for category in categories %}
-                        <div class="card col-6 col-md-3" style="width:10rem;">
+                        <div class="card col-6 col-md-3">
                             <a href="{% url 'category_view' category.name %}" style="text-decoration: none;">
-                                <img src="{{ category.image.url }}" alt="{{ category.name }}" class="card-img-top category-img">
+                                <img style="margin-top: 10px; text-align: center; height: 125px;width: 150px;" src="{{ category.image.url }}" alt="{{ category.name }}" >
                                 <div class="card-body">
-                                    <h5 class="card-title text-center" style="text-decoration: none;">{{ category.name}}</h5>
+                                    <h5 class="card-title text-center" style="text-decoration: none; margin-top: 5px;">{{ category.name}} </h5>
                                 </div>
                             </a>
                         </div>
@@ -94,7 +94,7 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
         <div class="product-list">
             {% for category, product in lowest_priced_products.items %}
             <div class="card col-md-3 my-2 mx-2 p-3 text-center"  style="width: 16rem;">
-                <img src="{{ product.image2.url }}" class="product-img" style="height: 170px;width: 200px;" alt="">
+                <img src="{{ product.image2.url }}" class="product-img" style="height: 170px;width: 180px;" alt="">
                 <i class="fa-regular fa-heart fa-xl position-absolute top-0 end-0 px-3 py-4"
                    onclick="addToWishlist('{{ product.id }}')"
                    style="cursor: pointer;">
