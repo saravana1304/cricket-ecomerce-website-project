@@ -14,7 +14,7 @@ from django.db.models import Q,Min
 from django.views.decorators.cache import never_cache
 from django.contrib.sessions.models import Session
 from django.contrib import messages
-from django.db.models import Count
+from django.db.models import F
 
 
 
@@ -190,31 +190,57 @@ def filter_products(request):
     if sort_name == 'AZ':
         filtered_products = filtered_products.order_by('product_name')
     elif sort_name == 'ZA':
-        filtered_products = filtered_products.order_by('-product_name')
+        filtered_products = filtered_products.order_by('-product_name','selling_price')
 
     if sort_price == '1':
-        filtered_products = filtered_products.filter(selling_price__range=(100, 500))
+        filtered_products = filtered_products.filter(selling_price__range=(100, 500)).order_by('selling_price')
     elif sort_price == '2':
-        filtered_products = filtered_products.filter(selling_price__range=(500, 1000))
+        filtered_products = filtered_products.filter(selling_price__range=(500, 1000)).order_by('selling_price')
     elif sort_price == '3':
-        filtered_products = filtered_products.filter(selling_price__range=(1000, 1500))
+        filtered_products = filtered_products.filter(selling_price__range=(1000, 1500)).order_by('selling_price')
     elif sort_price == '4':
-        filtered_products = filtered_products.filter(selling_price__gte=1500)
+        filtered_products = filtered_products.filter(selling_price__gte=1500).order_by('selling_price')
 
     if category_id:
-        filtered_products = filtered_products.filter(category_id=category_id)
+        filtered_products = filtered_products.filter(category_id=category_id).order_by('selling_price')
 
-    # Serialize products including image URLs
+
     serialized_products = [{
         'product_name': product.product_name,
         'selling_price': product.selling_price,
-        'image_url': product.image1.url if product.image1 else '',  # Use image1 URL if available
+        'image_url': product.image2.url if product.image2 else '', # Use image1 URL if available
         'id': product.id
     } for product in filtered_products]
 
+
     return render(request, 'userapp1/shop.html', {
         'products': serialized_products,
-        'categories': Category.objects.all()  # Pass all categories to the template
+        'categories': Category.objects.all()# Pass all categories to the template
     })
 
 
+# function for searching the products from shoppage
+
+def search_products(request):
+    query = request.GET.get('query')
+
+    if query:
+        filtered_products = Product.objects.filter(
+            Q(product_name__icontains=query) 
+        )
+    else:
+        filtered_products = Product.objects.order_by('product_name')
+
+    serialized_products = [{
+        'product_name': product.product_name,
+        'selling_price': product.selling_price,
+        'image_url': product.image2.url if product.image2 else '',  # Use image2 URL if available
+        'id': product.id
+    } for product in filtered_products]
+
+    print(serialized_products)
+
+    return render(request, 'userapp1/shop.html', {
+        'products': serialized_products,
+        'categories': Category.objects.all()
+    })
