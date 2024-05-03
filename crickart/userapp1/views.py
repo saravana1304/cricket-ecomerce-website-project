@@ -171,7 +171,16 @@ def shop_view(request):
         brand__is_listed=True,
         is_listed=True
     )
-    return render(request,'userapp1/shop.html',{'products':products})
+    
+    serialized_products = [{
+        'product_name': product.product_name,
+        'selling_price': product.selling_price,
+        'image_url': product.image1.url if product.image1 else '',  # Use image2 URL if available
+        'id': product.id
+    } for product in products]
+    
+    return render(request,'userapp1/shop.html',{'products':serialized_products})
+
 
 
 # function for filtering the products from shoppage
@@ -234,7 +243,7 @@ def search_products(request):
     serialized_products = [{
         'product_name': product.product_name,
         'selling_price': product.selling_price,
-        'image_url': product.image2.url if product.image2 else '',  # Use image2 URL if available
+        'image_url': product.image3.url if product.image3 else '',  # Use image2 URL if available
         'id': product.id
     } for product in filtered_products]
 
@@ -244,3 +253,5 @@ def search_products(request):
         'products': serialized_products,
         'categories': Category.objects.all()
     })
+
+    
