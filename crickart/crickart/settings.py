@@ -38,6 +38,7 @@ SITE_ID=3
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'userapp1',
     'adminn',     # registering app name 
     'userprofile',
+    'offers',
 
 # thiss apps for checking social authendications 
     'django.contrib.sites',

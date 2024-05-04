@@ -27,6 +27,7 @@ urlpatterns = [
     path('',include('userapp1.urls')),
     path('',include('adminn.urls')),
     path('',include('userprofile.urls')),
+    path('',include('offers.urls')),
 
 # this code using to google authentication 
     path('accounts/',include('allauth.urls')),    
