@@ -1,0 +1,20 @@
+{% extends 'adminn/home.html' %}
+{% block content %}
+    <title>Edit Coupon</title>
+    <!-- Your CSS styles here -->
+
+    <div class="container">
+        <h1>Edit Coupon</h1>
+        <div class="edit-coupon">
+            <form action="{% url 'editcoupon' coupon.id %}" method="post"> <!-- Here, 'editcoupon' is the name of the URL pattern -->
+                {% csrf_token %}
+                <input type="text" name="code" value="{{ coupon.code }}" placeholder="Enter Coupon Code">
+                <input type="text" name="discount" value="{{ coupon.discount }}" placeholder="Enter Discount">
+                <input type="datetime-local" name="valid_from" value="{{ coupon.valid_from }}">
+                <input type="datetime-local" name="valid_to" value="{{ coupon.valid_to }}">
+                <input type="text" name="total_amount" value="{{ coupon.total_amount }}" placeholder="Enter Total Amount">
+                <input type="submit" value="Update Coupon">
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends 'adminn/home.html' %}
+{% load static %}
+
+{% block content %}
+    <title>Coupon Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%; /* Set container width to 100% */
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: underline;
+            color: black;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%; /* Set table width to 100% */
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .add-coupon {
+            text-align: center; /* Center the add coupon form */
+            margin-top: 20px;
+        }
+        .add-coupon input[type="text"], .add-coupon input[type="datetime-local"], .add-coupon input[type="submit"] {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .add-coupon input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Coupon Management</h1>
+        <div class="add-coupon">
+            <h2>Add Coupon</h2>
+            <form action="{% url 'addcoupon' %}" method="post"> <!-- Here, 'addcoupon' is the name of the URL pattern -->
+                {% csrf_token %}
+                <input type="text" name="code" placeholder="Enter Coupon Code">
+                <input type="text" name="discount" placeholder="Enter Discount">
+                <input type="datetime-local" name="valid_from">
+                <input type="datetime-local" name="valid_to">
+                <input type="hidden" name="status" value="Active"> <!-- Default status is Active -->
+                <input type="text" name="total_amount" placeholder="Enter Total Amount"> <!-- New field for total amount -->
+                <input type="submit" value="Add Coupon">
+            </form>
+        </div>        
+        <hr> <!-- Add a horizontal line to separate the add coupon form and coupon list -->
+        <div class="coupon-list">
+            <h2>Coupon List</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Coupon Code</th>
+                        <th>Discount</th>
+                        <th>Valid From</th>
+                        <th>Valid To</th>
+                        <th>Total Amount</th>
+                        <th>Actions</th> <!-- New column for actions -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loop through coupons and display each coupon details -->
+                    {% for item in coupons %}
+                    <tr>
+                        <td>{{ item.code }}</td>
+                        <td>{{ item.discount }}</td>
+                        <td>{{ item.valid_from }}</td>
+                        <td>{{ item.valid_to }}</td>
+                        <td>{{ item.total_amount }}</td>
+                        <td>
+                            <button>Edit</button> <!-- Edit button -->
+                            <button>Delete</button> <!-- Delete button -->
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+<!-- Script files for alret mesages displaying user -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const url = '{% url "addcoupon" %}';
+            fetch(url, {
+                method: 'POST',
+                body: new FormData(this),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const icon = data.success ? 'success' : 'error';
+                Swal.fire({ icon, title: data.message });
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
+
+
+
+
+
+{% endblock content %}
+
+
