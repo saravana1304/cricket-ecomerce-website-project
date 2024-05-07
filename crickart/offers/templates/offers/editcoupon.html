@@ -1,19 +1,90 @@
 {% extends 'adminn/home.html' %}
 {% block content %}
-    <title>Edit Coupon</title>
-    <!-- Your CSS styles here -->
-
+    <title >Edit Coupon</title>
+    <style>
+        /* Your CSS styles here */
+        .container {
+            width: 30%;
+            margin: auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="datetime-local"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .radio-buttons label {
+            margin-right: 15px;
+        }
+        .radio-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .form-group:last-child {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .form-group:last-child input[type="submit"] {
+            width: 150px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
     <div class="container">
-        <h1>Edit Coupon</h1>
+        <h1 style="text-align: center; font-size: 24px; font-weight: bold; text-decoration: underline;color: black; margin-top: 50px;">Edit Coupon</h1>
         <div class="edit-coupon">
-            <form action="{% url 'editcoupon' coupon.id %}" method="post"> <!-- Here, 'editcoupon' is the name of the URL pattern -->
+            <form action="{% url 'editcoupon' coupon.id %}" method="post">
                 {% csrf_token %}
-                <input type="text" name="code" value="{{ coupon.code }}" placeholder="Enter Coupon Code">
-                <input type="text" name="discount" value="{{ coupon.discount }}" placeholder="Enter Discount">
-                <input type="datetime-local" name="valid_from" value="{{ coupon.valid_from }}">
-                <input type="datetime-local" name="valid_to" value="{{ coupon.valid_to }}">
-                <input type="text" name="total_amount" value="{{ coupon.total_amount }}" placeholder="Enter Total Amount">
-                <input type="submit" value="Update Coupon">
+                <div class="form-group">
+                    <label for="code">Coupon Code:</label>
+                    <input type="text" name="code" id="code" value="{{ coupon.code }}" placeholder="Enter Coupon Code">
+                </div>
+                <div class="form-group">
+                    <label for="discount">Discount:</label>
+                    <input type="text" name="discount" id="discount" value="{{ coupon.discount }}" placeholder="Enter Discount">
+                </div>
+                <div class="form-group">
+                    <label for="valid_from">Valid From:</label>
+                    <input type="datetime-local" name="valid_from" id="valid_from" value="{{ coupon.valid_from }}">
+                </div>
+                <div class="form-group">
+                    <label for="valid_to">Valid To:</label>
+                    <input type="datetime-local" name="valid_to" id="valid_to" value="{{ coupon.valid_to }}">
+                </div>
+                <div class="form-group">
+                    <label for="active">Active:</label>
+                    <div class="radio-buttons">
+                        <input type="radio" name="active" id="active_true" value="true" {% if coupon.active %}checked{% endif %}>
+                        <label for="active_true">True</label>
+                        <input type="radio" name="active" id="active_false" value="false" {% if not coupon.active %}checked{% endif %}>
+                        <label for="active_false">False</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="total_amount">Total Amount:</label>
+                    <input type="text" name="total_amount" id="total_amount" value="{{ coupon.total_amount }}" placeholder="Enter Total Amount">
+                </div>
+                <div class="form-group">
+                    <input type="hidden" name="status" value="{{ coupon.status }}">
+                    <input type="submit" value="Update Coupon">
+                </div>
             </form>
         </div>
     </div>
