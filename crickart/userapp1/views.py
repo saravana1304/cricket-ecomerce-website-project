@@ -247,8 +247,6 @@ def search_products(request):
         'id': product.id
     } for product in filtered_products]
 
-    print(serialized_products)
-
     return render(request, 'userapp1/shop.html', {
         'products': serialized_products,
         'categories': Category.objects.all()

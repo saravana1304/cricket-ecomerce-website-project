@@ -79,7 +79,7 @@
             <h5>{{ user.email }}</h5>
             <h5>{{ user_profile.phone_number }}</h5>
             <h5>{{ user_profile.place }} - {{ user_profile.pincode }}</h5>
-            <a href="#" class="btn btn-danger btn-lg mt-3">Change Password</a>
+            <a href="{% url 'change-password' %}" class="btn btn-danger btn-lg mt-3">Change Password</a>
             <hr>
 
             <div class="clearfix">

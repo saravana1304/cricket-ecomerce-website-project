@@ -9,9 +9,13 @@ from adminn.models import Product
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .forms import AddressForm
-from django.db.models import F,Sum,Count
+from django.db.models import F,Sum
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+
 
 
 
@@ -347,3 +351,28 @@ def remove_from_wishlist(request, item_id):
 def clear_wishlist(request):
     Wishlist.objects.filter(user=request.user).delete()
     return redirect('wish_list') 
+
+
+@login_required
+def change_password(request):
+    success = False  # Initialize flag for successful password change
+    if request.method == 'POST':
+        current_password = request.POST.get('current_password')
+        new_password = request.POST.get('new_password')
+        confirm_new_password = request.POST.get('confirm_new_password')
+
+        if new_password == current_password:
+            messages.error(request, ' current password, new password both same,try different password.')
+        elif new_password != confirm_new_password:
+            messages.error(request, 'New passwords do not match.')
+        else:
+            user = request.user
+            if user.check_password(current_password):
+                user.set_password(new_password)
+                user.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, 'Your password has been changed successfully.')
+                success = True  # Set flag to True for successful password change
+            else:
+                messages.error(request, 'Incorrect current password.')
+    return render(request, 'userprofile/changepassword.html', {'success': success})

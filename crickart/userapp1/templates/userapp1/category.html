@@ -7,16 +7,19 @@
     <div class="row">
         {% for product in products %}
         <div class="card col-md-3 my-2 mx-2 p-3"  style="width: 16rem;">
-          <a  style="text-decoration: none; color: black;"  href="{% url 'productdetails' product.id %}">
+          <a  style="text-decoration: none; color: black;"  href="{% url 'productdetails' product.id %}"></a>
             <img src ="{{ product.image2.url }}" class="product-img" style="height: 200px;width: 200px;" alt="">
-            <i  class="fa-regular fa-heart fa-xl position-absolute top-0 end-0 px-3 py-4 "></i>
+            <i class="fa-regular fa-heart fa-xl position-absolute top-0 end-0 px-3 py-4"
+            onclick="addToWishlist('{{ product.id }}')"
+            style="cursor: pointer;">
+            </i> 
             <div class="card-body">
               <h5 class="card-title">{{product.product_name}}</h5>
               <div class="d-flex  justify-content-between" >
                 <p class="card-text">₹ {{product.selling_price}}</p>
                 <s class="card-text text-danger">₹ {{ product.selling_price|add:200 }}</s>
-              </div></a>
-              <a href="#" class="btn btn-success">Shop now</a>
+              </div>
+              <a href="{% url 'productdetails' product.id %}" class="btn btn-primary mt-auto">View Details</a>
             </div>
           </div>
 
@@ -28,6 +31,34 @@
 {% else %}
   <p>No products available in this category.</p>
 {% endif %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  // Function to add item to wishlist
+  function addToWishlist(productId) {
+      $.post(`/wishlist/add/${productId}/`, {'csrfmiddlewaretoken': '{{ csrf_token }}'})
+      .done(function(response) {
+          if (response.success) {
+              Swal.fire({
+                  icon: 'success',
+                  text: response.message
+              });
+          } else {
+              Swal.fire({
+                  icon: 'error',
+                  text: response.message
+              });
+          }
+      })
+      .fail(function(xhr, status, error) {
+          console.error(xhr.responseText);
+      });
+  }
+
+</script>
+
 {% endblock %}
 
 

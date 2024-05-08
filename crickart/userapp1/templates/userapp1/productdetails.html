@@ -36,9 +36,9 @@
                     <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="10" style="width: 300px;">
                 </div>
                 <button type="button" class="btn btn-warning" onclick="addToCart()"><i class="fa-solid fa-cart-shopping"></i> ADD TO CART</button>
-                <a href=""><button type="button" class="btn btn-danger ms-3" id="addToWishlistBtn">
+                <button type="button" class="btn btn-danger ms-3" id="addToWishlistBtn" onclick="addToWishlist('{{ product.id }}')">
                     <i class="fa-regular fa-heart"></i> ADD TO WISHLIST
-                </button></a>
+                </button>
             </form>
             {% else %}
             <button type="button" class="btn btn-danger ms-3">OUTOF STOCK</button>
@@ -69,6 +69,11 @@
 {% else %}
 <h1 class="mt-5 text-center text-danger">No Similar Products Available</h1>
 {% endif %}
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <script>
     let submitted = false;
@@ -105,7 +110,49 @@
                 console.error(xhr.responseText);
             }
         });
+    });;
+
+
+    function addToWishlist(productId) {
+    $.post(`/wishlist/add/${productId}/`, {'csrfmiddlewaretoken': '{{ csrf_token }}'})
+    .done(function(response) {
+        if (response.success) {
+            // Item added to wishlist successfully
+            Swal.fire({
+                icon: 'success',
+                text: 'Item added to wishlist successfully.'
+            });
+        } else {
+            // Check the specific message returned by the server
+            if (response.message.includes('already exists in wishlist')) {
+                // Item is already in the wishlist
+                Swal.fire({
+                    icon: 'info',
+                    text: 'Item is already in the wishlist.'
+                });
+            } else if (response.message.includes('already exists in cart')) {
+                // Item is already in the cart
+                Swal.fire({
+                    icon: 'info',
+                    text: 'Item is already in the cart.'
+                });
+            } else {
+                // Handle other error messages
+                Swal.fire({
+                    icon: 'error',
+                    text: response.message
+                });
+            }
+        }
+    })
+    .fail(function(xhr, status, error) {
+        // Handle AJAX request failure
+        console.error(xhr.responseText);
     });
+}
+
+
+
     
 </script>
 

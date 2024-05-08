@@ -103,7 +103,7 @@
             <form action="#" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="product_id" value="{{ item.product.id }}">
-                <button type="submit">Add to Cart</button> <!-- Add to Cart Button -->
+                <button type="button" class="btn btn-warning" onclick="addToCart()"><i class="fa-solid fa-cart-shopping"></i> ADD TO CART</button> 
             </form>
         </td>
     </tr>
@@ -188,7 +188,20 @@
             }
         });
     }
-    
+
+
+    function addToCart() {
+        if (!submitted) {
+            const quantity = parseInt(document.getElementById('quantity').value);
+            if (quantity > 0) {
+                document.getElementById('add-to-cart-form').submit();
+                submitted = true;
+            }
+        }
+    }
+
+
+
 </script>
 
 
