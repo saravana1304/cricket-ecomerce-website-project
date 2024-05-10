@@ -185,6 +185,8 @@ def shop_view(request):
 
 # function for filtering the products from shoppage
 
+# function for filtering the products from shoppage
+
 def filter_products(request):
     sort_name = request.GET.get('sortName')
     sort_price = request.GET.get('sortPrice')
@@ -234,8 +236,9 @@ def search_products(request):
     query = request.GET.get('query')
 
     if query:
+        # Filter products by product name or category name
         filtered_products = Product.objects.filter(
-            Q(product_name__icontains=query) 
+            Q(product_name__icontains=query) | Q(category__name__icontains=query)
         )
     else:
         filtered_products = Product.objects.order_by('product_name')
@@ -251,5 +254,4 @@ def search_products(request):
         'products': serialized_products,
         'categories': Category.objects.all()
     })
-
     

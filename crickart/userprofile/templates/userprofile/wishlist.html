@@ -100,12 +100,13 @@
             </form>
         </td>
         <td class="add-to-cart-button">
-            <form action="#" method="post">
+            <form action="{% url 'add_to_cart' item.product.id %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="product_id" value="{{ item.product.id }}">
-                <button type="button" class="btn btn-warning" onclick="addToCart()"><i class="fa-solid fa-cart-shopping"></i> ADD TO CART</button> 
+                <button type="submit" class="btn btn-warning"><i class="fa-solid fa-cart-shopping"></i> ADD TO CART</button> 
             </form>
         </td>
+        
     </tr>
     {% empty %}
     <tr>
@@ -198,7 +199,6 @@
             }
         }
     }
-
 
 </script>
 

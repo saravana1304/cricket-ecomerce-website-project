@@ -115,7 +115,7 @@ def cart_view(request):
 
 # function for add_to_cart 
 
-@cache_control(no_cache=True,must_revalidate=True,no_store=True)  
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
 def add_to_cart(request, product_id):
     if request.method == 'POST':
@@ -138,13 +138,11 @@ def add_to_cart(request, product_id):
         )
 
         if not created:  # Item already exists in the cart
-            cart_item.quantity += requested_quantity  # Increase the quantity
-            if cart_item.quantity > max_quantity:
-                cart_item.quantity = max_quantity  # Limit the quantity to the maximum available
-            cart_item.save()
-        else:
-            cart_item.quantity = requested_quantity
-            cart_item.save()
+            return redirect('cartview')
+
+        # If the item is not already in the cart, proceed to add it
+        cart_item.quantity = requested_quantity
+        cart_item.save()
 
         return redirect('cartview')
     
