@@ -72,7 +72,21 @@ def edit_coupon(request, coupon_id):
 
 
 
-def delete_coupon(request, coupon_id):
+def unlist_coupon(request, coupon_id):
     coupon = get_object_or_404(Coupon, pk=coupon_id)
-    coupon.delete()
-    return JsonResponse({'message': 'Coupon deleted successfully.'})
+    if coupon.is_listed:
+        coupon.status = 'Expired'
+    else:
+        coupon.status = 'Active'
+    coupon.is_listed = not coupon.is_listed  
+    coupon.save()
+    return JsonResponse({'message': 'Coupon unlisted successfully.'})
+
+
+def list_coupon(request, coupon_id):
+    coupon = get_object_or_404(Coupon, pk=coupon_id)
+    if not coupon.is_listed:
+        coupon.status = 'Active'
+    coupon.is_listed = True
+    coupon.save()
+    return JsonResponse({'message': 'Coupon listed successfully.'})
