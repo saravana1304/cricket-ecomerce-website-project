@@ -11,6 +11,7 @@ class UserProfile(models.Model):
     place = models.CharField(max_length=255)
     address = models.TextField(null=True)
     pincode = models.IntegerField(null=True, blank=True, default=None)
+    wallet_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
         return self.user.username

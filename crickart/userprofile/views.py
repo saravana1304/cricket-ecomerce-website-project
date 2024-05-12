@@ -39,12 +39,16 @@ def userprofile(request):
         pending_orders_count = user_orders.filter(delivery_status='Pending').count()
         delivered_orders_count = user_orders.filter(delivery_status='Delivered').count()
         total_amount = user_orders.aggregate(total=Sum('total_price'))['total'] or 0
+        wallet_balance = user_profile.wallet_balance
+        
+        
     
         context = {
             'total_orders': total_orders_count,
             'pending_orders': pending_orders_count,
             'total_amount': total_amount,
             'delivered_orders':delivered_orders_count,
+            'wallet_balance':wallet_balance
         }
         request.session['user_profile_id'] = user_profile.id
         return render(request, 'userprofile/profile.html', {'user_profile': user_profile, 'addresses': addresses, 'context': context})
@@ -241,25 +245,16 @@ def checkout_page(request):
 @login_required
 def place_order(request):
     try:
-        print('inside function')
         user = request.user
         user_profile_address = get_object_or_404(UserProfile, user=user)
         payment_method = request.POST.get('payment_method')
         address_method = request.POST.get('address_method')
 
-        print('payment')
-        print(payment_method)
-
-        print('adress')
-        print(address_method)
-
         cart_items = Cart.objects.filter(user=user)
-        print(cart_items)
         if not cart_items.exists():
             raise ValueError("No items in the cart.")
 
         product_ids = [item.product_id for item in cart_items]
-        print(product_ids)
         try:
 
         # Create the order
@@ -279,7 +274,6 @@ def place_order(request):
             for item in cart_items:
                 item.product.stock -= item.quantity
                 item.product.save()
-            print(order)
             # Clear the user's cart
             cart_items.delete()
         except Exception as e:
@@ -294,7 +288,6 @@ def place_order(request):
 @login_required
 def user_order(request):
     user_orders = Order.objects.filter(user_profile=request.user.userprofile).order_by('-id')
-
     return render(request, 'userprofile/userorder.html', {'user_orders': user_orders})
 
 
@@ -374,3 +367,19 @@ def change_password(request):
             else:
                 messages.error(request, 'Incorrect current password.')
     return render(request, 'userprofile/changepassword.html', {'success': success})
+
+
+
+@login_required
+def cancel_order(request,order_id):
+    order = get_object_or_404(Order, id=order_id)
+
+    if request.method =='POST':
+        # Update the order status to "Cancelled"
+
+        order.delivery_status ='Cancelled'
+        order.save()
+
+        # Increase the product quantity
+        
+
