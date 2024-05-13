@@ -51,6 +51,7 @@
         <th>Payment</th>
         <th>Order Status</th>
         <th>Action</th>
+        <th>Details</th>
     </tr>
     {% for order in orders %}
     <tr>
@@ -77,6 +78,8 @@
                 <option value="Delivered" {% if order.delivery_status == 'Delivered' %}selected{% endif %}>Delivered</option>
             </select>
         </td>
+       
+        <td> <a style="margin-bottom: 10px;" href="{% url 'product_view' %}" class="btn btn-success">View More</a></td>
     </tr>
     {% endfor %}
 </table>

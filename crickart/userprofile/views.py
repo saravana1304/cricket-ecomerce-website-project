@@ -371,15 +371,16 @@ def change_password(request):
 
 
 @login_required
-def cancel_order(request,order_id):
+def cancel_order(request, order_id):
     order = get_object_or_404(Order, id=order_id)
 
-    if request.method =='POST':
-        # Update the order status to "Cancelled"
-
-        order.delivery_status ='Cancelled'
+    if request.method == 'POST':
+        order.delivery_status = 'Cancelled'
         order.save()
 
-        # Increase the product quantity
+        return JsonResponse({'success': True, 'message': 'Order cancelled successfully.'})
+
+    return JsonResponse({'error': 'Invalid HTTP method'})
+
         
 

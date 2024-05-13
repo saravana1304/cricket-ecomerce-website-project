@@ -5,7 +5,6 @@
 {% endblock title %}
 
 {% block content %}
-
 <div class="container" style="margin-bottom: 100px;">
     <!-- Go Back Button -->
     <div class="text-left mt-3">
@@ -62,17 +61,25 @@
                                 <td><strong>Status:</strong></td>
                                 <td style="color: red;font-size:larger;font-weight:500">{{ order.delivery_status }}</td>
                             </tr>
-                            {% if order.delivery_status == 'Delivered' %}
-                            <tr>
-                                <td colspan="2"><button class="btn btn-warning btn-block">Return</button></td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="2"><button class="btn btn-danger btn-block">Cancel Order</button></td>
-                            </tr>
-                            {% endif %}
                         </tbody>
                     </table>
+                    {% if order.delivery_status == 'Delivered' %}
+                    <form action="#" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-warning btn-block">Return</button>
+                    </form>
+                    {% else %}
+                    {% if order.delivery_status == 'Cancelled' %}
+                    <div class="alert alert-danger" role="alert">
+                        This order has been cancelled.
+                    </div>
+                    {% else %}
+                    <form id="cancel-order-form" action="{% url 'cancel_order' order.id %}" method="post">
+                        {% csrf_token %}
+                        <button id="cancel-order-btn" type="button" class="btn btn-danger btn-block">Cancel Order</button>
+                    </form>
+                    {% endif %}
+                    {% endif %}
                 </div>
                 <!-- Shipping Address Section -->
                 <div class="col-md-12">
@@ -95,4 +102,63 @@
     </div>
 </div>
 
-{% endblock %}
+<!-- SweetAlert 2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cancelButton = document.getElementById('cancel-order-btn');
+    const cancelOrderForm = document.getElementById('cancel-order-form');
+
+    cancelButton.addEventListener('click', function() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You are about to cancel this order.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, cancel it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit the cancel order form via AJAX
+                fetch(cancelOrderForm.action, {
+                    method: 'POST',
+                    body: new FormData(cancelOrderForm),
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show success message in SweetAlert
+                        Swal.fire({
+                            title: 'Success!',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            // Redirect to user orders page after OK button click
+                            if (result.isConfirmed) {
+                                window.location.href = "{% url 'user_order' %}";
+                            }
+                        });
+                    } else {
+                        // Show error message if cancel order fails
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        });
+    });
+});
+</script>
+{% endblock %}    

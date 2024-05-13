@@ -391,3 +391,7 @@ def sales_report(request):
         'product_names': product_names
     }
     return render(request, 'adminn/salesreport.html', context)
+
+
+def product_details(request):
+    return render(request, 'adminn/orderedproduct.html')
