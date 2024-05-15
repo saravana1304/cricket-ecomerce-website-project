@@ -48,6 +48,11 @@ INSTALLED_APPS = [
     'userprofile',
     'offers',
 
+
+    # paypal intigreation
+
+    'paypal.standard.ipn',
+
 # thiss apps for checking social authendications 
     'django.contrib.sites',
     'allauth',
