@@ -39,5 +39,6 @@ urlpatterns = [
     # urls for user uptating a password
     path('change-password/', views.change_password, name='change-password'),
     
+    # urls for the working paypal payent method
 
 ]
