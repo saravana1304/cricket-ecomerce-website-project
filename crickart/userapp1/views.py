@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
-from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib import messages
 from .models import UserProfile
 from adminn.models import Category,Product,Brand
@@ -12,9 +11,8 @@ from .forms import CreateUserForm
 from django.http import JsonResponse
 from django.db.models import Q,Min
 from django.views.decorators.cache import never_cache
-from django.contrib.sessions.models import Session
 from django.contrib import messages
-from django.db.models import F
+from django.shortcuts import render, get_object_or_404
 
 
 
@@ -38,6 +36,7 @@ def userindex(request):
         
         if lowest_price is not None:
             lowest_priced_product = category_products.filter(selling_price=lowest_price).first()
+            lowest_priced_product.selling_price_display = "{:.0f}".format(lowest_price)
             lowest_priced_products[category] = lowest_priced_product
 
     context = {
@@ -45,6 +44,7 @@ def userindex(request):
         'lowest_priced_products': lowest_priced_products
     }
     return render(request, "userapp1/home.html", context)
+
 
 
 # function for user register page 
@@ -134,16 +134,25 @@ def contactus(request):
 
 # function for product deyails 
 
+from django.shortcuts import get_object_or_404
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
-def product_deatils(request,product_id):
-    product=Product.objects.get(pk=product_id)
+def product_details(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
     similar_products = Product.objects.filter(category=product.category).exclude(pk=product_id)[:5]
-    context={
-        'product':product,
-        'similar_products':similar_products
+    
+    # Calculate the discounted price for the current product
+    discounted_price = product.get_discounted_price()
+    
+    context = {
+        'product': product,
+        'discounted_price': discounted_price,
+        'similar_products': similar_products
     }
-    return render(request,'userapp1/productdetails.html',context)
+    
+    return render(request, 'userapp1/productdetails.html', context)
+
 
 
 # function  for cart_view
@@ -175,6 +184,7 @@ def shop_view(request):
     serialized_products = [{
         'product_name': product.product_name,
         'selling_price': product.selling_price,
+        'discounted_price': product.get_discounted_price(),  # Include discounted price
         'image_url': product.image1.url if product.image1 else '',  # Use image2 URL if available
         'id': product.id
     } for product in products]
@@ -183,9 +193,10 @@ def shop_view(request):
 
 
 
-# function for filtering the products from shoppage
 
 # function for filtering the products from shoppage
+
+from operator import attrgetter
 
 def filter_products(request):
     sort_name = request.GET.get('sortName')
@@ -198,36 +209,40 @@ def filter_products(request):
         is_listed=True
     )
 
+    # Calculate the discounted price for each product
+    for product in filtered_products:
+        product.discounted_price = product.get_discounted_price()
+
     if sort_name == 'AZ':
-        filtered_products = filtered_products.order_by('product_name')
+        filtered_products = sorted(filtered_products, key=attrgetter('product_name'))
     elif sort_name == 'ZA':
-        filtered_products = filtered_products.order_by('-product_name','selling_price')
+        filtered_products = sorted(filtered_products, key=attrgetter('product_name'), reverse=True)
 
     if sort_price == '1':
-        filtered_products = filtered_products.filter(selling_price__range=(100, 500)).order_by('selling_price')
+        filtered_products = [product for product in filtered_products if 100 <= product.discounted_price <= 500]
     elif sort_price == '2':
-        filtered_products = filtered_products.filter(selling_price__range=(500, 1000)).order_by('selling_price')
+        filtered_products = [product for product in filtered_products if 500 <= product.discounted_price <= 1000]
     elif sort_price == '3':
-        filtered_products = filtered_products.filter(selling_price__range=(1000, 1500)).order_by('selling_price')
+        filtered_products = [product for product in filtered_products if 1000 <= product.discounted_price <= 1500]
     elif sort_price == '4':
-        filtered_products = filtered_products.filter(selling_price__gte=1500).order_by('selling_price')
+        filtered_products = [product for product in filtered_products if product.discounted_price >= 1500]
 
     if category_id:
-        filtered_products = filtered_products.filter(category_id=category_id).order_by('selling_price')
-
+        filtered_products = [product for product in filtered_products if product.category_id == int(category_id)]
 
     serialized_products = [{
         'product_name': product.product_name,
+        'discounted_price': product.discounted_price,
         'selling_price': product.selling_price,
         'image_url': product.image2.url if product.image2 else '', # Use image1 URL if available
         'id': product.id
     } for product in filtered_products]
 
-
     return render(request, 'userapp1/shop.html', {
         'products': serialized_products,
         'categories': Category.objects.all()# Pass all categories to the template
     })
+
 
 
 # function for searching the products from shoppage
@@ -236,9 +251,11 @@ def search_products(request):
     query = request.GET.get('query')
 
     if query:
-        # Filter products by product name or category name
+        # Filter products by product name, category name, or description
         filtered_products = Product.objects.filter(
-            Q(product_name__icontains=query) | Q(category__name__icontains=query)
+            Q(product_name__icontains=query) | 
+            Q(category__name__icontains=query) |
+            Q(description__icontains=query)
         )
     else:
         filtered_products = Product.objects.order_by('product_name')
@@ -246,7 +263,8 @@ def search_products(request):
     serialized_products = [{
         'product_name': product.product_name,
         'selling_price': product.selling_price,
-        'image_url': product.image3.url if product.image3 else '',  # Use image2 URL if available
+        'discounted_price': product.get_discounted_price(),  # Calculate discounted price
+        'image_url': product.image3.url if product.image3 else '',  # Use image3 URL if available
         'id': product.id
     } for product in filtered_products]
 
@@ -254,4 +272,4 @@ def search_products(request):
         'products': serialized_products,
         'categories': Category.objects.all()
     })
-    
+

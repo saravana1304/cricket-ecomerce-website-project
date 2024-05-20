@@ -25,8 +25,9 @@
             </div>
         </div>
         <div class="col-md-6">
-            <h1 class="text-center">{{ product.product_name }}</h1>
-            <h3 class="text-center ms-1 text-danger">₹ {{ product.selling_price }}</h3>
+            <h1 class="text-center text-primary">{{ product.product_name }}</h1>
+            <h3 class="text-center ms-1 text-black">₹ {{ discounted_price }}</h3>
+            <h3 class="text-center ms-1 text-danger">₹ <s>{{ product.selling_price }}</s></h3>
             <p class="mt-5 fw-bold">{{ product.description }}</p>
             {% if product.stock > 0 %}
             <form id="add-to-cart-form" method="post" action="{% url 'add_to_cart' product_id=product.id %}">
@@ -58,9 +59,8 @@
             <a class="text-decoration-none" href="{% url 'productdetails' similar_product.id %}">
                 <img style="height: 150px;width: 150px; margin-top: 20px;" src="{{ similar_product.image1.url }}" alt="{{ similar_product.product_name }}" class="img-fluid" style="height: 220px; width: 300px;">
                 <p class="product-name text-black fw-bold my-2">{{ similar_product.product_name }}</p>
-                <p class="product-price text-danger">${{ similar_product.selling_price }}</p>
             </a>
-            <a style="margin-bottom: 25px;" href="{% url 'shop_view' %}" class="btn btn-success">Shop Now</a>
+            <a style="margin-bottom: 25px;" href="{% url 'shop_view' %}" class="btn btn-success">Go Shop</a>
         </div>
         {% endif %}
         {% endfor %}
@@ -69,6 +69,7 @@
 {% else %}
 <h1 class="mt-5 text-center text-danger">No Similar Products Available</h1>
 {% endif %}
+
 
 
 

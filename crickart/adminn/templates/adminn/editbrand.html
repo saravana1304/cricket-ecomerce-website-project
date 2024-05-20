@@ -18,13 +18,18 @@
         </div>
 
         <div class="form-group">
+            <label for="offer">Offer (%):</label>
+            <input type="number" id="offer" name="offer" value="{{ brand.offer }}" required min="0" max="100">
+        </div>
+
+        <div class="form-group">
             <label for="is_listed">Is Listed:</label>
             <select id="is_listed" name="is_listed">
-                <option value="1" {% if brands.is_listed %} selected {% endif %}>Yes</option>
-                <option value="0" {% if not brands.is_listed %} selected {% endif %}>No</option>
+                <option value="1" {% if brand.is_listed %} selected {% endif %}>Yes</option>
+                <option value="0" {% if not brand.is_listed %} selected {% endif %}>No</option>
             </select>
         </div>
-        <button type="submit" class="button">Update Brand</button>     
+        <button type="submit" class="button">Update Brand</button>
     </form>
     <a href="{% url 'brandlist' %}">
         <p style="text-align: center;">Back to Brandlist</p>

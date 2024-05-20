@@ -17,7 +17,7 @@ urlpatterns = [
 
     # product details
 
-    path('productdetails/<int:product_id>/',views.product_deatils,name='productdetails'),
+    path('productdetails/<int:product_id>/',views. product_details,name='productdetails'),
     path('resendotp/',views.resendotp,name='resendotp'), 
    
 

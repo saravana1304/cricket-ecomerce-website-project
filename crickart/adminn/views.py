@@ -106,28 +106,37 @@ def category_list(request):
 # function for addcategory page
 
 @admin_required
-@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def add_category(request):
-    if request.method=='POST':
+    if request.method == 'POST':
         name = request.POST.get('name')
         description = request.POST.get('description')
+        offer = request.POST.get('offer')
         is_listed = request.POST.get('is_listed')
         image = request.FILES.get('image')
 
         if Category.objects.filter(name=name).exists(): 
-            error_message= "Category with this name already exists."
-            return render(request,'adminn/addcategory.html',{'error_message': error_message})
-        
-        if Category.objects.filter(description=description).exists():
-            error_message= "description is already exists."
-            return render(request,'adminn/addcategory.html',{'error_message': error_message})
-        
-        if not image:
-            error_message= "please upload an image."
-            return render(request,'adminn/addcategory.html',{'error_message': error_message})
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'error', 'message': 'Category with this name already exists.'})
+            error_message = "Category with this name already exists."
+            return render(request, 'adminn/addcategory.html', {'error_message_name': error_message})
 
-        category = Category(name=name, description=description, is_listed=is_listed, image=image)
+        if Category.objects.filter(description=description).exists():
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'error', 'message': 'Description already exists.'})
+            error_message = "Description already exists."
+            return render(request, 'adminn/addcategory.html', {'error_message_description': error_message})
+
+        if not image:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'status': 'error', 'message': 'Please upload an image.'})
+            error_message = "Please upload an image."
+            return render(request, 'adminn/addcategory.html', {'error_message_image': error_message})
+
+        category = Category(name=name, description=description, offer=offer, is_listed=is_listed, image=image)
         category.save()
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'success', 'message': 'Category added successfully.'})
         return redirect('categories')
     
     return render(request, 'adminn/addcategory.html')
@@ -136,24 +145,27 @@ def add_category(request):
 # function for update category page
 
 @admin_required
-@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def update_category(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
-    if request.method=='POST':
-            name=request.POST.get('name')
-            description = request.POST.get('description')
-            is_listed = request.POST.get('is_listed')
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        offer = request.POST.get('offer')  # Get the offer field
+        is_listed = request.POST.get('is_listed')
 
-            new_image = request.FILES.get('new_image') 
-            if new_image:
-                category.image=new_image
-            
-            category.name=name
-            category.description=description
-            category.is_listed=is_listed
-            category.save()
-            return redirect('categories')
-    return render(request,'adminn/editcategory.html',{'category': category})
+        new_image = request.FILES.get('new_image')
+        if new_image:
+            category.image = new_image
+
+        category.name = name
+        category.description = description
+        category.offer = offer  # Update the offer field
+        category.is_listed = is_listed
+        category.save()
+        return redirect('categories')
+    return render(request, 'adminn/editcategory.html', {'category': category})
+
 
 
 # function for unlist category from admin side 
@@ -186,36 +198,43 @@ def brand_list(request):
 # function for Add brand for our site
 
 @admin_required
-@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def add_brand(request):
-    if request.method=='POST':
+    if request.method == 'POST':
         name = request.POST.get('name')
+        offer = request.POST.get('offer')
         is_listed = request.POST.get('is_listed')
 
         if Brand.objects.filter(name=name).exists(): 
-            error_message= "Brand with this name already exists."
-            return render(request,'adminn/addbrand.html',{'error_message': error_message})
-        
-        brand = Brand(name=name, is_listed=is_listed,)
+            error_message = "Brand with this name already exists."
+            return JsonResponse({'status': 'error', 'message': error_message})
+
+        brand = Brand(name=name, offer=offer, is_listed=is_listed)
         brand.save()
         return redirect('brandlist')
     return render(request, 'adminn/addbrand.html')
 
 
+
 # function for update brand for our site
 
 @admin_required
-@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def update_brand(request, brand_id):
     brands = get_object_or_404(Brand, pk=brand_id)
-    if request.method=='POST':
-            name=request.POST.get('name')
-            is_listed = request.POST.get('is_listed')
-            brands.name=name
-            brands.is_listed=is_listed
-            brands.save()
-            return redirect('brandlist')
-    return render(request,'adminn/editbrand.html',{'brand': brands})
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        offer = request.POST.get('offer')  # Retrieve offer value
+        is_listed = request.POST.get('is_listed')
+        
+        brands.name = name
+        brands.offer = offer  # Assign offer value to the brand instance
+        brands.is_listed = is_listed
+        
+        brands.save()
+        return redirect('brandlist')
+    return render(request, 'adminn/editbrand.html', {'brand': brands})
+
 
 
 # function for edit brand for our site
@@ -249,29 +268,30 @@ def product_list(request):
 # function for Add product page:
 
 @admin_required
-@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def add_product(request):
     categories = Category.objects.all()
     brands = Brand.objects.all()
-    if request.method=='POST':
-        product_name=request.POST.get('product_name')
+    if request.method == 'POST':
+        product_name = request.POST.get('product_name')
         category_id = request.POST.get('category')
         brand_id = request.POST.get('brand')
-        description=request.POST.get('description')
+        description = request.POST.get('description')
         image1 = request.FILES.get('image1')
         image2 = request.FILES.get('image2')
         image3 = request.FILES.get('image3')
         stock = request.POST.get('stock')
         landing_price = request.POST.get('landing_price')
         selling_price = request.POST.get('selling_price')
-        is_listed =  request.POST.get('is_listed')
+        offer = request.POST.get('offer')  # Get the offer value from the form
+        is_listed = request.POST.get('is_listed')
 
         category_instance = Category.objects.get(id=category_id)
         brand_instance = Brand.objects.get(id=brand_id)
 
-        product =Product(
+        product = Product(
             product_name=product_name,
-            category= category_instance,
+            category=category_instance,
             brand=brand_instance,
             description=description,
             image1=image1,
@@ -280,8 +300,9 @@ def add_product(request):
             stock=stock,
             landing_price=landing_price,
             selling_price=selling_price,
+            offer=offer,  # Assign the offer value to the product
             is_listed=is_listed
-            )
+        )
         product.save()
         return redirect('products')
     return render(request, 'adminn/addproduct.html', {'categories': categories, 'brands': brands})
@@ -306,43 +327,46 @@ def unlist_produt(request, product_id):
 # function for update product
 
 @admin_required
-@cache_control(no_cache=True,must_revalidate=True,no_store=True)
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def update_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     categories = Category.objects.all()
     brands = Brand.objects.all()
 
-    if request.method=='POST':
-            product_name=request.POST.get('product_name')
-            category_id = request.POST.get('category')
-            brand_id = request.POST.get('brand')
-            description = request.POST.get('description')
-            stock = request.POST.get('stock')
-            landing_price = request.POST.get('landing_price')
-            selling_price = request.POST.get('selling_price')
-            is_listed = request.POST.get('is_listed')
+    if request.method == 'POST':
+        product_name = request.POST.get('product_name')
+        category_id = request.POST.get('category')
+        brand_id = request.POST.get('brand')
+        description = request.POST.get('description')
+        stock = request.POST.get('stock')
+        landing_price = request.POST.get('landing_price')
+        selling_price = request.POST.get('selling_price')
+        offer = request.POST.get('offer')  # Get the offer value from the form
+        is_listed = request.POST.get('is_listed')
 
-            for i in range(1, 4):
-                image_field_name = 'image{}'.format(i)
-                new_image = request.FILES.get(image_field_name)
-                if new_image:
-                    setattr(product, image_field_name, new_image)
-                    
-            category = get_object_or_404(Category, pk=category_id)
-            brand = get_object_or_404(Brand, pk=brand_id)
-            
-            product.product_name=product_name
-            product.category = category
-            product.brand = brand
-            product.description = description
-            product.stock = stock
-            product.landing_price = landing_price
-            product.selling_price = selling_price
-            product.is_listed = is_listed
+        for i in range(1, 4):
+            image_field_name = 'image{}'.format(i)
+            new_image = request.FILES.get(image_field_name)
+            if new_image:
+                setattr(product, image_field_name, new_image)
 
-            product.save()
-            return redirect('products')
-    return render(request,'adminn/editproduct.html',{'product': product,'categories': categories, 'brands': brands})
+        category = get_object_or_404(Category, pk=category_id)
+        brand = get_object_or_404(Brand, pk=brand_id)
+
+        product.product_name = product_name
+        product.category = category
+        product.brand = brand
+        product.description = description
+        product.stock = stock
+        product.landing_price = landing_price
+        product.selling_price = selling_price
+        product.offer = offer  # Assign the offer value to the product
+        product.is_listed = is_listed
+
+        product.save()
+        return redirect('products')
+        
+    return render(request, 'adminn/editproduct.html', {'product': product, 'categories': categories, 'brands': brands})
 
 
 # function for displaying order details 

@@ -1,28 +1,26 @@
 
 {% extends 'userapp1/main.html' %}
 {% block content %}
-<h1>Available Products in {{ category.name }} {{products_count}}</h1>
+<h1 style="text-align: center; color: red; margin-top: 10px; font-size: x-large;">Available Products in {{ category.name }} {{ products_count }}</h1>
+<hr style="color: blue; height: 25px;">
+
 {% if products %}
 <div class="container" style="margin-bottom: 120px;">
     <div class="row">
         {% for product in products %}
-        <div class="card col-md-3 my-2 mx-2 p-3"  style="width: 16rem;">
-          <a  style="text-decoration: none; color: black;"  href="{% url 'productdetails' product.id %}"></a>
-            <img src ="{{ product.image2.url }}" class="product-img" style="height: 200px;width: 200px;" alt="">
-            <i class="fa-regular fa-heart fa-xl position-absolute top-0 end-0 px-3 py-4"
-            onclick="addToWishlist('{{ product.id }}')"
-            style="cursor: pointer;">
-            </i> 
+        <div class="card col-md-3 my-2 mx-2 p-3" style="width: 16rem;">
+            <a style="text-decoration: none; color: black;" href="{% url 'productdetails' product.id %}"></a>
+            <img src="{{ product.image2.url }}" class="product-img" style="height: 200px;width: 200px;" alt="">
+            <i class="fa-regular fa-heart fa-xl position-absolute top-0 end-0 px-3 py-4" onclick="addToWishlist('{{ product.id }}')" style="cursor: pointer;"></i> 
             <div class="card-body">
-              <h5 class="card-title">{{product.product_name}}</h5>
-              <div class="d-flex  justify-content-between" >
-                <p class="card-text">₹ {{product.selling_price}}</p>
-                <s class="card-text text-danger">₹ {{ product.selling_price|add:200 }}</s>
-              </div>
-              <a href="{% url 'productdetails' product.id %}" class="btn btn-primary mt-auto">View Details</a>
+                <h5 class="card-title">{{ product.product_name }}</h5>
+                <div class="d-flex justify-content-between">
+                <p class="card-text fw-bold" >₹ {{ product.get_discounted_price }}</p>
+                <p class="card-text" style="color: red;">₹ <s>{{ product.selling_price }}</s></p>
+                </div>
+                <a href="{% url 'productdetails' product.id %}" class="btn btn-primary mt-auto">View Details</a>
             </div>
-          </div>
-
+        </div>
         {% endfor %}
     </div>
 </div>

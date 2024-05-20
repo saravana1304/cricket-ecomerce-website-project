@@ -134,11 +134,14 @@ def add_to_cart(request, product_id):
         if requested_quantity > max_quantity:
             requested_quantity = max_quantity  # Limit the quantity to the maximum available
 
+        # Calculate the discounted price
+        discounted_price = product.get_discounted_price()
+
         # Check if the item already exists in the cart
         cart_item, created = Cart.objects.get_or_create(
             user=request.user,
             product=product,
-            selling_price=product.selling_price
+            defaults={'selling_price': discounted_price}  # Set the discounted price
         )
 
         if not created:  # Item already exists in the cart
@@ -383,4 +386,6 @@ def cancel_order(request, order_id):
     return JsonResponse({'error': 'Invalid HTTP method'})
 
         
+
+# paypal payment intigration 
 

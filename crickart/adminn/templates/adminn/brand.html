@@ -4,7 +4,6 @@
 
 {% block content %}
 
-
 <style>
     .brandadd {
         margin-top: 80px;
@@ -13,7 +12,7 @@
     }
 </style>
 
-<div class="button-row" >
+<div class="button-row">
     <a href="{% url 'addbrand' %}" class="button brandadd" style="background-color: green;">Add Brand</a>
 </div>
 <table id="brand">
@@ -21,6 +20,7 @@
         <tr>
             <th>Id</th>
             <th>Name</th>
+            <th>Offer</th> <!-- Add a header for the offer column -->
             <th>Actions</th>
         </tr>
     </thead>
@@ -29,18 +29,15 @@
         <tr>
             <td>{{ brands.id }}</td>
             <td>{{ brands.name }}</td>
-
-            <td >
+            <td>{{ brands.offer }}%</td> <!-- Display the offer value for each brand -->
+            <td>
                 <a href="{% url 'updatebrand' brand_id=brands.id %}">
                     <button class="edit-btn" id="brandedit">Edit</button>
                 </a>
-
                 {% if brands.is_listed %}
-                <a href="{% url 'unlistbrand' brand_id=brands.id %}"><button style="background-color: red;"
-                        class="delete-btn">Unlist</button></a>
+                <a href="{% url 'unlistbrand' brand_id=brands.id %}"><button style="background-color: red;" class="delete-btn">Unlist</button></a>
                 {% else %}
-                <a href="{% url 'unlistbrand' brand_id=brands.id %}"><button style="background-color: green;"
-                        class="delete-btn">List</button></a>
+                <a href="{% url 'unlistbrand' brand_id=brands.id %}"><button style="background-color: green;" class="delete-btn">List</button></a>
                 {% endif %}
             </td>
         </tr>
@@ -53,6 +50,5 @@
         $('#brand').DataTable();
     });
 </script>
-
 
 {% endblock content %}

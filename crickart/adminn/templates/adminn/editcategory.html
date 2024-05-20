@@ -1,5 +1,5 @@
 {% load static %}
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -21,7 +21,7 @@
         </div>
         <div class="form-group">
             <label for="current_image">Current Image:</label>
-            <img id="currentImage" src="{{ category.image.url }}" alt="Current Image" style="height: 100px;width: auto;">
+            <img id="currentImage" src="{{ category.image.url }}" alt="Current Image" style="height: 100px; width: auto;">
         </div>
         <div class="form-group">
             <label for="new_image">New Image:</label>
@@ -29,7 +29,11 @@
         </div>
         <div class="form-group" id="newImagePreviewContainer" style="display: none;">
             <label for="new_image_preview">New Image Preview:</label>
-            <img id="newImagePreview" src="" alt="New Image" style="height: 100px;width: auto;">
+            <img id="newImagePreview" src="" alt="New Image" style="height: 100px; width: auto;">
+        </div>
+        <div class="form-group">
+            <label for="offer">Offer (%):</label>
+            <input type="number" id="offer" name="offer" value="{{ category.offer }}" required min="0" max="100">
         </div>
         <div class="form-group">
             <label for="is_listed">Is Listed:</label>
@@ -40,6 +44,10 @@
         </div>
         <button type="submit" class="button">Update Category</button>
     </form>
+
+    <a href="{% url 'categories' %}">
+        <p style="text-align: center;">Back to Category List</p>
+    </a>
 
     <script>
         function previewNewImage(event) {
@@ -57,5 +65,3 @@
     </script>
 </body>
 </html>
-
-

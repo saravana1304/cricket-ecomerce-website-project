@@ -85,6 +85,8 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
   <hr style="color: red;"red>
 
 
+
+
 <!-- CODE FOR DISPLAY THE PRODUCTS TO USER SIDE  -->
 
 
@@ -93,18 +95,25 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
         <h1 style="color: red; text-align: center;">Our Products</h1>
         <div class="product-list">
             {% for category, product in lowest_priced_products.items %}
-            <div class="card col-md-3 my-2 mx-2 p-3 text-center"  style="width: 16rem;">
+            <div class="card col-md-3 my-2 mx-2 p-3 text-center" style="width: 16rem;">
                 <img src="{{ product.image2.url }}" class="product-img" style="height: 170px;width: 180px;" alt="">
                 <i class="fa-regular fa-heart fa-xl position-absolute top-0 end-0 px-3 py-4"
                    onclick="addToWishlist('{{ product.id }}')"
                    style="cursor: pointer;">
                 </i>
-                <a  style="text-decoration: none; color: black;"  href="{% url 'productdetails' product.id %}">
+                <a style="text-decoration: none; color: black;" href="{% url 'productdetails' product.id %}">
                     <div class="card-body">
                         <h5 class="card-title">{{ product.product_name }}</h5>
-                        <div class="d-flex  justify-content-between" >
-                            <p class="card-text fw-bold">₹ {{ product.selling_price }}</p>
-                            <s class="card-text text-danger">₹ {{ product.selling_price|add:200 }}</s>
+                        <div class="d-flex justify-content-between">
+                            <!-- Original selling price -->
+                            <p class="card-text fw-bold">
+                            
+                                <!-- Strike out the original price -->
+                                <s style="color: red;">₹ {{ product.selling_price }}</s>
+                            </p>
+                            <!-- Discounted price -->
+                            <p class="card-text fw-bold">₹ {{ product.get_discounted_price }}</p>
+
                         </div>
                         <a href="{% url 'shop_view' %}" class="btn btn-success">Shop now</a>
                     </div>
@@ -114,6 +123,9 @@ integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEw
         </div>
     </div>
 </div>
+
+
+
 
 
 

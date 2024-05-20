@@ -46,7 +46,7 @@
     }
 
     .add-to-cart-button button {
-        background-color:mediumseagreen;
+        background-color: mediumseagreen;
         color: #fff;
         border: none;
         padding: 8px 16px;
@@ -67,7 +67,7 @@
     }
 </style>
 
-<h1 style="color: violet; text-align: center; margin-top: 10px;"> Hi...{{user.username}} your wish list</h1>
+<h1 style="color: violet; text-align: center; margin-top: 10px;"> Hi...{{ user.username }} your wish list</h1>
 <hr class="wishlist-line">
 
 {% if messages %}
@@ -92,7 +92,7 @@
     <tr>
         <td><img src="{{ item.product.image1.url }}" alt="{{ item.product.product_name }}"></td>
         <td><h5>{{ item.product.product_name }}</h5></td>
-        <td><h5 style="color: red;">{{ item.product.selling_price }}</h5></td>
+        <td><h5 style="color: red;">{{ item.product.get_discounted_price }}</h5></td>
         <td class="delete-button">
             <form action="{% url 'remove_from_wishlist' item.id %}" method="post" onsubmit="confirmDelete('{{ item.id }}'); return false;">
                 {% csrf_token %}
@@ -106,7 +106,6 @@
                 <button type="submit" class="btn btn-warning"><i class="fa-solid fa-cart-shopping"></i> ADD TO CART</button> 
             </form>
         </td>
-        
     </tr>
     {% empty %}
     <tr>
@@ -122,9 +121,7 @@
         <button style="margin-bottom: 50px;margin-bottom: 100px;" type="submit">Clear Wishlist</button> <!-- Clear Wishlist Button -->
     </form>
 </div>
-
 {% endif %}
-
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
@@ -199,8 +196,6 @@
             }
         }
     }
-
 </script>
-
 
 {% endblock content%}

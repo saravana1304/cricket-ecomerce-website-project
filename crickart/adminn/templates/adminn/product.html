@@ -4,9 +4,8 @@
 
 {% block content %}
 
-
 <style>
-    .addproduct{
+    .addproduct {
         width: 150px;
         height: 40px;
         margin-top: 60px !important;
@@ -14,84 +13,86 @@
         margin-left: 850px;
     }
 
+    .product-image {
+        width: 100px;
+        height: auto;
+    }
 </style>
 
-  
 <a href="{% url 'addproduct' %}"><button class="btn btn-success addproduct mt-3">Add Product</button></a>
-    <div class="container ms-4" >
-        <table id="table" class="product-table  mt-5">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Product Name</th>
-                    <th>Category</th>
-                    <th>Brand</th>
-                    <th>Description</th>
-                    <th>Image 1</th>
-                    <th>Image 2</th>
-                    <th>Image 3</th>
-                    <th>Stock</th>
-                    <th>Landing  Price</th>  
-                    <th>Selling Price</th>   
-                    <th>Listed</th>                 
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for product in products %}
-                <tr>
-                    <td>{{ product.id }}</td>
-                    <td>{{ product.product_name }}</td>
-                    <td>{{ product.category.name }}</td>
-                    <td>{{ product.brand.name }}</td>
-                    <td>{{ product.description }}</td>
-                    <td>
-                        {% if product.image1 %}
-                        <img src="{{ product.image1.url }}" alt="Product Image 1" class="product-image">
-                        {% else %}
-                        No Image
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if product.image2 %}
-                        <img src="{{ product.image2.url }}" alt="Product Image 2" class="product-image">
-                        {% else %}
-                        No Image
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if product.image3 %}
-                        <img src="{{ product.image3.url }}" alt="Product Image 3" class="product-image">
-                        {% else %}
-                        No Image
-                        {% endif %}
-                    </td>
-                    <td>{{ product.stock }}</td>
-                    <td>${{ product.landing_price }}</td>
-                    <td>${{ product.selling_price }}</td>
-                    <td>
-                        {% if product.is_listed %}
-                        <a href="{% url 'unlistproduct' product_id=product.id %}"><button style="background-color: red;" class="delete-btn">Unlist</button></a>
-                        {% else %}
-                        <a href="{% url 'unlistproduct' product_id=product.id %}"><button style="background-color: green;"  class="delete-btn">List</button></a>
-                        {% endif %}   
-                    </td>
-                    <td>
-                        <a href="{% url 'updateproduct' product_id=product.id %}" class="edit-button">Edit</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+<div class="container ms-4">
+    <table id="table" class="product-table mt-5">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Brand</th>
+                <th>Description</th>
+                <th>Image 1</th>
+                <th>Image 2</th>
+                <th>Image 3</th>
+                <th>Stock</th>
+                <th>Landing Price</th>
+                <th>Selling Price</th>
+                <th>Offer</th>
+                <th>Listed</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.category.name }}</td>
+                <td>{{ product.brand.name }}</td>
+                <td>{{ product.description }}</td>
+                <td>
+                    {% if product.image1 %}
+                    <img src="{{ product.image1.url }}" alt="Product Image 1" class="product-image">
+                    {% else %}
+                    No Image
+                    {% endif %}
+                </td>
+                <td>
+                    {% if product.image2 %}
+                    <img src="{{ product.image2.url }}" alt="Product Image 2" class="product-image">
+                    {% else %}
+                    No Image
+                    {% endif %}
+                </td>
+                <td>
+                    {% if product.image3 %}
+                    <img src="{{ product.image3.url }}" alt="Product Image 3" class="product-image">
+                    {% else %}
+                    No Image
+                    {% endif %}
+                </td>
+                <td>{{ product.stock }}</td>
+                <td>${{ product.landing_price }}</td>
+                <td>${{ product.selling_price }}</td>
+                <td>{{ product.offer }}%</td> <!-- Display the offer value -->
+                <td>
+                    {% if product.is_listed %}
+                    <a href="{% url 'unlistproduct' product_id=product.id %}"><button style="background-color: red;" class="delete-btn">Unlist</button></a>
+                    {% else %}
+                    <a href="{% url 'unlistproduct' product_id=product.id %}"><button style="background-color: green;" class="delete-btn">List</button></a>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'updateproduct' product_id=product.id %}" class="edit-button">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
+<script>
+    $(document).ready(function () {
+        $('#table').DataTable();
+    });
+</script>
 
-
-    <script>
-        $(document).ready(function () {
-                    $('#table').DataTable();
-                });
-    </script>
-
-    
 {% endblock content %}

@@ -2,69 +2,67 @@
 
 {% load static %}
 
-
 {% block content %}
 
-
 <style>
-    .addcat{
+    .addcat {
         margin-top: 80px;
         margin-bottom: -80px;
         margin-right: 450px;
     }
 </style>
 
-    <div class="button-row">
-        <a href="{% url 'add_category' %}" class="button addcat " style="background-color: green;">Add Category</a>
-    </div>
-    <table id="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Image</th>
-                <th>Actions</th> 
-            </tr>
-        </thead>
-        <tbody>
-            {% for category in categories %}
-            <tr>
-                <td>{{ category.id }}</td>
-                <td>{{ category.name }}</td>
-                <td>{{ category.description }}</td>
-                <td>
-                    {% if category.image %}
-                    <img src="{{ category.image.url }}" alt="{{ category.name }}" style="max-width: 100px;">
-                    {% else %}
-                    No Image
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{% url 'editcategory' category_id=category.id %}">
-                        <button class="edit-btn">Edit</button>
-                    </a>
-                    {% if category.is_listed %}
-                    <a href="{% url 'unlistcategory' category_id=category.id %}">
-                        <button class="delete-btn">Unlist</button>
-                    </a>
-                    {% else %}
-                    <a href="{% url 'unlistcategory' category_id=category.id %}">
-                        <button style="background-color: green;" class="delete-btn">List</button>
-                    </a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
+<div class="button-row">
+    <a href="{% url 'add_category' %}" class="button addcat" style="background-color: green;">Add Category</a>
+</div>
+<table id="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Image</th>
+            <th>Offer (%)</th> <!-- New Offer column -->
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+        <tr>
+            <td>{{ category.id }}</td>
+            <td>{{ category.name }}</td>
+            <td>{{ category.description }}</td>
+            <td>
+                {% if category.image %}
+                <img src="{{ category.image.url }}" alt="{{ category.name }}" style="max-width: 100px;">
+                {% else %}
+                No Image
+                {% endif %}
+            </td>
+            <td>{{ category.offer }}%</td> <!-- Display the offer percentage -->
+            <td>
+                <a href="{% url 'editcategory' category_id=category.id %}">
+                    <button class="edit-btn">Edit</button>
+                </a>
+                {% if category.is_listed %}
+                <a href="{% url 'unlistcategory' category_id=category.id %}">
+                    <button class="delete-btn">Unlist</button>
+                </a>
+                {% else %}
+                <a href="{% url 'unlistcategory' category_id=category.id %}">
+                    <button style="background-color: green;" class="delete-btn">List</button>
+                </a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
-
-    <script>
-        $(document).ready(function () {
-                    $('#table').DataTable();
-                });
-    </script>
+<script>
+    $(document).ready(function () {
+        $('#table').DataTable();
+    });
+</script>
 
 {% endblock content %}

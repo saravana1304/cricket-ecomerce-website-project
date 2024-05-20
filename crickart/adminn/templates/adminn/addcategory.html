@@ -7,32 +7,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Category</title>
     <link rel="stylesheet" href="{% static 'adminn/addcategory.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <h1>Add Category</h1>
-    <form id="addCategoryForm" method="post" enctype="multipart/form-data">
+    <form id="addCategoryForm" method="post" enctype="multipart/form-data" action="{% url 'add_category' %}">
         {% csrf_token %}
         <div class="form-group">
             <label for="name">Category Name:</label>
             <input type="text" id="name" name="name" required>
-            {% if error_message %}
-                <p style="color: red;">{{ error_message_name }}</p>
-            {% endif %}
         </div>
         <div class="form-group">
             <label for="description">Description:</label>
             <textarea id="description" name="description" rows="4"></textarea>
-            {% if error_message %}
-                <p style="color: red;">{{ error_message_description }}</p>
-            {% endif %}
         </div>
         <div class="form-group">
             <label for="image">Image:</label>
             <input type="file" id="image" name="image" onchange="updatePreview()">
             <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 100px; display: none;">
-            {% if error_message %}
-                <p style="color: red;">{{ error_message_image }}</p>
-            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="offer">Offer (%):</label>
+            <input type="number" id="offer" name="offer" required min="0" max="100">
         </div>
         <div class="form-group">
             <label for="is_listed">Is Listed:</label>
@@ -40,9 +36,6 @@
                 <option value="1">Yes</option>
                 <option value="0">No</option>
             </select>
-            {% if error_message %}
-                <p style="color: red;">{{ error_message_is_listed }}</p>
-            {% endif %}
         </div>
         <button type="submit" class="button">Add Category</button>
     </form>
@@ -65,7 +58,41 @@
                 preview.src = '';
             }
         }
+
+        document.getElementById('addCategoryForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'error') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: data.message,
+                    }).then(() => {
+                        window.location.href = '{% url "categories" %}';
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
     </script>
 </body>
 </html>
-

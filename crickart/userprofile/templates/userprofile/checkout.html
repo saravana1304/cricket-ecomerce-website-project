@@ -30,17 +30,16 @@
             <div class="payment-method-container">
                 <h2>Payment Method</h2>
                 <div class="form-check">
+                    <input class="form-check-input" type="radio" name="payment_method" id="paypal" value="paypal">
+                    <label class="form-check-label" for="paypal">PayPal</label>
                 </div>
-                <!-- Set up a container element for the button -->
-                <div id="paypal-button-container"></div>
+                <div id="paypal-button-container" style="display:none;"></div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="payment_method" id="netbanking"
-                        value="netbanking">
+                    <input class="form-check-input" type="radio" name="payment_method" id="netbanking" value="netbanking">
                     <label class="form-check-label" for="netbanking">Net Banking</label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="payment_method" id="cashondelivery"
-                        value="cashondelivery">
+                    <input class="form-check-input" type="radio" name="payment_method" id="cashondelivery" value="cashondelivery">
                     <label class="form-check-label" for="cashondelivery">Cash on Delivery</label>
                 </div>
             </div>
@@ -50,15 +49,13 @@
                 <div class="shipping-address-options">
                     {% for address in shipping_addresses %}
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="shipping_address"
-                            id="address{{ address.id }}" value="{{ address.address }}{{' '}}{{ address.place }}{{' '}}{{ address.pincode }}">
+                        <input class="form-check-input" type="radio" name="shipping_address" id="address{{ address.id }}" value="{{ address.id }}">
                         <label class="form-check-label" for="address{{ address.id }}">
                             {{ address.address }}, {{ address.place }}, {{ address.pincode }}
                         </label>
                     </div>
                     {% endfor %}
                 </div>
-                <!-- Manage Addresses Button -->
                 <div class="clearfix mt-3">
                     <h2 class="float-left">Add New Addresses</h2>
                     <a href="{% url 'addaddress' %}" class="btn btn-success add-new-address float-right">Add New</a>
@@ -97,54 +94,145 @@
                 <h4 style="margin-left: 520px;color: red;">{{ total_price }}</h4>
             </div>
             <div class="place-order-button mt-3">
-                <button id="place-order-btn" type="button" class="btn btn-success" style="margin-left: 250px;">Place
-                    Order</button>
+                <button id="place-order-btn" type="button" class="btn btn-success" style="margin-left: 250px;">Place Order</button>
             </div>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
+<script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
 
 <script>
-    $('#place-order-btn').click(function () {
-        const paymentMethod = $('input[name="payment_method"]:checked').val();
-        const addressMethod = $('input[name="shipping_address"]:checked').val(); // Get selected shipping address
-        if (!paymentMethod) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please select a payment method.'
-            });
-            return;
-        }
-        if (!addressMethod) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please select a shipping address.'
-            });
-            return;
-        }
-        console.log(paymentMethod);
-        console.log(addressMethod);
-        if (confirm('Are you sure you want to place the order?')) {
+    document.addEventListener('DOMContentLoaded', function () {
+        const placeOrderBtn = document.getElementById('place-order-btn');
+        const paypalButtonContainer = document.getElementById('paypal-button-container');
+        const paypalRadio = document.getElementById('paypal');
 
-            const formData = new FormData();
-            formData.append("payment_method", paymentMethod)
-            formData.append("address_method", addressMethod)
+        // Show PayPal button only if PayPal is selected
+        document.querySelectorAll('input[name="payment_method"]').forEach(function (elem) {
+            elem.addEventListener('change', function () {
+                if (paypalRadio.checked) {
+                    paypalButtonContainer.style.display = 'block';
+                } else {
+                    paypalButtonContainer.style.display = 'none';
+                }
+            });
+        });
 
-            const csrftoken = getCookie('csrftoken');
-            console.log(csrftoken);
-            fetch('/place_order/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken,
-                },
-                body: formData
-            })
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+            style: {
+                color: 'blue',
+                shape: 'rect',
+                label: 'pay',
+                height: 50
+            },
+            createOrder: function (data, actions) {
+                return fetch('/payment/create/', {
+                    method: 'post',
+                    headers: {
+                        'content-type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        // Add any data you need to create the order, e.g.:
+                        // items: [...],
+                        // total_amount: ...
+                    })
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (orderData) {
+                    return orderData.id;
+                });
+            },
+            onApprove: function (data, actions) {
+                return fetch('/payment/execute/', {
+                    method: 'post',
+                    headers: {
+                        'content-type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({
+                        orderID: data.orderID
+                    })
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (orderData) {
+                    if (orderData.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Order placed successfully!'
+                        }).then(() => {
+                            window.location.href = '/user_order/';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Failed to place order: ' + orderData.message
+                        });
+                    }
+                });
+            },
+            onCancel: function (data) {
+                window.location.href = '/payment/cancel/';
+            },
+            onError: function (err) {
+                console.error('Error:', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'An unexpected error occurred.'
+                });
+            }
+        }).render('#paypal-button-container');
+
+        placeOrderBtn.addEventListener('click', function () {
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+            const addressMethod = document.querySelector('input[name="shipping_address"]:checked');
+
+            if (!paymentMethod) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select a payment method.'
+                });
+                return;
+            }
+            if (!addressMethod) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select a shipping address.'
+                });
+                return;
+            }
+
+            if (paymentMethod.value === 'paypal') {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Please complete the payment with PayPal button.',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                return;
+            }
+
+            if (confirm('Are you sure you want to place the order?')) {
+                const formData = new FormData();
+                formData.append("payment_method", paymentMethod.value);
+                formData.append("address_method", addressMethod.value);
+
+                const csrftoken = getCookie('csrftoken');
+                fetch('/place_order/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: formData
+                })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -156,9 +244,9 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',
-                            text:'order placed succesfully:'
+                            text: 'Order placed successfully!'
                         }).then(() => {
-                            window.location.href = '/user_order/'; // Redirect to profile page
+                            window.location.href = '/user_order/';
                         });
                     } else {
                         Swal.fire({
@@ -176,88 +264,23 @@
                         text: 'An unexpected error occurred.'
                     });
                 });
-        }
-    });
+            }
+        });
 
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.startsWith(name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
                 }
             }
+            return cookieValue;
         }
-        return cookieValue;
-    }
-
-    
-        // Render the PayPal button into #paypal-button-container
-        paypal.Buttons({
-
-            style: {
-                color:  'blue',
-                shape:  'rect',
-                label:  'pay',
-                height: 50
-            },
-            
-            // Call your server to set up the transaction
-            createOrder: function(data, actions) {
-                return fetch('/demo/checkout/api/paypal/order/create/', {
-                    method: 'post'
-                }).then(function(res) {
-                    return res.json();
-                }).then(function(orderData) {
-                    return orderData.id;
-                });
-            },
-
-            // Call your server to finalize the transaction
-            onApprove: function(data, actions) {
-                return fetch('/demo/checkout/api/paypal/order/' + data.orderID + '/capture/', {
-                    method: 'post'
-                }).then(function(res) {
-                    return res.json();
-                }).then(function(orderData) {
-                    // Three cases to handle:
-                    //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
-                    //   (2) Other non-recoverable errors -> Show a failure message
-                    //   (3) Successful transaction -> Show confirmation or thank you
-
-                    // This example reads a v2/checkout/orders capture response, propagated from the server
-                    // You could use a different API or structure for your 'orderData'
-                    var errorDetail = Array.isArray(orderData.details) && orderData.details[0];
-
-                    if (errorDetail && errorDetail.issue === 'INSTRUMENT_DECLINED') {
-                        return actions.restart(); // Recoverable state, per:
-                        // https://developer.paypal.com/docs/checkout/integration-features/funding-failure/
-                    }
-
-                    if (errorDetail) {
-                        var msg = 'Sorry, your transaction could not be processed.';
-                        if (errorDetail.description) msg += '\n\n' + errorDetail.description;
-                        if (orderData.debug_id) msg += ' (' + orderData.debug_id + ')';
-                        return alert(msg); // Show a failure message (try to avoid alerts in production environments)
-                    }
-
-                    // Successful capture! For demo purposes:
-                    console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                    var transaction = orderData.purchase_units[0].payments.captures[0];
-                    alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
-
-                    // Replace the above to show a success message within this page, e.g.
-                    // const element = document.getElementById('paypal-button-container');
-                    // element.innerHTML = '';
-                    // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-                    // Or go to another URL:  actions.redirect('thank_you.html');
-                });
-            }
-
-        }).render('#paypal-button-container');
-
+    });
 </script>
 {% endblock %}

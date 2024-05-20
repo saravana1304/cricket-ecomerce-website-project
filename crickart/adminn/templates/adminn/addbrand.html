@@ -7,17 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Brand</title>
     <link rel="stylesheet" href="{% static 'adminn/addbrand.css' %}">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> <!-- Include SweetAlert -->
 </head>
 <body>
     <h1>Add Brand</h1>
-    <form method="post" enctype="multipart/form-data">
+    <form id="addBrandForm" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
             <label for="name">Brand Name:</label>
             <input type="text" id="name" name="name" required>
-            {% if error_message %}
-                <p style="color: red;">{{ error_message_name }}</p>
-            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="offer">Offer (%):</label>
+            <input type="number" id="offer" name="offer" required min="0" max="100">
         </div>
 
         <div class="form-group">
@@ -26,15 +29,34 @@
                 <option value="1">Yes</option>
                 <option value="0">No</option>
             </select>
-            {% if error_message %}
-                <p style="color: red;">{{ error_message_is_listed }}</p>
-            {% endif %}
         </div>
         <button type="submit" class="button">Add Brand</button>
     </form>
     <a href="{% url 'brandlist' %}">
-        <p style="text-align: center;">Back brandlist</p>
+        <p style="text-align: center;">Back to Brandlist</p>
     </a>
 
+    <script>
+        // Submit form via AJAX
+        document.getElementById("addBrandForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            var formData = new FormData(this);
+            fetch(this.action, {
+                method: this.method,
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "error") {
+                    // Display SweetAlert if an error occurs
+                    swal("Error", data.message, "error");
+                } else {
+                    // Redirect to brandlist page if successful
+                    window.location.href = "{% url 'brandlist' %}";
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
 </body>
 </html>
