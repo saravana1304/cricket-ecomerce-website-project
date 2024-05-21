@@ -22,6 +22,7 @@ urlpatterns = [
     # urls for checkout and place_order functions
 
     path('checkout/', views.checkout_page, name='checkout'),
+    path('apply_coupon/', views.apply_coupon, name='apply_coupon'),
     path('place_order/', views.place_order, name='place_order'),
         
     # urls for displaying user orders 

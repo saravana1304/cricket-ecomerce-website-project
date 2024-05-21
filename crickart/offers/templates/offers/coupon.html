@@ -81,11 +81,10 @@
             <form action="{% url 'addcoupon' %}" method="post"> <!-- Here, 'addcoupon' is the name of the URL pattern -->
                 {% csrf_token %}
                 <input type="text" name="code" placeholder="Enter Coupon Code">
-                <input type="text" name="discount" placeholder="Enter Discount">
                 <input type="datetime-local" name="valid_from">
                 <input type="datetime-local" name="valid_to">
                 <input type="hidden" name="status" value="Active"> <!-- Default status is Active -->
-                <input type="text" name="total_amount" placeholder="Enter Total Amount"> <!-- New field for total amount -->
+                <input type="text" name="total_amount" placeholder="Enter Coupon Amount"> <!-- New field for total amount -->
                 <input type="submit" value="Add Coupon">
             </form>
         </div>        
@@ -97,10 +96,9 @@
                     <tr>
                         <th>Coupon ID</th> <!-- Added Coupon ID -->
                         <th>Coupon Code</th>
-                        <th>Discount</th>
                         <th>Valid From</th>
                         <th>Valid To</th>
-                        <th>Total Amount</th>
+                        <th>Coupon Amount</th>
                         <th>Status</th> <!-- New column for status -->
                         <th>Actions</th> <!-- New column for actions -->
                     </tr>
@@ -111,7 +109,6 @@
                     <tr>
                         <td>{{ item.id }}</td> <!-- Display Coupon ID -->
                         <td>{{ item.code }}</td>
-                        <td>{{ item.discount }}</td>
                         <td>{{ item.valid_from }}</td>
                         <td>{{ item.valid_to }}</td>
                         <td>{{ item.total_amount }}</td>

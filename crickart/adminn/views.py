@@ -372,7 +372,7 @@ def update_product(request, product_id):
 # function for displaying order details 
 
 def order_details(request):
-    orders = Order.objects.all()
+    orders = Order.objects.all().order_by('-id')
     product_names = [", ".join([product.product_name for product in order.products.all()]) for order in orders]
     context = {
         'orders': orders,
@@ -408,7 +408,7 @@ def update_order_status(request):
 # function for display the sales report admin side
 
 def sales_report(request):
-    delivered_orders = Order.objects.filter(delivery_status='Delivered')
+    delivered_orders = Order.objects.filter(delivery_status='Delivered').order_by('-id')
     product_names = [", ".join([product.product_name for product in order.products.all()]) for order in delivered_orders]
     context = {
         'orders': delivered_orders,
@@ -416,6 +416,6 @@ def sales_report(request):
     }
     return render(request, 'adminn/salesreport.html', context)
 
-
 def product_details(request):
     return render(request, 'adminn/orderedproduct.html')
+

@@ -88,10 +88,27 @@
                     </tbody>
                 </table>
             </div>
+            <div class="coupon-container mt-3">
+                <h2>Apply Coupon</h2>
+                <div class="input-group">
+                    <input type="text" id="coupon-code" class="form-control" placeholder="Enter coupon code">
+                    <div class="input-group-append">
+                        <button id="apply-coupon-btn" class="btn btn-primary" type="button">Apply</button>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    {% if coupon_applied_amount %}
+                    <p style="color: red;">Applied Discount: -{{ coupon_applied_amount }}</p>
+                    {% endif %}
+                </div>
+                <div id="coupon-message" class="mt-2"></div>
+            </div>
 
             <div class="total-price-container mt-5">
                 <h2 style="margin-left: 450px;">Total Price</h2>
-                <h4 style="margin-left: 520px;color: red;">{{ total_price }}</h4>
+                <h4 id="actual-total-price" style="margin-left: 520px;color: black">{{ total_price }}</h4>
+                <h6 id="coupon-applied" style="margin-left: 520px; color: red;"></h6>
+                <h4 id="final-total-price" style="margin-left: 520px;color: green;">{{ total_price }}</h4>
             </div>
             <div class="place-order-button mt-3">
                 <button id="place-order-btn" type="button" class="btn btn-success" style="margin-left: 250px;">Place Order</button>
@@ -108,6 +125,11 @@
         const placeOrderBtn = document.getElementById('place-order-btn');
         const paypalButtonContainer = document.getElementById('paypal-button-container');
         const paypalRadio = document.getElementById('paypal');
+        const applyCouponBtn = document.getElementById('apply-coupon-btn');
+        const couponMessage = document.getElementById('coupon-message');
+        const actualTotalPriceElem = document.getElementById('actual-total-price');
+        const finalTotalPriceElem = document.getElementById('final-total-price');
+        const couponAppliedElem = document.getElementById('coupon-applied');
 
         // Show PayPal button only if PayPal is selected
         document.querySelectorAll('input[name="payment_method"]').forEach(function (elem) {
@@ -119,6 +141,51 @@
                 }
             });
         });
+
+        // Apply coupon code
+        // Apply coupon code
+applyCouponBtn.addEventListener('click', function () {
+    const couponCode = document.getElementById('coupon-code').value;
+    const actualTotalPrice = parseFloat(actualTotalPriceElem.textContent);
+
+    if (!couponCode) {
+        couponMessage.textContent = 'Please enter a coupon code.';
+        couponMessage.style.color = 'red';
+        return;
+    }
+
+    fetch('/apply_coupon/', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            coupon_code: couponCode,
+            total_price: actualTotalPrice
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            finalTotalPriceElem.textContent = data.new_total_price;
+            // Show the amount by which the coupon reduced the total price
+            const couponReduction = actualTotalPrice - parseFloat(data.new_total_price);
+            couponAppliedElem.textContent = `Coupon applied: -${couponReduction.toFixed(2)}`;
+            couponMessage.textContent = 'Coupon applied successfully!';
+            couponMessage.style.color = 'green';
+        } else {
+            couponMessage.textContent = data.message;
+            couponMessage.style.color = 'red';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        couponMessage.textContent = 'An unexpected error occurred.';
+        couponMessage.style.color = 'red';
+    });
+});
+
 
         // Render the PayPal button into #paypal-button-container
         paypal.Buttons({
@@ -135,11 +202,7 @@
                         'content-type': 'application/json',
                         'X-CSRFToken': getCookie('csrftoken')
                     },
-                    body: JSON.stringify({
-                        // Add any data you need to create the order, e.g.:
-                        // items: [...],
-                        // total_amount: ...
-                    })
+                    body: JSON.stringify({})
                 }).then(function (res) {
                     return res.json();
                 }).then(function (orderData) {
@@ -184,14 +247,16 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'An unexpected error occurred.'
+                    text: 'An error occurred during the transaction.'
                 });
             }
         }).render('#paypal-button-container');
 
+        // Handle place order for other payment methods
         placeOrderBtn.addEventListener('click', function () {
             const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
             const addressMethod = document.querySelector('input[name="shipping_address"]:checked');
+            const finalTotalPrice = parseFloat(finalTotalPriceElem.textContent);
 
             if (!paymentMethod) {
                 Swal.fire({
@@ -209,62 +274,54 @@
                 });
                 return;
             }
-
-            if (paymentMethod.value === 'paypal') {
+            if (paymentMethod.id === 'paypal') {
                 Swal.fire({
-                    icon: 'info',
-                    title: 'Please complete the payment with PayPal button.',
-                    showConfirmButton: false,
-                    timer: 3000
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please complete payment using PayPal button.'
                 });
                 return;
             }
 
-            if (confirm('Are you sure you want to place the order?')) {
-                const formData = new FormData();
-                formData.append("payment_method", paymentMethod.value);
-                formData.append("address_method", addressMethod.value);
-
-                const csrftoken = getCookie('csrftoken');
-                fetch('/place_order/', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': csrftoken,
-                    },
-                    body: formData
+            // Proceed with other payment methods (Net Banking, COD)
+            fetch('/order/create/', {
+                method: 'post',
+                headers: {
+                    'content-type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    payment_method: paymentMethod.value,
+                    shipping_address: addressMethod.value,
+                    total_price: finalTotalPrice
                 })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'Order placed successfully!'
-                        }).then(() => {
-                            window.location.href = '/user_order/';
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Failed to place order: ' + data.message
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Order placed successfully!'
+                    }).then(() => {
+                        window.location.href = '/user_order/';
+                    });
+                } else {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'An unexpected error occurred.'
+                        text: 'Failed to place order: ' + data.message
                     });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'An unexpected error occurred.'
                 });
-            }
+            });
         });
 
         function getCookie(name) {
@@ -273,7 +330,7 @@
                 const cookies = document.cookie.split(';');
                 for (let i = 0; i < cookies.length; i++) {
                     const cookie = cookies[i].trim();
-                    if (cookie.startsWith(name + '=')) {
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;
                     }
@@ -283,4 +340,4 @@
         }
     });
 </script>
-{% endblock %}
+{% endblock content %}

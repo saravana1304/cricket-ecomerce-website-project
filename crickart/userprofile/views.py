@@ -15,8 +15,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
-
-
+import json
+from offers.models import Coupon
 
 
 # function for viewing user profile 
@@ -238,8 +238,29 @@ def checkout_page(request):
         'shipping_addresses': shipping_addresses,
         'total_price': total_price,
     }
-
     return render(request, 'userprofile/checkout.html', context)
+
+
+# function for checking and applying coupon 
+
+@csrf_exempt
+@login_required
+def apply_coupon(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        coupon_code = data.get('coupon_code')
+        total_price = int(data.get('total_price'))  
+
+        try:
+            coupon = Coupon.objects.get(code=coupon_code, status='Active')
+            if coupon.valid_from <= timezone.now() <= coupon.valid_to:
+                new_total_price = total_price - coupon.total_amount
+                return JsonResponse({'success': True, 'new_total_price': new_total_price})
+            else:
+                return JsonResponse({'success': False, 'message': 'coupon time expired try some other coupon.'})
+        except Coupon.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Invalid coupon code.'})
+    return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 
 # function for place order

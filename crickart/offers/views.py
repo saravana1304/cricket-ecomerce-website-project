@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from django.contrib import messages
 from adminn.views import admin_required
 from .models import Coupon
+from django.utils import timezone
+
 
 # Create your views here.
 
@@ -23,22 +25,33 @@ def add_coupon(request):
         if Coupon.objects.filter(code=code).exists():
             message = f"A coupon with code '{code}' already exists."
             messages.error(request, message)
-            return JsonResponse({'success': False, 'message': message})  # Return JSON response with error message
+            return JsonResponse({'success': False, 'message': message})
             
-        discount = request.POST.get('discount')
         valid_from = request.POST.get('valid_from')
         valid_to = request.POST.get('valid_to')
         total_amount = request.POST.get('total_amount')
+
+        # Validate date fields
+        if valid_from and valid_to:
+            valid_from_date = timezone.datetime.strptime(valid_from, '%Y-%m-%dT%H:%M')
+            valid_to_date = timezone.datetime.strptime(valid_to, '%Y-%m-%dT%H:%M')
+
+            if valid_from_date >= valid_to_date:
+                message = "The 'valid from' date must be earlier than the 'valid to' date."
+                messages.error(request, message)
+                return JsonResponse({'success': False, 'message': message})
+
         status = 'Active'
-        coupon = Coupon(code=code, discount=discount, valid_from=valid_from, valid_to=valid_to, total_amount=total_amount, status=status)
+        coupon = Coupon(code=code,valid_from=valid_from, valid_to=valid_to, total_amount=total_amount, status=status)
         coupon.save()
         messages.success(request, "Coupon added successfully!")
-        return JsonResponse({'success': True, 'message': 'Coupon added successfully!'})  # Return JSON response with success message
+        return JsonResponse({'success': True, 'message': 'Coupon added successfully!'})
         
     return render(request, 'coupon.html')
 
 
 
+# function for edit coupon admin 
 
 def edit_coupon(request, coupon_id):
     coupon = get_object_or_404(Coupon, pk=coupon_id)
@@ -49,7 +62,6 @@ def edit_coupon(request, coupon_id):
         
         # Update other fields as needed
         code = request.POST.get('code')
-        discount = request.POST.get('discount')
         valid_from = request.POST.get('valid_from')
         valid_to = request.POST.get('valid_to')
         total_amount = request.POST.get('total_amount')
@@ -57,7 +69,6 @@ def edit_coupon(request, coupon_id):
         
         # Update coupon object with new data
         coupon.code = code
-        coupon.discount = discount
         coupon.valid_from = valid_from
         coupon.valid_to = valid_to
         coupon.active = active
