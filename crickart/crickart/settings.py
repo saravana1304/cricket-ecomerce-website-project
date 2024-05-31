@@ -59,6 +59,10 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+
+# this code used for the email otp verification for new user 
+    'django_otp',
+    'django_otp.plugins.otp_email',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -180,3 +184,17 @@ AUTHENTICATION_BACKENDS = (
 
 LOGIN_REDIRECT_URL ='/'
 LOGOUT_REDIRECT_URL ='/'
+
+
+
+# this code used for the sending an otp through the register email  
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'saravanakumar130497@gmail.com'
+EMAIL_HOST_PASSWORD = 'rhtr gvpv tvfa jaix'
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'

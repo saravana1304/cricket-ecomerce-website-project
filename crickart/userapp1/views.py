@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
-from django.contrib import messages
+from django.contrib import messages,auth
 from .models import UserProfile
 from adminn.models import Category,Product,Brand
 from .forms import CreateUserForm
@@ -13,6 +13,12 @@ from django.db.models import Q,Min
 from django.views.decorators.cache import never_cache
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
+import random 
+from django.core.mail import send_mail
+from django_otp.plugins.otp_email.models import EmailDevice
+from .models import User
+import logging
+from django.contrib.auth import get_backends
 
 
 
@@ -46,6 +52,11 @@ def userindex(request):
     return render(request, "userapp1/home.html", context)
 
 
+# function for genereting random otp 
+
+def generate_otp():
+    return random.randint(100000, 999999)
+
 
 # function for user register page 
 
@@ -56,14 +67,35 @@ def userregister(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
+            user.is_active = False  # Deactivate account till it is confirmed
+            user.save()
+
             # Check if a UserProfile already exists for the user
             user_profile, created = UserProfile.objects.get_or_create(user=user)
             # Update additional fields in the existing UserProfile
             user_profile.phone_number = form.cleaned_data['phone_number']
             user_profile.place = form.cleaned_data['place']
             user_profile.save()
-            return redirect('userlogin')
+
+            # Generate OTP and send email
+            otp = generate_otp()
+            email_device = EmailDevice(user=user, email=user.email, confirmed=False)
+            email_device.token = otp
+            email_device.save()
+
+            print(otp)
+
+            send_mail(
+                'this is CRICKART OTP Code for register',
+                f'Your OTP code is dont share to any one {otp}',
+                'your-email@example.com',
+                [user.email],
+                fail_silently=False,
+            )
+
+            request.session['user_id'] = user.id
+            return redirect('verify_otp')
         else:
             # Add form errors to the messages framework
             for field, errors in form.errors.items():
@@ -71,6 +103,81 @@ def userregister(request):
                     messages.error(request, f"{field}: {error}")
     context = {'registerform': form}
     return render(request, "userapp1/register.html", context=context)
+
+
+# function for verify otp 
+
+def verify_otp(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        logging.debug("No user_id in session, redirecting to userregister.")
+        return redirect('userregister')
+
+    try:
+        user = User.objects.get(id=user_id)
+        email_device = EmailDevice.objects.get(user=user)
+    except User.DoesNotExist:
+        logging.error(f"User with id {user_id} does not exist.")
+        return redirect('userregister')
+    except EmailDevice.DoesNotExist:
+        logging.error(f"EmailDevice for user {user_id} does not exist.")
+        return redirect('userregister')
+
+    if request.method == 'POST':
+        otp = request.POST.get('otp_code')
+        logging.debug(f"Received OTP: {otp}")
+
+        if otp == email_device.token:  # Assuming email_device.token stores the OTP
+            user.is_active = True
+            user.save()
+            email_device.confirmed = True
+            email_device.save()
+
+            # Find the backend that authenticated the user
+            backend_path = None
+            for backend in get_backends():
+                if backend.get_user(user.id) is not None:
+                    backend_path = f'{backend.__module__}.{backend.__class__.__name__}'
+                    break
+
+            if backend_path:
+                auth.login(request, user, backend=backend_path)  # Log the user in with the specified backend
+                messages.success(request, 'Your account has been activated. You can now log in.')
+                logging.debug("OTP verified successfully. Redirecting to home page.")
+                return redirect('userlogin')  # Redirect to login page after successful activation
+            else:
+                logging.error("No suitable authentication backend found for the user.")
+                messages.error(request, 'Authentication error. Please try again.')
+        else:
+            messages.error(request, 'Invalid OTP')
+            logging.debug("Invalid OTP entered.")
+
+    return render(request, 'userapp1/verify_otp.html')
+
+
+# function for resend otp 
+
+def resend_otp(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('userregister')  # Redirect to registration if no user_id in session
+
+    user = User.objects.get(id=user_id)
+    email_device = EmailDevice.objects.get(user=user)
+    otp = generate_otp()
+    email_device.token = otp
+    email_device.save()
+
+    send_mail(
+        'Your OTP Code',
+        f'Your OTP code is {otp}',
+        'your-email@example.com',
+        [user.email],
+        fail_silently=False,
+    )
+
+    messages.success(request, 'A new OTP has been sent to your email.')
+    return redirect('verify_otp')
 
 
 # function for user login page 
@@ -113,28 +220,8 @@ def userlogout(request):
     return response
 
 
-# function for genarating otp
-
-def otp(request):
-    return render(request,'userapp1/otp.html')
-
-
-# function for resend otp 
-
-def resendotp(request):
-    return render(request,'userapp1/resendotp.html')
-
-
-# function for contact us page 
-
-def contactus(request):
-    return render(request,'userapp1/contact.html')
-
-
-
 # function for product deyails 
 
-from django.shortcuts import get_object_or_404
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
