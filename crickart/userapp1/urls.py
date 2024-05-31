@@ -8,17 +8,17 @@ urlpatterns = [
     path('',views.userindex,name='home'),  
     path('userregister/',views.userregister,name='userregister'),
     path('userlogin/',views.userlogin,name='userlogin'),
-    path('contactus/',views.contactus,name='contactus'),
     path('logout/',views.userlogout,name='logout'),
    
 
-    path('otp/',views.otp,name='otp'),
-    path('resendotp/',views.resendotp,name='resendotp'),  
+    path('userregister/', views.userregister, name='userregister'),
+    path('verify-otp/', views.verify_otp, name='verify_otp'),
+    path('resend-otp/', views.resend_otp, name='resendotp'), 
 
     # product details
 
     path('productdetails/<int:product_id>/',views. product_details,name='productdetails'),
-    path('resendotp/',views.resendotp,name='resendotp'), 
+
    
 
     # category and shop details

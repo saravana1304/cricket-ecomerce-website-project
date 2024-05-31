@@ -15,3 +15,12 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class EmailDevice(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='otp_email_device')
+    otp = models.CharField(max_length=6)
+    confirmed = models.BooleanField(default=False)
+
+    def verify_token(self, token):
+        return self.otp == token
