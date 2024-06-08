@@ -27,20 +27,16 @@
        
         
         <div class="forget">
-            <a href="#">Forget Password ? </a>
+            <a href="{% url 'forgetpass' %}">Forget Password ? </a>
         </div>
         
         {% load socialaccount %}
         
-
         <div class="register">
             <a href="{% url 'userregister' %}"> Click Here to Register </a>
         </div>
-
-    </form>
-    
+    </form> 
 </div>
-
 
 
 

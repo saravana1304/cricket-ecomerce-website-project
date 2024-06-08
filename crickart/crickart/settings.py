@@ -198,3 +198,5 @@ EMAIL_HOST_PASSWORD = 'rhtr gvpv tvfa jaix'
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+

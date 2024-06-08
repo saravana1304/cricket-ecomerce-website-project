@@ -7,19 +7,20 @@ urlpatterns = [
 
     path('',views.userindex,name='home'),  
     path('userregister/',views.userregister,name='userregister'),
-    path('userlogin/',views.userlogin,name='userlogin'),
+    path('user_login/', views.user_login, name='userlogin'), 
     path('logout/',views.userlogout,name='logout'),
    
 
-    path('userregister/', views.userregister, name='userregister'),
     path('verify-otp/', views.verify_otp, name='verify_otp'),
     path('resend-otp/', views.resend_otp, name='resendotp'), 
+    path('forget_pasword/', views.forget_password, name='forgetpass'),
+    path('reset_pasword/', views.rest_password, name='resetpass'),
+    path('otp_verify/', views.otp_verify, name='otp_verify'),
+
 
     # product details
 
     path('productdetails/<int:product_id>/',views. product_details,name='productdetails'),
-
-   
 
     # category and shop details
     

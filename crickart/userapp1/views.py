@@ -19,8 +19,14 @@ from django_otp.plugins.otp_email.models import EmailDevice
 from .models import User
 import logging
 from django.contrib.auth import get_backends
+from django.contrib.auth import get_user_model
+from django.views.decorators.csrf import csrf_protect
+from django.conf import settings
+from django.urls import reverse
 
 
+
+User = get_user_model()
 
 # function for displaying index page to users
 
@@ -84,11 +90,12 @@ def userregister(request):
             email_device.token = otp
             email_device.save()
 
+            # Print OTP for debugging (remove in production)
             print(otp)
 
             send_mail(
-                'this is CRICKART OTP Code for register',
-                f'Your OTP code is dont share to any one {otp}',
+                'This is CRICKART OTP Code for Registration',
+                f'Your OTP code is: {otp}. Do not share it with anyone.',
                 'your-email@example.com',
                 [user.email],
                 fail_silently=False,
@@ -135,15 +142,15 @@ def verify_otp(request):
 
             # Find the backend that authenticated the user
             backend_path = None
-            for backend in get_backends():
+            for backend in auth.get_backends():
                 if backend.get_user(user.id) is not None:
                     backend_path = f'{backend.__module__}.{backend.__class__.__name__}'
                     break
 
             if backend_path:
                 auth.login(request, user, backend=backend_path)  # Log the user in with the specified backend
-                messages.success(request, 'Your account has been activated. You can now log in.')
-                logging.debug("OTP verified successfully. Redirecting to home page.")
+                messages.success(request, f'OTP sent to {user.email}. Enter OTP to log in.')
+                logging.debug(f"OTP verified successfully for user {user.email}. Redirecting to login page.")
                 return redirect('userlogin')  # Redirect to login page after successful activation
             else:
                 logging.error("No suitable authentication backend found for the user.")
@@ -153,8 +160,7 @@ def verify_otp(request):
             logging.debug("Invalid OTP entered.")
 
     return render(request, 'userapp1/verify_otp.html')
-
-
+    
 # function for resend otp 
 
 def resend_otp(request):
@@ -180,11 +186,100 @@ def resend_otp(request):
     return redirect('verify_otp')
 
 
+# function for forget password 
+
+@csrf_protect
+def forget_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        associated_users = User.objects.filter(email=email)
+        if associated_users.exists():
+            for user in associated_users:
+                otp = generate_otp()
+                request.session['reset_otp'] = otp
+                request.session['email'] = email
+
+                logger.debug(f"Generated OTP: {otp}")
+
+                subject = "This is a password reset mail"
+                message = f'Your OTP for resetting your password is {otp}.'
+                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+                
+                return render(request, 'userapp1/newpassword.html')
+        return render(request, 'userapp1/forget_password.html', {'error': 'Email not found'})
+    return render(request, 'userapp1/forget_password.html')
+    
+# function for forget otp verify
+
+logger = logging.getLogger(__name__)
+
+# Helper function to generate OTP
+def generate_otp():
+    return str(random.randint(100000, 999999))
+
+@csrf_protect
+def forget_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        associated_users = User.objects.filter(email=email)
+        if associated_users.exists():
+            for user in associated_users:
+                otp = generate_otp()
+                request.session['reset_otp'] = otp
+                request.session['email'] = email
+
+                logger.debug(f"Generated OTP: {otp}")
+                print(f"Generated OTP: {otp}")
+
+                subject = "This is a password reset mail"
+                message = f'Your OTP for resetting your password is {otp}.'
+                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+                
+                return render(request, 'userapp1/newpassword.html')
+        return render(request, 'userapp1/forget_password.html', {'error': 'Email not found'})
+    return render(request, 'userapp1/forget_password.html')
+
+
+
+# this function is used to check the password is matching or not
+@csrf_protect
+def otp_verify(request):
+    if request.method == 'POST':
+        otp = request.POST.get('otp')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+
+        session_otp = request.session.get('reset_otp')
+        email = request.session.get('email')
+
+        if otp == session_otp:
+            if new_password == confirm_password:
+                user = User.objects.get(email=email)
+                user.set_password(new_password)
+                user.save()
+                # Clear the session
+                request.session.flush()
+                return render(request, 'userapp1/newpassword.html', {'success': 'Password updated successfully'})
+            else:
+                return render(request, 'userapp1/newpassword.html', {'error': 'Passwords do not match'})
+        else:
+            return render(request, 'userapp1/newpassword.html', {'error': 'Invalid OTP'})
+
+    return render(request, 'userapp1/newpassword.html')
+
+
+
+
+# function for forget password 
+def rest_password(request):
+    return render(request,'userapp1/newpassword.html')
+
+
 # function for user login page 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @never_cache
-def userlogin(request): 
+def user_login(request): 
     if request.user.is_authenticated:
         return redirect('home')
     if request.method=='POST':
@@ -359,4 +454,3 @@ def search_products(request):
         'products': serialized_products,
         'categories': Category.objects.all()
     })
-
