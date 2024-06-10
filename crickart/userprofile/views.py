@@ -279,33 +279,34 @@ def place_order(request):
             raise ValueError("No items in the cart.")
 
         product_ids = [item.product_id for item in cart_items]
-        try:
 
         # Create the order
-            order = Order.objects.create(
-                user_profile=user_profile_address,
-                total_qty=sum(item.quantity for item in cart_items),
-                total_price=sum(item.total_price() for item in cart_items),
-                address=address_method,
-                payment=payment_method,
-                delivery_status='Pending',
-                order_date=timezone.localtime(timezone.now()),
-            )
-            for product_id in product_ids:
-                product = Product.objects.get(id=product_id)
-                order.products.add(product)
-            order.save()
-            for item in cart_items:
-                item.product.stock -= item.quantity
-                item.product.save()
-            # Clear the user's cart
-            cart_items.delete()
-        except Exception as e:
-            print(e)
-        return JsonResponse({'success': True})
+        order = Order.objects.create(
+            user_profile=user_profile_address,
+            total_qty=sum(item.quantity for item in cart_items),
+            total_price=sum(item.total_price() for item in cart_items),
+            address=address_method,
+            payment='paypal' if payment_method == 'paypal' else 'cash on delivery',
+            delivery_status='Pending',
+            order_date=timezone.localtime(timezone.now()),
+        )
 
+        for product_id in product_ids:
+            product = Product.objects.get(id=product_id)
+            order.products.add(product)
+        order.save()
+        for item in cart_items:
+            item.product.stock -= item.quantity
+            item.product.save()
+        # Clear the user's cart
+        cart_items.delete()
+
+        return JsonResponse({'success': True})
     except Exception as e:
         return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+
+
 
 # function for displaying user order
 
@@ -405,8 +406,6 @@ def cancel_order(request, order_id):
         return JsonResponse({'success': True, 'message': 'Order cancelled successfully.'})
 
     return JsonResponse({'error': 'Invalid HTTP method'})
-
-        
 
 # paypal payment intigration 
 

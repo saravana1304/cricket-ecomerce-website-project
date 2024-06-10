@@ -120,6 +120,7 @@
 
 
 <script>
+
 document.addEventListener('DOMContentLoaded', function () {
     const placeOrderBtn = document.getElementById('place-order-btn');
     const paypalButtonContainer = document.getElementById('paypal-button-container');
@@ -186,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Place order
+    // Place order for non-PayPal methods
     placeOrderBtn.addEventListener('click', function () {
         const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
         const addressMethod = document.querySelector('input[name="shipping_address"]:checked');
@@ -210,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (paymentMethod.value === 'paypal') {
-            // Handle PayPal separately
+            // Handle PayPal separately, PayPal button rendering and actions
             paypal.Buttons({
                 createOrder: function(data, actions) {
                     return actions.order.create({
@@ -228,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             title: 'Payment Successful',
                             text: 'Transaction completed by ' + details.payer.name.given_name
                         }).then(() => {
-                            window.location.href = '/user_order/';
+                            placeOrder('paypal', addressMethod.value, finalTotalPrice);
                         });
                     });
                 },
@@ -241,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }).render('#paypal-button-container');
         } else {
-            // Handle Net Banking or Cash on Delivery
             placeOrder(paymentMethod.value, addressMethod.value, finalTotalPrice);
         }
     });
@@ -311,6 +311,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return cookieValue;
     }
 });
+
 
 </script>
 
