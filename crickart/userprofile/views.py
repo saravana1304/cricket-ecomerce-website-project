@@ -278,13 +278,20 @@ def place_order(request):
         if not cart_items.exists():
             raise ValueError("No items in the cart.")
 
+        # Calculate total price
+        total_price = sum(item.total_price() for item in cart_items)
+
+        # Check if payment method is cash on delivery and total price exceeds 1000
+        if payment_method == 'cashondelivery' and total_price > 1000:
+            return JsonResponse({'success': False, 'message': 'Cash on delivery is not available for orders above 1000 rupees.'}, status=400)
+
         product_ids = [item.product_id for item in cart_items]
 
         # Create the order
         order = Order.objects.create(
             user_profile=user_profile_address,
             total_qty=sum(item.quantity for item in cart_items),
-            total_price=sum(item.total_price() for item in cart_items),
+            total_price=total_price,
             address=address_method,
             payment='paypal' if payment_method == 'paypal' else 'cash on delivery',
             delivery_status='Pending',
@@ -306,7 +313,27 @@ def place_order(request):
         return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
 
+# function for cancel order
 
+@login_required
+def cancel_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+
+    if request.method == 'POST':
+        if order.delivery_status != 'Cancelled':  # Check if the order is not already cancelled
+            if order.payment == 'paypal':
+                user_profile = get_object_or_404(UserProfile, user=request.user)
+                user_profile.wallet_balance += order.total_price
+                user_profile.save()
+            
+            order.delivery_status = 'Cancelled'
+            order.save()
+
+            return JsonResponse({'success': True, 'message': 'Order cancelled successfully and wallet updated.'})
+        else:
+            return JsonResponse({'error': 'Order is already cancelled.'})
+
+    return JsonResponse({'error': 'Invalid HTTP method'})
 
 # function for displaying user order
 
@@ -395,17 +422,6 @@ def change_password(request):
 
 
 
-@login_required
-def cancel_order(request, order_id):
-    order = get_object_or_404(Order, id=order_id)
-
-    if request.method == 'POST':
-        order.delivery_status = 'Cancelled'
-        order.save()
-
-        return JsonResponse({'success': True, 'message': 'Order cancelled successfully.'})
-
-    return JsonResponse({'error': 'Invalid HTTP method'})
 
 # paypal payment intigration 
 
